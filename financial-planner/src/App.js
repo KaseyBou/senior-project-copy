@@ -1,23 +1,30 @@
-import logo from './logo.svg';
+import React, { useState} from 'react';
 import './App.css';
+import Navbar from './components/Navbar/Navbar';
+import 'bootstrap/dist/css/bootstrap.min.css';
+//import { ThemeContext, themes } from './context/themeContext';
+import { Outlet, useNavigate} from 'react-router-dom';
 
 function App() {
+
+  const navigate = useNavigate()
+  //const [theme, setTheme] = useState(themes.light);
+
+  /*const toggleTheme = () => {
+
+    setTheme((previousThemeValue) => previousThemeValue === themes.dark ? themes.light : themes.dark);
+
+  };*/
+
+  //document.body.setAttribute("style", `background: ${theme.background};`);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Navbar/>
+      <div className='body'>
+          <Outlet/>
+          <div id='modal-root'></div>
+      </div>
     </div>
   );
 }
