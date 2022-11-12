@@ -1,0 +1,22 @@
+.container {
+    text-align: center;
+}
+
+button {
+    font: inherit;
+    padding: 0.5rem 1.5rem;
+    cursor: pointer;
+    border-radius: 5px;
+    background-color: #50BF47;
+    margin: 1rem;
+    width: 150px;
+    align-self: center;
+  }
+
+  button:hover {
+    border-color: rgb(180, 27, 27);
+  }
+  
+  button-highlight {
+    background-color: transparent;
+  }

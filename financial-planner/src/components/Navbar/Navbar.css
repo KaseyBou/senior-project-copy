@@ -1,0 +1,14 @@
+.nav-style {
+  background-color:#32752D;
+  color: #fff;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.navbar-brand {
+  color: #fff;
+}
+.nav-link:hover {
+  background-color: #275b22;
+}
+
