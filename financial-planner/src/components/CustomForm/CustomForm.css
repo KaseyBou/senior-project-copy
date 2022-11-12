@@ -1,0 +1,34 @@
+
+.customForm {
+    display: flex;
+    background-color: #32752D ;
+    color:white;
+    border: 10px #333333 solid;
+    padding: 2%;
+    width: 75%;
+    margin: auto;
+}
+
+.formTable{
+    width: 50%;
+    table-layout: fixed;
+    margin-left: 15%
+}
+
+.formLabel{
+    width: 100%;
+    text-align: right;
+}
+
+.formInput{
+    border-radius: 10px;
+    border: none;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+}
+
+.formButtons{
+    display: flex;
+    width: 50%;
+    margin:auto;
+}
