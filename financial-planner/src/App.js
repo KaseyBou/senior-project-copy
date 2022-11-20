@@ -22,8 +22,9 @@ function App() {
     <div className="App">
       <Navbar/>
       <div className='body'>
-          <Outlet/>
-          <div id='modal-root'></div>
+          <div id='modal-root'>
+            <Outlet/>
+          </div>
       </div>
     </div>
   );
