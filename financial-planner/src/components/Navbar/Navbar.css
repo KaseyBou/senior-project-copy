@@ -1,4 +1,7 @@
 .nav-style {
+  height:10vh;
+  position: fixed;
+  top:0;
   background-color:#32752D;
   color: #fff;
   margin-top: 0;
