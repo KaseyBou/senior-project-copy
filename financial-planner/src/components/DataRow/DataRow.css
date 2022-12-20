@@ -1,0 +1,31 @@
+/* Color Variables */
+:root{
+    --row-bg: #b5b5b5;
+}
+
+.dataRowWrapper{
+    display: flex;
+    justify-content: space-between;
+    width: 90%;
+    background-color: var(--row-bg);
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 1em;
+    padding:1em;
+    border-radius: 1em;
+}
+
+.dataRowTitle{
+    font-weight: bold;
+    text-align: left;
+}
+
+.subrow{
+    text-align: left;
+}
+
+.dataRowButtons{
+    display: flex;
+    margin-top:auto;
+    margin-bottom:auto;
+}
