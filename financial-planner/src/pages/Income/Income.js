@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import IncomeRow from '../../components/IncomeRow/IncomeRow';
 import Button from '../../components/Button/Button';
 import Modal from '../../components/Modal/Modal';
+import DataRow from '../../components/DataRow/DataRow';
 
 const Income = () => {
 
@@ -36,6 +37,18 @@ const Income = () => {
             <Button text="Add Income" function={onEditClick}/>
             <Modal dismissModal={onDismissEditModal}/>
 
+            <div id="IncomeList">
+                <DataRow title="Row 1" rows={["subrow 1", "subrow 2", "subrow 3"]}/>
+                <DataRow title="Row 1" rows={["subrow 1", "subrow 2", "subrow 3"]}/>
+                <DataRow title="Row 1" rows={["subrow 1", "subrow 2", "subrow 3"]}/>
+                <DataRow title="Row 1" rows={["subrow 1", "subrow 2", "subrow 3"]}/>
+                <DataRow title="Row 1" rows={["subrow 1", "subrow 2", "subrow 3"]}/>
+                <DataRow title="Row 1" rows={["subrow 1", "subrow 2", "subrow 3"]}/>
+                <DataRow title="Row 1" rows={["subrow 1", "subrow 2", "subrow 3"]}/>
+            </div>
+            <div className='bottomTaskBar'>
+                <Button text="Add Income"/>
+            </div>
         </>
         );
 }

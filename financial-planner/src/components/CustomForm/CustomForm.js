@@ -6,7 +6,6 @@ import PropTypes from 'prop-types';
 import Button from '../Button/Button';
 
 const CustomForm = (props) => {
-    console.log(props)
     //defining proptypes
     CustomForm.propTypes = {
         title:PropTypes.string,
