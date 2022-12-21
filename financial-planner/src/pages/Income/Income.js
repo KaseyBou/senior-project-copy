@@ -33,8 +33,9 @@ const Income = () => {
                 <IncomeRow name="income 1" source="Company 1" date="1/1/2022" amount={123.45} id="1" editFunction={onEditClick}/>
                 <IncomeRow name="income 2" source="Company 2" date="7/31/2022" amount={420.69} id="2"editFunction={onEditClick}/>
             </div>
-            <Button text="Add Income"/>
+            <Button text="Add Income" function={onEditClick}/>
             <Modal dismissModal={onDismissEditModal}/>
+
         </>
         );
 }
