@@ -1,3 +1,20 @@
+/* Color variables */
+:root{
+  --button-color: #50bf47;
+  --button-hover-color: #378631;
+}
+
+/* Overriding Bootstrap styles */
+.btn-primary{
+  background-color: var(--button-color) !important;
+  border-color: var(--button-color) !important;
+}
+
+.btn-primary:hover{
+  background-color: var(--button-hover-color) !important;
+  border-color: var(--button-hover-color) !important;
+}
+
 .App {
   text-align: center;
   background: rgb(140,140,140);

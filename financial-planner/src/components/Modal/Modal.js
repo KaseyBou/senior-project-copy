@@ -1,3 +1,4 @@
+import './Modal.css'
 import React, {useState} from "react";
 import ReactDom from "react-dom";
 import Button from 'react-bootstrap/Button';
@@ -11,8 +12,8 @@ const TestModal = (props) => {
 
   return (
     <>
-      <Button variant="primary" onClick={handleShow}>
-        Launch static backdrop modal
+      <Button onClick={handleShow}>
+        {props.buttonText}
       </Button>
 
       <Modal
@@ -23,18 +24,11 @@ const TestModal = (props) => {
         className="modal"
       >
         <Modal.Header closeButton>
-          <Modal.Title>Modal title</Modal.Title>
+          <Modal.Title>{props.title}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          I will not close if you click outside me. Don't even try to press
-          escape key.
+          {props.children}
         </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
-          <Button variant="primary">Understood</Button>
-        </Modal.Footer>
       </Modal>
     </>
     );
