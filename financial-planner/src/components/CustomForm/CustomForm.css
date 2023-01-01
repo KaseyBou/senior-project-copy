@@ -1,12 +1,11 @@
 
 .customForm {
     display: flex;
-    background-color: #32752D ;
-    color:white;
-    border: 10px #333333 solid;
+    background-color: #B5B5B5 ;
     padding: 2%;
     width: 75%;
     margin: auto;
+    border-radius: 1em;
 }
 
 .formTable{

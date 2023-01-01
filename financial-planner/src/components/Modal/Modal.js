@@ -1,40 +1,39 @@
-import React, {useState} from "react";
+import './Modal.css'
+import React, {useEffect, useState} from "react";
 import ReactDom from "react-dom";
-import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import PropTypes, { bool } from 'prop-types';
 
 const TestModal = (props) => {
-      const [show, setShow] = useState(false);
+  //defining proptypes
+  TestModal.propTypes = {
+    show: PropTypes.bool,
+    handleClose: PropTypes.func,
+    title: PropTypes.string
+  }
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  //default props
+  TestModal.defaultProp = {
+    show: false,
+    handleClose: () => {},
+    title: ""
+  }
 
   return (
     <>
-      <Button variant="primary" onClick={handleShow}>
-        Launch static backdrop modal
-      </Button>
-
       <Modal
-        show={show}
-        onHide={handleClose}
+        show={props.show}
+        onHide={props.handleClose}
         backdrop="static"
         keyboard={false}
         className="modal"
       >
         <Modal.Header closeButton>
-          <Modal.Title>Modal title</Modal.Title>
+          <Modal.Title>{props.title}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          I will not close if you click outside me. Don't even try to press
-          escape key.
+          {props.children}
         </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
-          <Button variant="primary">Understood</Button>
-        </Modal.Footer>
       </Modal>
     </>
     );

@@ -3,54 +3,91 @@ import { useState } from 'react';
 //import Loading from '../Loading/Loading';
 import './Income.css';
 import { useNavigate } from 'react-router-dom';
-import IncomeRow from '../../components/IncomeRow/IncomeRow';
-import Button from '../../components/Button/Button';
+import Button from 'react-bootstrap/Button';
 import Modal from '../../components/Modal/Modal';
 import DataRow from '../../components/DataRow/DataRow';
+import CustomForm from '../../components/CustomForm/CustomForm';
 
 const Income = () => {
+    // modal visibility states and functions
+    const [showEdit, setShowEdit] = useState(false);
+    const handleCloseEdit = () => setShowEdit(false);
+    const handleShowEdit = () => setShowEdit(true);
 
-    //Initializing
+    const [showDelete, setShowDelete] = useState(false);
+    const handleCloseDelete = () => setShowDelete(false);
+    const handleShowDelete = () => setShowDelete(true);
+
+    const [showAdd, setShowAdd] = useState(false);
+    const handleCloseAdd = () => setShowAdd(false);
+    const handleShowAdd = () => setShowAdd(true);
+
+    //Initialization
     const navigate = useNavigate();
-
-    // modal visibility states
-    const [editModalVisible, setEditModalVisibility] = useState(false);
-    const [deleteModalVisible, setDeleteModalVisibility] = useState(false);
-    const [addModalVisible, setAddModalVisibility] = useState(false);
-
-    // show modal to edit income
-    const onEditClick = () => {
-        setEditModalVisibility(true);
-    }
-    const onDismissEditModal = () => {
-        setEditModalVisibility(false);
-    }
 
     //returning JSX
     return (
         <>
-            <div className='Incomes'>
-                {/* TODO: make these autogenerate from database */}
-                <IncomeRow name="income 1" source="Company 1" date="1/1/2022" amount={123.45} id="1" editFunction={onEditClick}/>
-                <IncomeRow name="income 2" source="Company 2" date="7/31/2022" amount={420.69} id="2"editFunction={onEditClick}/>
-            </div>
-            <Button text="Add Income" function={onEditClick}/>
-            <Modal dismissModal={onDismissEditModal}/>
-
             <div id="IncomeList">
-                <DataRow title="Row 1" rows={["subrow 1", "subrow 2", "subrow 3"]}/>
-                <DataRow title="Row 1" rows={["subrow 1", "subrow 2", "subrow 3"]}/>
-                <DataRow title="Row 1" rows={["subrow 1", "subrow 2", "subrow 3"]}/>
-                <DataRow title="Row 1" rows={["subrow 1", "subrow 2", "subrow 3"]}/>
-                <DataRow title="Row 1" rows={["subrow 1", "subrow 2", "subrow 3"]}/>
-                <DataRow title="Row 1" rows={["subrow 1", "subrow 2", "subrow 3"]}/>
-                <DataRow title="Row 1" rows={["subrow 1", "subrow 2", "subrow 3"]}/>
+                <DataRow
+                    title="Row 1"
+                    rows={["subrow 1", "subrow 2", "subrow 3"]}
+                    HandleEdit={handleShowEdit}
+                    HandleDelete={handleShowDelete}
+                />
+                <DataRow
+                    title="Row 2"
+                    rows={["subrow 1", "subrow 2", "subrow 3"]}
+                    HandleEdit={handleShowEdit}
+                    HandleDelete={handleShowDelete}
+                />
+                <DataRow
+                    title="Row 3"
+                    rows={["subrow 1", "subrow 2", "subrow 3"]}
+                    HandleEdit={handleShowEdit}
+                    HandleDelete={handleShowDelete}
+                />
+                <DataRow
+                    title="Row 4"
+                    rows={["subrow 1", "subrow 2", "subrow 3"]}
+                    HandleEdit={handleShowEdit}
+                    HandleDelete={handleShowDelete}
+                />
+                <DataRow
+                    title="Row 5"
+                    rows={["subrow 1", "subrow 2", "subrow 3"]}
+                    HandleEdit={handleShowEdit}
+                    HandleDelete={handleShowDelete}
+                />
             </div>
             <div className='bottomTaskBar'>
-                <Button text="Add Income"/>
+                <Button onClick={handleShowAdd}>Add Income</Button>
+                <Modal buttonText="Add Income" show={showAdd} handleShow={handleShowAdd} handleClose={handleCloseAdd}>
+                    <CustomForm
+                        title="Add Income"
+                        fields={['Gross Pay', 'Pay Frequency', 'Pay Date']}
+                        submitAction={handleCloseAdd}
+                    />
+                </Modal>
+
+                <Modal buttonText="Confirm Changes" show={showEdit} handleShow={handleShowEdit} handleClose={handleCloseEdit}>
+                    <CustomForm
+                        title="Edit Income"
+                        fields={['Gross Pay', 'Pay Frequency', 'Pay Date']}
+                        submitAction={handleCloseEdit}
+                    />
+                </Modal>
+
+                <Modal buttonText="Confirm Deletion" show={showDelete} handleShow={handleShowDelete} handleClose={handleCloseDelete}>
+                    <CustomForm
+                        title="Delete Income"
+                        fields={['Confirm Income Name', 'User Password']}
+                        submitAction={handleCloseDelete}
+                    />
+                </Modal>
             </div>
         </>
-        );
+    );
 }
 
 export default Income
