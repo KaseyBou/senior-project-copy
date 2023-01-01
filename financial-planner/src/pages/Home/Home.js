@@ -4,7 +4,7 @@ import './Home.css';
 import ColumnBox from '../../components/ColumnBox/ColumnBox'
 //import Button from '../../components/Button/Button'
 //import { useNavigate } from 'react-router-dom';
-import Modal from '../../components/Modal/Modal';
+//import Modal from '../../components/Modal/Modal';
 
 const Home = () => {
 
@@ -30,7 +30,6 @@ const Home = () => {
                         />
                         <ColumnBox pictureFilePath="/logo192.png" altText="Filler" title="Income" text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque dapibus odio justo, non ullamcorper justo congue ac. Phasellus egestas purus eget ligula ullamcorper feugiat. Etiam leo nisi, sagittis sed egestas at, mollis eget augue. Cras venenatis tortor nunc, nec condimentum nibh viverra mattis. Nam in mi mollis, dapibus eros nec, pretium augue. Ut a laoreet tellus. In quis tellus dignissim, luctus erat eget, dictum ipsum. Curabitur fringilla, ex at vehicula ornare, nulla lacus gravida massa, lobortis consectetur diam tellus eget odio." 
                         />
-                        <Modal>Testing testing testing testing</Modal>
                     </div>
                 </div>
             </div>

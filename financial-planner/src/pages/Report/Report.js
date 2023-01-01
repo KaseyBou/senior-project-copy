@@ -1,12 +1,12 @@
 
 //import Loading from '../Loading/Loading';
 import './Report.css';
-import { useNavigate } from 'react-router-dom';
+//import { useNavigate } from 'react-router-dom';
 
 const Report = () => {
 
     //intializing
-    const navigate = useNavigate();
+    //const navigate = useNavigate();
 
     //returning JSX
     return (

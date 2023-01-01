@@ -1,13 +1,13 @@
 
 //import Loading from '../Loading/Loading';
 import './Account.css';
-import { useNavigate } from 'react-router-dom';
+//import { useNavigate } from 'react-router-dom';
 import CustomForm from '../../components/CustomForm/CustomForm';
 
 const Account = () => {
 
     //intializing
-    const navigate = useNavigate();
+    //const navigate = useNavigate();
 
     //returning JSX
     return (

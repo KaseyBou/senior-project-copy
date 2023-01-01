@@ -1,7 +1,7 @@
-import {useContext} from 'react';
+//import {useContext} from 'react';
 import './Navbar.css';
 import { useNavigate } from 'react-router-dom';
-import { useSelector} from 'react-redux';
+//import { useSelector} from 'react-redux';
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';

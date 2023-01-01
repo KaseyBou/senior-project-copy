@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 //import Loading from '../Loading/Loading';
 import './Income.css';
-import { useNavigate } from 'react-router-dom';
+//import { useNavigate } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import Modal from '../../components/Modal/Modal';
 import DataRow from '../../components/DataRow/DataRow';
@@ -23,7 +23,7 @@ const Income = () => {
     const handleShowAdd = () => setShowAdd(true);
 
     //Initialization
-    const navigate = useNavigate();
+    //const navigate = useNavigate();
 
     //returning JSX
     return (
