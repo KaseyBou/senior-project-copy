@@ -1,5 +1,7 @@
+// TODO: add "key" prop
+
 import './DataRow.css'
-import Button from "../Button/Button"
+import Button from 'react-bootstrap/Button';
 import PropTypes from 'prop-types';
 
 const DataRow = (props) => {
@@ -7,12 +9,16 @@ const DataRow = (props) => {
     DataRow.propTypes = {
         title:PropTypes.string,
         rows:PropTypes.string, // list of subrows in row
+        HandleEdit:PropTypes.func,
+        HandleDelete:PropTypes.func
     }
 
     //default props
     DataRow.defaultProp = {
         title: "",
-        rows: []
+        rows: [],
+        HandleEdit:() => {},
+        HandleDelete:() => {}
     }
 
     // generate rows from prop
@@ -32,8 +38,8 @@ const DataRow = (props) => {
                 {subrowsJSX}
             </div>
             <div className="dataRowButtons">
-                <Button text="Edit" />
-                <Button text="Delete" />
+                <Button onClick={props.HandleEdit}>Edit</Button>
+                <Button onClick={props.HandleDelete}>Delete</Button>
             </div>
         </div>
     )

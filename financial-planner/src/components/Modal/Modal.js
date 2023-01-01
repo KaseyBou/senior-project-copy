@@ -1,24 +1,29 @@
 import './Modal.css'
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import ReactDom from "react-dom";
-import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import PropTypes, { bool } from 'prop-types';
 
 const TestModal = (props) => {
-      const [show, setShow] = useState(false);
+  //defining proptypes
+  TestModal.propTypes = {
+    show: PropTypes.bool,
+    handleClose: PropTypes.func,
+    title: PropTypes.string
+  }
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  //default props
+  TestModal.defaultProp = {
+    show: false,
+    handleClose: () => {},
+    title: ""
+  }
 
   return (
     <>
-      <Button onClick={handleShow}>
-        {props.buttonText}
-      </Button>
-
       <Modal
-        show={show}
-        onHide={handleClose}
+        show={props.show}
+        onHide={props.handleClose}
         backdrop="static"
         keyboard={false}
         className="modal"
