@@ -2,14 +2,14 @@
 //import Loading from '../Loading/Loading';
 import './Home.css';
 import ColumnBox from '../../components/ColumnBox/ColumnBox'
-import Button from '../../components/Button/Button'
-import { useNavigate } from 'react-router-dom';
+//import Button from '../../components/Button/Button'
+//import { useNavigate } from 'react-router-dom';
 import Modal from '../../components/Modal/Modal';
 
 const Home = () => {
 
     //Initializing
-    const navigate = useNavigate();
+    //const navigate = useNavigate();
 
     //returning JSX
     return (
