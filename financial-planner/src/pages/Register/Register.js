@@ -16,6 +16,7 @@ const Register = () => {
             <CustomForm
                 title='Register'
                 fields={["First Name", "Last Name", "E-Mail Address", "Phone Number", "Password", "Confirm Password"]}
+                fieldTypes={['text', 'text', 'email', 'tel', 'password', 'password']}
             ></CustomForm>
         </>
         );

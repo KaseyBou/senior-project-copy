@@ -75,6 +75,7 @@ const Expenses = () => {
                     <CustomForm
                         title="Delete"
                         fields={['Password']}
+                        fieldTypes={['password']}
                         submitAction={handleCloseDelete}
                     />
                 </Modal>

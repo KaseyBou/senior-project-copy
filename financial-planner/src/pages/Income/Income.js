@@ -66,6 +66,7 @@ const Income = () => {
                     <CustomForm
                         title="Add Income"
                         fields={['Gross Pay', 'Pay Frequency', 'Pay Date']}
+                        fieldTypes={['number', 'text', 'date']}
                         submitAction={handleCloseAdd}
                     />
                 </Modal>
@@ -74,6 +75,7 @@ const Income = () => {
                     <CustomForm
                         title="Edit Income"
                         fields={['Gross Pay', 'Pay Frequency', 'Pay Date']}
+                        fieldTypes={['number', 'text', 'date']}
                         submitAction={handleCloseEdit}
                     />
                 </Modal>
@@ -82,6 +84,7 @@ const Income = () => {
                     <CustomForm
                         title="Delete Income"
                         fields={['Confirm Income Name', 'User Password']}
+                        fieldTypes={['text', 'password']}
                         submitAction={handleCloseDelete}
                     />
                 </Modal>

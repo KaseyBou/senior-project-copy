@@ -16,6 +16,7 @@ const Account = () => {
             <CustomForm
                 title='Edit Account'
                 fields={["First Name", "Last Name", "E-Mail Address", "Phone Number", "New Password", "Confirm Password"]}
+                fieldTypes={['text', 'text', 'email', 'tel', 'password', 'password']}
             ></CustomForm>
         </>
         );
