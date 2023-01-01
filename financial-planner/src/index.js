@@ -17,6 +17,7 @@ import Income from './pages/Income/Income'
 import Login from './pages/Login/Login'
 import Register from './pages/Register/Register'
 import Report from './pages/Report/Report'
+import Account from './pages/Account/Account'
 
 //Navigation Routing for Website
 ReactDOM.render(
@@ -33,6 +34,7 @@ ReactDOM.render(
             <Route path="/Report" element={<Report />}/>
             <Route path="/Register" element={<Register />}/>
             <Route path="/Login" element={<Login />}/>
+            <Route path="/Account" element={<Account />}/>
           </Route>
         </Routes>
     </BrowserRouter>

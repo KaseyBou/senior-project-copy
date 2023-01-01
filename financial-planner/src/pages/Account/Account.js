@@ -1,9 +1,9 @@
 
 //import Loading from '../Loading/Loading';
-import './Report.css';
+import './Account.css';
 import { useNavigate } from 'react-router-dom';
 
-const Report = () => {
+const Account = () => {
 
     //intializing
     const navigate = useNavigate();
@@ -11,10 +11,10 @@ const Report = () => {
     //returning JSX
     return (
         <>
-            <h1>Report</h1>
+            <h1>Account</h1>
 
         </>
         );
 }
 
-export default Report
+export default Account
