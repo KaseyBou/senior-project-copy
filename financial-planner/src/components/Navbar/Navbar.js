@@ -41,6 +41,10 @@ const HomeNavbar = () => {
       navigate("/Login");
     };
 
+    const report = () => {
+      navigate("/Report");
+    };
+
     //-------------End of Navigation
     return (
 
@@ -54,6 +58,7 @@ const HomeNavbar = () => {
             <Nav.Link className="text-white" onClick={() =>expenses()}>Expenses</Nav.Link>
             <Nav.Link className="text-white" onClick={() =>savings()}>Savings</Nav.Link>
             <Nav.Link className="text-white" onClick={() =>income()}>Income</Nav.Link>
+            <Nav.Link className="text-white" onClick={() =>report()}>Report</Nav.Link>
           </Nav>
           <Nav className=' d-flex justify-content-end'>
               <Nav.Link className="text-white" onClick={() =>login()}>Login</Nav.Link>
