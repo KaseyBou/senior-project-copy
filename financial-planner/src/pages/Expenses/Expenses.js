@@ -7,6 +7,7 @@ import Button from 'react-bootstrap/Button';
 import Modal from '../../components/Modal/Modal';
 import DataRow from '../../components/DataRow/DataRow';
 import CustomForm from '../../components/CustomForm/CustomForm';
+import SearchBar from '../../components/SearchBar/SearchBar';
 
 const Expenses = () => {
     // modal visibility states and functions
@@ -36,6 +37,7 @@ const Expenses = () => {
     //returning JSX
     return (
         <>
+            <SearchBar/>
             <div id="ExpenseList">
                 <DataRow
                     title="Expense 1"

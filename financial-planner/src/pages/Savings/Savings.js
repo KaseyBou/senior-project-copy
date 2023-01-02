@@ -1,13 +1,13 @@
 
-import { useState } from 'react';
+//import { useState } from 'react';
 
 //import Loading from '../Loading/Loading';
 import './Savings.css';
 import { useNavigate } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
-import Modal from '../../components/Modal/Modal';
-import DataRow from '../../components/DataRow/DataRow';
-import CustomForm from '../../components/CustomForm/CustomForm';
+//import Modal from '../../components/Modal/Modal';
+//import DataRow from '../../components/DataRow/DataRow';
+//import CustomForm from '../../components/CustomForm/CustomForm';
 import ColumnBox from '../../components/ColumnBox/ColumnBox'
 import InformationDisplay from '../../components/InformationDisplay/InformationDisplay';
 
