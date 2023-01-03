@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 //import Loading from '../Loading/Loading';
-import './Income.css';
+import './Deposits.css';
 //import { useNavigate } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import Modal from '../../components/Modal/Modal';
@@ -30,7 +30,7 @@ const Income = () => {
     return (
         <>
             <SearchBar/>
-            <div id="IncomeList">
+            <div id="DepositList">
                 <DataRow
                     title="Row 1"
                     rows={["subrow 1", "subrow 2", "subrow 3"]}
@@ -63,21 +63,21 @@ const Income = () => {
                 />
             </div>
             <div className='bottomTaskBar'>
-                <Button onClick={handleShowAdd}>Add Income</Button>
-                <Modal buttonText="Add Income" show={showAdd} handleShow={handleShowAdd} handleClose={handleCloseAdd}>
+                <Button onClick={handleShowAdd}>Add Deposit</Button>
+                <Modal buttonText="Add Deposit" show={showAdd} handleShow={handleShowAdd} handleClose={handleCloseAdd}>
                     <CustomForm
-                        title="Add Income"
-                        fields={['Gross Pay', 'Pay Frequency', 'Pay Date']}
-                        fieldTypes={['number', 'text', 'date']}
+                        title="Add Deposit"
+                        fields={['Account', 'Deposit Date', 'Amount', 'Confirm Amount', 'Reocurring Deposit', 'Payment Date', 'Deposit Frequency']}
+                        fieldTypes={[ 'text', 'date', 'number', 'number', 'checkbox', 'date', 'text']}
                         submitAction={handleCloseAdd}
                     />
                 </Modal>
 
                 <Modal buttonText="Confirm Changes" show={showEdit} handleShow={handleShowEdit} handleClose={handleCloseEdit}>
                     <CustomForm
-                        title="Edit Income"
-                        fields={['Gross Pay', 'Pay Frequency', 'Pay Date']}
-                        fieldTypes={['number', 'text', 'date']}
+                        title="Edit Deposit"
+                        fields={['Account', 'Deposit Date', 'Amount', 'Confirm Amount', 'Reocurring Deposit', 'Payment Date', 'Deposit Frequency']}
+                        fieldTypes={[ 'text', 'date', 'number', 'number', 'checkbox', 'date', 'text']}
                         submitAction={handleCloseEdit}
                     />
                 </Modal>
