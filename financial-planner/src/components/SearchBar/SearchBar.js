@@ -1,9 +1,9 @@
-import {useContext} from 'react';
+//import {useContext} from 'react';
 import './SearchBar.css';
-import { useNavigate } from 'react-router-dom';
-import { useSelector} from 'react-redux';
+//import { useNavigate } from 'react-router-dom';
+//import { useSelector} from 'react-redux';
 import PropTypes from 'prop-types';
-import Button from '../Button/Button';
+//import Button from '../Button/Button';
 
 const SearchBar = (props) => {
     //defining proptypes
