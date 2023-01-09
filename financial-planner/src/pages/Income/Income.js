@@ -14,9 +14,9 @@ const Income = () => {
     const [showEdit, setShowEdit] = useState(false);
     const handleCloseEdit = () => setShowEdit(false);
     const handleShowEdit = () => setShowEdit(true);
-    const [grossPayEdit, setGrossPayEdit] = useState(document.getElementById("grossPayEdit").value);
-    const [payFrequencyEdit, setPayFrequencyEdit] = useState(document.getElementById("payFrequencyEdit").value)
-    const [payDateEdit, setPayDateEdit] = useState(document.getElementById("payDateEdit").value);
+    const [grossPayEdit, setGrossPayEdit] = useState('');
+    const [payFrequencyEdit, setPayFrequencyEdit] = useState('')
+    const [payDateEdit, setPayDateEdit] = useState('');
 
     const [showDelete, setShowDelete] = useState(false);
     const handleCloseDelete = () => setShowDelete(false);

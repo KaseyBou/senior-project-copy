@@ -38,10 +38,10 @@ const CustomForm = (props) => {
         <>
             <tr>
                 <td>
-                    <label htmlFor={props.fields[i]} class="formLabel">{props.fields[i]}</label>
+                    <label htmlFor={props.fields[i]} className="formLabel">{props.fields[i]}</label>
                 </td>
                 <td>
-                    <input type={type} class="formInput" name={props.fieldIDs[i]} id={props.fieldIDs[i]} />
+                    <input type={type} className="formInput" name={props.fieldIDs[i]} id={props.fieldIDs[i]} onChange={props.onChange} />
                 </td>
             </tr>
         </>
@@ -54,12 +54,12 @@ const CustomForm = (props) => {
         <div className="customForm col-sm mt-3">
             <div className="formWrapper">
                 <h3>{props.title}</h3>
-                <table class="formTable">
+                <table className="formTable">
                     <tbody>
                         {fieldsJSX}
                     </tbody>
                 </table>
-                <div class="formButtons">
+                <div className="formButtons">
                     <Button text="Submit" function={props.submitAction}/>
                     {props.isCancellable && <Button text="Cancel"/>} {/*TODO: add cancel functionality*/}
                 </div>
