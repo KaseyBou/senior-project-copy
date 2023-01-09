@@ -1,3 +1,8 @@
+/* Color Variables */
+:root{
+    --taskbar-color: #000000;
+}
+
 h1 {
     margin: 0px;
     padding: 10px;
@@ -7,4 +12,18 @@ h1 {
     margin-left: 25%;
     margin-right: 25%;
     width: 50%;
+}
+
+#IncomeList{
+    padding-bottom: 1em;
+    height:80vh;
+    overflow-y: scroll;
+}
+
+.bottomTaskBar{
+    width:100vw;
+    height:10vh;
+    position:fixed;
+    bottom:0;
+    background-color: var(--taskbar-color);
 }

@@ -17,13 +17,14 @@ const ColumnBox = (props) => {
 
     //default props
     ColumnBox.defaultProp = {
-        button: ""
+        button: "",
+        pictureFilePath: ""
     }
 
     //returning jsx
     return (
 
-        <div className="col-sm column-style mt-3">
+        <div className="col-sm column-style">
             <img src={props.pictureFilePath} alt={props.altText}></img>
             <h3>{props.title}</h3>
             <p>{props.text}</p>

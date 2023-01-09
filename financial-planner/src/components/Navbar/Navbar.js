@@ -1,7 +1,7 @@
-import {useContext} from 'react';
+//import {useContext} from 'react';
 import './Navbar.css';
 import { useNavigate } from 'react-router-dom';
-import { useSelector} from 'react-redux';
+//import { useSelector} from 'react-redux';
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
@@ -41,6 +41,10 @@ const HomeNavbar = () => {
       navigate("/Login");
     };
 
+    const report = () => {
+      navigate("/Report");
+    };
+
     //-------------End of Navigation
     return (
 
@@ -54,6 +58,7 @@ const HomeNavbar = () => {
             <Nav.Link className="text-white" onClick={() =>expenses()}>Expenses</Nav.Link>
             <Nav.Link className="text-white" onClick={() =>savings()}>Savings</Nav.Link>
             <Nav.Link className="text-white" onClick={() =>income()}>Income</Nav.Link>
+            <Nav.Link className="text-white" onClick={() =>report()}>Report</Nav.Link>
           </Nav>
           <Nav className=' d-flex justify-content-end'>
               <Nav.Link className="text-white" onClick={() =>login()}>Login</Nav.Link>

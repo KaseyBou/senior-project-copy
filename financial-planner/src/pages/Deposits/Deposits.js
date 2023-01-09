@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 //import Loading from '../Loading/Loading';
-import './Income.css';
+import './Deposits.css';
 //import { useNavigate } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import Modal from '../../components/Modal/Modal';
@@ -14,51 +14,23 @@ const Income = () => {
     const [showEdit, setShowEdit] = useState(false);
     const handleCloseEdit = () => setShowEdit(false);
     const handleShowEdit = () => setShowEdit(true);
-    const [grossPayEdit, setGrossPayEdit] = useState(document.getElementById("grossPayEdit").value);
-    const [payFrequencyEdit, setPayFrequencyEdit] = useState(document.getElementById("payFrequencyEdit").value)
-    const [payDateEdit, setPayDateEdit] = useState(document.getElementById("payDateEdit").value);
 
     const [showDelete, setShowDelete] = useState(false);
     const handleCloseDelete = () => setShowDelete(false);
     const handleShowDelete = () => setShowDelete(true);
-    const [password, setPassword] = useState('');
 
     const [showAdd, setShowAdd] = useState(false);
     const handleCloseAdd = () => setShowAdd(false);
     const handleShowAdd = () => setShowAdd(true);
-    const [grossPayAdd, setGrossPayAdd] = useState('');
-    const [payFrequencyAdd, setPayFrequencyAdd] = useState('')
-    const [payDateAdd, setPayDateAdd] = useState('');
 
     //Initialization
     //const navigate = useNavigate();
 
-        //handles updates to input's
-        const editInputHandler = () =>{
-            setPayDateEdit(document.getElementById("payDateEdit").value);
-            setPayFrequencyEdit(document.getElementById("payFrequencyEdit").value);
-            setGrossPayEdit(document.getElementById("grossPayEdit").value);
-
-        }
-
-        //handles updates to input's
-        const addInputHandler = () =>{
-            setPayDateAdd(document.getElementById("payDateAdd").value);
-            setPayFrequencyAdd(document.getElementById("payFrequencyAdd").value);
-            setGrossPayAdd(document.getElementById("grossPayAdd").value);
-
-        }
-
-        //handles updates to input's
-        const deleteInputHandler = () =>{
-            setPassword(document.getElementById("password").value);
-
-        }
     //returning JSX
     return (
         <>
             <SearchBar/>
-            <div id="IncomeList">
+            <div id="DepositList">
                 <DataRow
                     title="Row 1"
                     rows={["subrow 1", "subrow 2", "subrow 3"]}
@@ -91,25 +63,21 @@ const Income = () => {
                 />
             </div>
             <div className='bottomTaskBar'>
-                <Button onClick={handleShowAdd}>Add Income</Button>
-                <Modal buttonText="Add Income" show={showAdd} handleShow={handleShowAdd} handleClose={handleCloseAdd}>
+                <Button onClick={handleShowAdd}>Add Deposit</Button>
+                <Modal buttonText="Add Deposit" show={showAdd} handleShow={handleShowAdd} handleClose={handleCloseAdd}>
                     <CustomForm
-                        title="Add Income"
-                        fields={['Gross Pay', 'Pay Frequency', 'Pay Date']}
-                        fieldIDs={['grossPayAdd', 'payFrequencyAdd', 'payDateAdd']}
-                        fieldTypes={['number', 'number', 'date']}
-                        onChange={addInputHandler}
+                        title="Add Deposit"
+                        fields={['Account', 'Deposit Date', 'Amount', 'Confirm Amount', 'Reocurring Deposit', 'Payment Date', 'Deposit Frequency']}
+                        fieldTypes={[ 'text', 'date', 'number', 'number', 'checkbox', 'date', 'text']}
                         submitAction={handleCloseAdd}
                     />
                 </Modal>
 
                 <Modal buttonText="Confirm Changes" show={showEdit} handleShow={handleShowEdit} handleClose={handleCloseEdit}>
                     <CustomForm
-                        title="Edit Income"
-                        fields={['Gross Pay', 'Pay Frequency', 'Pay Date']}
-                        fieldIDs={['grossPayEdit', 'payFrequencyEdit', 'payDateEdit']}
-                        fieldTypes={['number', 'number', 'date']}
-                        onChange={editInputHandler}
+                        title="Edit Deposit"
+                        fields={['Account', 'Deposit Date', 'Amount', 'Confirm Amount', 'Reocurring Deposit', 'Payment Date', 'Deposit Frequency']}
+                        fieldTypes={[ 'text', 'date', 'number', 'number', 'checkbox', 'date', 'text']}
                         submitAction={handleCloseEdit}
                     />
                 </Modal>
@@ -117,10 +85,8 @@ const Income = () => {
                 <Modal buttonText="Confirm Deletion" show={showDelete} handleShow={handleShowDelete} handleClose={handleCloseDelete}>
                     <CustomForm
                         title="Delete Income"
-                        fields={['User Password']}
-                        fieldIDs={['password']}
-                        fieldTypes={['password']}
-                        onChange={deleteInputHandler}
+                        fields={['Confirm Income Name', 'User Password']}
+                        fieldTypes={['text', 'password']}
                         submitAction={handleCloseDelete}
                     />
                 </Modal>

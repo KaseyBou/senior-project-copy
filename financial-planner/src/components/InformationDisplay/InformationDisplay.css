@@ -1,7 +1,10 @@
+:root{
+    --row-bg: #b5b5b5;
+}
 
 .column-style {
-    background-color: #32752D ;
-    color:white;
+    background-color: var(--row-bg) ;
+    color:black;
     border: 10px #333333 solid;
 }
 

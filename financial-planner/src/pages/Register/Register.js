@@ -1,14 +1,14 @@
 
 //import Loading from '../Loading/Loading';
 import './Register.css';
-import { useNavigate } from 'react-router-dom';
+//import { useNavigate } from 'react-router-dom';
 import CustomForm from '../../components/CustomForm/CustomForm';
 import { useState } from 'react';
 
 const Register = () => {
 
     //Initializing
-    const navigate = useNavigate();
+    //const navigate = useNavigate();
 
     //state variables
     const [firstName, setFirstName] = useState('');
