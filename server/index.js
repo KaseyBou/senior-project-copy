@@ -1,29 +1,101 @@
+const functions = require("./helper-functions/functions.js")
+
 const express = require("express");
 
 const PORT = process.env.PORT || 3001;
 
 const app = express();
+app.use(express.json())
 const bodyParser = require("body-parser")
-
-const mysql = require('mysql')
+const cors = require('cors');
+app.use(cors());
+const mysql = require('mysql');
+const { Console } = require("console");
 const connection = mysql.createConnection({
   host: 'financial-planner.c3p10rqx8lpz.us-east-1.rds.amazonaws.com',
   port: 3306,
   user: 'admin',
+  database: 'financial_planner',
   password: 'Capital34Candy',
-  database:'financial-planner'
   
 })
 
-connection.connect()
+//connection.connect()
 
-connection.query('SELECT 1 + 1 AS solution', (err, rows, fields) => {
-  if (err) throw err
+/*connection.query('SELECT * FROM `account` WHERE `firstName` = "David"', function (error, results, fields) {
+  console.log(results)
+});*/
 
-  console.log('The solution is: ', rows[0].solution)
-})
+app.post('/Register',(req,res)=>{
 
-connection.end()
+  let {first_Name, last_Name, email, password, password_salt, phone, profile_image, is_admin} = req.body;
+
+  let returnData = functions.hashPassword(password)
+
+  password_salt = returnData[0];
+  hashPass = returnData[1];
+  
+  /*if(!firstName) return res.status(400).json('First Name can not be blank');
+  if(!lastName) return res.status(400).json('Last Name cant be blank');
+  if(!email) return res.status(400).json('Email cant be blank');
+  if(!password) return res.status(400).json('Password cant be blank');*/
+  
+    //var sql = "INSERT INTO Users (first_name, last_name, email, password, password_salt, phone, profile_image, is_admin) Values ('firstName', 'lastName', 'testingg@testing.com', 'password', 'password_salt', 'phone', 'profile_image', 'is_admin')";
+   var sql = `INSERT INTO Users (first_name, last_name, email, password, password_salt, phone, profile_image, is_admin) Values ('${first_Name}', '${last_Name}', '${email}', '${hashPass}', '${password_salt}','${phone}', ${profile_image}, ${is_admin})`;
+
+   connection.query(sql, function(err, rows)
+  {
+
+    if (err){
+      //If error
+        res.status(400).json('Sorry!!Unable To Add');
+        console.log("Error inserting : %s ",err );
+    }
+   else
+    //If success
+    res.status(200).json('Account Added Successfully!!')
+
+  });
+
+
+  });
+
+app.post
+
+app.post('/Login',(req,res)=>{
+
+  let {email, password} = req.body;
+
+  
+  var sql = `SELECT userPass, salt FROM account WHERE emailAddress = '${email}'`;
+
+   connection.query(sql, function(err, rows)
+  {
+
+    if (err){
+      //If error
+        res.status(400).json('Sorry!!Unable To Find');
+        console.log("Error inserting : %s ",err );
+        //console.log(res)
+    }
+   else {
+
+    let correct = functions.isPasswordCorrect(rows[0]['userPass'], rows[0]['salt'], password)
+    //If success
+    if(correct) {
+      res.status(200).json('Login Succeful' + correct)
+    } else {
+      res.status(400).json('Incorrect password');
+    }
+
+   }
+  });
+
+  });
+
+app.post
+
+//connection.end()
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -31,14 +103,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 // parse application/json
 app.use(bodyParser.json())
 
-/* Set Cookie Settings 
-app.use(
-    session({
-      name: 'session',
-      secret: 'secretKeyWooo',
-      expires: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24 hours
-    })
-);*/
+
 
 app.get("/api", (req, res) => {
     res.json({ message: "Hello from server!" });

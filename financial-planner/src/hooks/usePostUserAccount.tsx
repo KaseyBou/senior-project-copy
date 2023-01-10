@@ -10,19 +10,20 @@ const usePost = (urlSegment : string) => {
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<boolean>(false);
 
-    const postRegister = async(firstName: string, lastName: string, email: string, password: string) => {
+    const postRegister = async(first_Name: string, last_Name: string, email: string, password: string, phone: string) => {
 
         try {
             setLoading(true);
             setError(false);
             const response = await axios.post(`${baseURL}${urlSegment}`, {
-            firstName: `${firstName}`,
-            lastName: `${lastName}`,
+            first_Name: `${first_Name}`,
+            last_Name: `${last_Name}`,
             email: `${email}`,
             password: `${password}`,
-            salt: ``,
-            creationDate:``,
-            iterations:``
+            password_salt: ``,
+            phone:`${phone}`,
+            profile_image: null,
+            is_admin: 0
 
             })
             setData(response);

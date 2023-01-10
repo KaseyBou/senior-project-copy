@@ -4,11 +4,20 @@ import './Register.css';
 //import { useNavigate } from 'react-router-dom';
 import CustomForm from '../../components/CustomForm/CustomForm';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import usePost from '../../hooks/usePostUserAccount.tsx';
 
 const Register = () => {
 
     //Initializing
-    //const navigate = useNavigate();
+    const navigate = useNavigate();
+
+    const home = () => {
+        navigate("/");
+    };
+
+      //calling postRegister function
+    const { postRegister } = usePost('Register')
 
     //state variables
     const [firstName, setFirstName] = useState('');
@@ -31,11 +40,11 @@ const Register = () => {
     //Register
     const Register = () =>{
         
-        //TODO - Register functionality
-        console.log("Registration Not Done")
-
         if(password === confirmPassword) {
-            //functionality
+            postRegister(firstName, lastName, email, password, phone)
+            home();
+        } else {
+            
         }
     }
 
