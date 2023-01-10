@@ -4,15 +4,24 @@ import './Login.css';
 import { useNavigate } from 'react-router-dom';
 import CustomForm from '../../components/CustomForm/CustomForm';
 import { useState } from 'react';
+import usePost from '../../hooks/usePostUserAccount.tsx';
+
 
 const Login = () => {
 
     //Initializing
     const navigate = useNavigate();
 
+    const dashboard = () => {
+        navigate("/Dashboard");
+    };
+
     //state variables
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+
+    //calling postLogin function
+    const { postLogin } = usePost('Login')
 
     //handles updates to input's
     const inputHandler = (e) =>{
@@ -20,12 +29,13 @@ const Login = () => {
         setPassword(document.getElementById("password").value);
     }
 
-    //Login
-    const Login = () =>{
-        
-        //TODO - Login functionality
-        console.log("Not Done")
-    }
+         //Login
+         const Login = () =>{
+            
+            postLogin(email, password)
+            //dashboard();
+            
+        }
 
     //returning JSX
     return (
