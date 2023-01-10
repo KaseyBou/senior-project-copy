@@ -39,6 +39,34 @@ const usePost = (urlSegment : string) => {
         
     };
 
+    const postEditUser = async(first_Name: string, last_Name: string, email: string, password: string, phone: string, user_id: number) => {
+
+        try {
+            setLoading(true);
+            setError(false);
+            const response = await axios.post(`${baseURL}${urlSegment}`, {
+            first_Name: `${first_Name}`,
+            last_Name: `${last_Name}`,
+            email: `${email}`,
+            password: `${password}`,
+            phone:`${phone}`,
+            profile_image: null,
+            user_id: user_id
+
+            })
+            setData(response);
+        }catch(error) {
+            setError(true);
+            console.log(error);
+
+        } finally {
+
+            setLoading(false);
+
+        }
+        
+    };
+
     const postLogin = async(email: string, password: string) => {
 
         try {
@@ -64,7 +92,7 @@ const usePost = (urlSegment : string) => {
     };
 
     
-    return {postRegister, postLogin, data, loading, error}
+    return {postRegister, postLogin, postEditUser, data, loading, error}
 
 }
 
