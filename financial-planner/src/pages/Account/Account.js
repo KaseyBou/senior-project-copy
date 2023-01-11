@@ -40,8 +40,8 @@ const Account = () => {
         //get user_ID from how it is stored
         //postEditUser()
         if(password === confirmPassword) {
-            //postEditUser(firstName, lastName, email, password, phone)
-            postEditUser("firstName", "lastName", "test@test.com", "", "000-000-0000", 7)
+            postEditUser(firstName, lastName, email, password, phone, user_id)
+           // postEditUser("firstName", "lastName", "test@test.com", "", "000-000-0000", 7)
             console.log('hello')
         } else {
             console.log('not good')
