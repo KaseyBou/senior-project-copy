@@ -51,11 +51,12 @@ app.post('/Register',(req,res)=>{
       //If error
         res.status(400).json('Sorry!!Unable To Add');
         console.log("Error inserting : %s ",err );
+        return err;
     }
    else
     //If success
     res.status(200).json('Account Added Successfully!!')
-
+    
   });
 
 

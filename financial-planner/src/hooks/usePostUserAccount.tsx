@@ -24,7 +24,6 @@ const usePost = (urlSegment : string) => {
             phone:`${phone}`,
             profile_image: null,
             is_admin: 0
-
             })
             setData(response);
         }catch(error) {
@@ -36,6 +35,8 @@ const usePost = (urlSegment : string) => {
             setLoading(false);
 
         }
+
+        return {data, loading, error}
         
     };
 

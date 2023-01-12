@@ -11,7 +11,7 @@
 .formTable{
     width: 50%;
     table-layout: fixed;
-    margin-left: 15%
+    margin-left: 25%
 }
 
 .formLabel{
@@ -30,4 +30,10 @@
     display: flex;
     width: 50%;
     margin:auto;
+}
+
+.warning {
+    color: red;
+    text-align: left;
+    display: none;
 }
