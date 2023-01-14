@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 //import Loading from '../Loading/Loading';
 import './Income.css';
@@ -8,8 +8,25 @@ import Modal from '../../components/Modal/Modal';
 import DataRow from '../../components/DataRow/DataRow';
 import CustomForm from '../../components/CustomForm/CustomForm';
 import SearchBar from '../../components/SearchBar/SearchBar';
+import useIncome from '../../hooks/useIncome.tsx';
 
 const Income = () => {
+
+    // income hook instance
+    const { postIncome, getIncomes } = useIncome("Income");
+
+    // income state
+    const [incomes, setIncomes] = useState(null);
+
+    // on render, get list of incomes
+    // TODO: use user ID from session data
+    useEffect(() => {
+        getIncomes(7).then((data) => {
+            setIncomes(data);
+            console.log(incomes);
+        });
+    }, [])
+
     // modal visibility states and functions
     const [showEdit, setShowEdit] = useState(false);
     const handleCloseEdit = () => setShowEdit(false);
@@ -24,11 +41,15 @@ const Income = () => {
     const [password, setPassword] = useState('');
 
     const [showAdd, setShowAdd] = useState(false);
-    const handleCloseAdd = () => setShowAdd(false);
+    const handleCloseAdd = () => {
+        setShowAdd(false);
+        
+    }
     const handleShowAdd = () => setShowAdd(true);
     const [grossPayAdd, setGrossPayAdd] = useState('');
     const [payFrequencyAdd, setPayFrequencyAdd] = useState('')
     const [payDateAdd, setPayDateAdd] = useState('');
+    const [accountAdd, setAccountAdd] = useState('');
 
     //Initialization
     //const navigate = useNavigate();
@@ -46,6 +67,7 @@ const Income = () => {
             setPayDateAdd(document.getElementById("payDateAdd").value);
             setPayFrequencyAdd(document.getElementById("payFrequencyAdd").value);
             setGrossPayAdd(document.getElementById("grossPayAdd").value);
+            setAccountAdd(document.getElementById("accountAdd").value);
 
         }
 
@@ -54,6 +76,14 @@ const Income = () => {
             setPassword(document.getElementById("password").value);
 
         }
+
+        // post Income to server
+        const addIncome = () => {
+            // TODO: get user ID from session variable
+            postIncome(accountAdd, grossPayAdd, payDateAdd, payFrequencyAdd, 7);
+            handleCloseAdd();
+        }
+    
     //returning JSX
     return (
         <>
@@ -93,13 +123,14 @@ const Income = () => {
             <div className='bottomTaskBar'>
                 <Button onClick={handleShowAdd}>Add Income</Button>
                 <Modal buttonText="Add Income" show={showAdd} handleShow={handleShowAdd} handleClose={handleCloseAdd}>
+                    {/* TODO: convert account to string, create validation */}
                     <CustomForm
                         title="Add Income"
-                        fields={['Gross Pay', 'Pay Frequency', 'Pay Date']}
-                        fieldIDs={['grossPayAdd', 'payFrequencyAdd', 'payDateAdd']}
-                        fieldTypes={['number', 'number', 'date']}
+                        fields={['Gross Pay', 'Pay Frequency', 'Pay Date', 'Account']}
+                        fieldIDs={['grossPayAdd', 'payFrequencyAdd', 'payDateAdd', 'accountAdd']}
+                        fieldTypes={['number', 'number', 'date', 'number']}
                         onChange={addInputHandler}
-                        submitAction={handleCloseAdd}
+                        submitAction={addIncome}
                     />
                 </Modal>
 
