@@ -40,7 +40,9 @@ const Register = () => {
     //Register
     const Register = () =>{
         
+
         if(password === confirmPassword) {
+
             postRegister(firstName, lastName, email, password, phone)
             home();
         } else {
@@ -57,6 +59,7 @@ const Register = () => {
                 fields={["First Name", "Last Name", "E-Mail Address", "Phone Number", "Password", "Confirm Password"]}
                 fieldIDs={['firstName', 'lastName', 'email', 'phone', 'password', 'confirmPassword']}
                 warning={['Please Enter First Name', 'Please Enter Last Name', 'Enter valid email', 'Enter Valid Phone #', 'Passwords Must Match']}
+                warningIDs={['firstNameWarning', 'lastNameWarning', 'emailWarning', 'phoneWarning', 'passwordWarning', 'confirmPasswordWarning']}
                 fieldTypes={['text', 'text', 'text', 'text', 'password','password']}
                 onChange={inputHandler}
                 submitAction={Register}

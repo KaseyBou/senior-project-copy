@@ -41,10 +41,10 @@ const Login = () => {
 
         let warning = document.querySelectorAll(".warning");
         if(error) {
-            return warning.setAttribute("style", "display:block;");
+            warning.style.display = "block"
     
         } else {
-            return warning.setAttribute("style", "display:none;");
+            warning.style.display = "none"
         }
 
     }

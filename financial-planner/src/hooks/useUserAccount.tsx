@@ -12,6 +12,7 @@ const usePost = (urlSegment : string) => {
 
     const postRegister = async(first_Name: string, last_Name: string, email: string, password: string, phone: string) => {
 
+        
         try {
             setLoading(true);
             setError(false);
