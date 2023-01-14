@@ -21,12 +21,12 @@ const Expenses = () => {
  
      // on render, get list of bills
      // TODO: use user ID from session data
-    //  useEffect(() => {
-    //      getBills(7).then((data) => {
-    //          setBills(data);
-    //          console.log(bills);
-    //      });
-    //  }, [])
+     useEffect(() => {
+         getBills(7).then((data) => {
+             setBills(data);
+             console.log(data);
+         });
+     }, [])
 
     // modal visibility states and functions
     const [showEdit, setShowEdit] = useState(false);

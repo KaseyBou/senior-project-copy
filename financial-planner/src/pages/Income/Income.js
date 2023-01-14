@@ -23,7 +23,7 @@ const Income = () => {
     useEffect(() => {
         getIncomes(7).then((data) => {
             setIncomes(data);
-            console.log(incomes);
+            console.log(data);
         });
     }, [])
 
