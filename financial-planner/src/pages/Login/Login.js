@@ -4,7 +4,7 @@ import './Login.css';
 import { useNavigate } from 'react-router-dom';
 import CustomForm from '../../components/CustomForm/CustomForm';
 import { useState } from 'react';
-import usePost from '../../hooks/usePostUserAccount.tsx';
+import usePost from '../../hooks/useUserAccount.tsx';
 
 
 const Login = () => {
