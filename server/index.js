@@ -95,6 +95,92 @@ app.post('/Login',(req,res)=>{
 
 app.post
 
+app.post('/Income',(req,res)=>{
+
+  let {account_id, gross_pay, pay_day, pay_frequency, user_id} = req.body;
+  
+  var sql = `INSERT INTO Incomes (account_id, gross_pay, pay_day, pay_frequency, user_id) Values ('${account_id}', '${gross_pay}', '${pay_day}', '${pay_frequency}','${user_id}')`;
+
+  connection.query(sql, function(err, rows)
+    {
+
+      if (err){
+        //If error
+        res.status(400).json('Sorry!!Unable To Add');
+         console.log("Error inserting : %s ",err );
+      }
+    else
+      //If success
+      res.status(200).json('Income Added Successfully!!')
+
+    });
+
+  });
+
+  app.get('/Income/:user_id', (req,res)=>{
+    user_id = req.params.user_id;
+
+    var sql = `SELECT * FROM Incomes WHERE user_id = ${user_id}`;
+  
+    connection.query(sql, function(err, rows)
+      {
+  
+        if (err){
+          //If error
+          res.status(400).json('Sorry!!Unable To Add');
+           console.log("Error inserting : %s ",err );
+        }
+      else
+        //If success
+        console.log(rows)
+        res.status(200).json(rows)
+  
+      });
+  
+    });
+  
+  app.post('/Bills', (req, res) => {
+    let {user_id, bill_name, bill_source, pay_frequency, next_due, amount, account_id, budget_id} = req.body;
+
+    var sql = `INSERT INTO Bills(user_id, bill_name, bill_source, pay_frequency, next_due, amount, account_id, budget_id) VALUES ('${user_id}', '${bill_name}', '${bill_source}', '${pay_frequency}', '${next_due}', '${amount}', '${account_id}', '${budget_id}')`;
+
+    connection.query(sql, function(err, rows)
+    {
+
+      if (err){
+        //If error
+          res.status(400).json('Sorry!!Unable To Find');
+          console.log("Error inserting : %s ",err );
+          //console.log(res)
+      }
+    else {
+      //If success
+      res.status(200).json('Bill Added Successfully!!')
+    }
+    });
+  })
+
+  app.get('/Bills/:user_id', (req, res) => {
+    user_id = req.params.user_id;
+
+    var sql = `SELECT * FROM Bills WHERE user_id = ${user_id}`;
+  
+    connection.query(sql, function(err, rows)
+      {
+  
+        if (err){
+          //If error
+          res.status(400).json('Sorry!!Unable To Add');
+           console.log("Error inserting : %s ",err );
+        }
+      else
+        //If success
+        console.log(rows)
+        res.status(200).json(rows)
+  
+      });
+  })
+
 //connection.end()
 
 // parse application/x-www-form-urlencoded
