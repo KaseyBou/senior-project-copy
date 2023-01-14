@@ -28,12 +28,11 @@ const connection = mysql.createConnection({
 
 app.post('/Register',(req,res)=>{
 
-  let {first_Name, last_Name, email, password, password_salt, phone, profile_image, is_admin} = req.body;
+  let {first_Name, last_Name, email, password, phone, profile_image, is_admin} = req.body;
 
   let returnData = functions.hashPassword(password)
-
-  password_salt = returnData[0];
-  hashPass = returnData[1];
+  salt = returnData[0];
+  hash = returnData[1];
   
   /*if(!firstName) return res.status(400).json('First Name can not be blank');
   if(!lastName) return res.status(400).json('Last Name cant be blank');
@@ -41,7 +40,7 @@ app.post('/Register',(req,res)=>{
   if(!password) return res.status(400).json('Password cant be blank');*/
   
     //var sql = "INSERT INTO Users (first_name, last_name, email, password, password_salt, phone, profile_image, is_admin) Values ('firstName', 'lastName', 'testingg@testing.com', 'password', 'password_salt', 'phone', 'profile_image', 'is_admin')";
-   var sql = `INSERT INTO Users (first_name, last_name, email, password, password_salt, phone, profile_image, is_admin) Values ('${first_Name}', '${last_Name}', '${email}', '${hashPass}', '${password_salt}','${phone}', ${profile_image}, ${is_admin})`;
+   var sql = `INSERT INTO Users (first_name, last_name, email, password, password_salt, phone, profile_image, is_admin) Values ('${first_Name}', '${last_Name}', '${email}', '${hash}', '${salt}','${phone}', ${profile_image}, ${is_admin})`;
 
    connection.query(sql, function(err, rows)
   {
@@ -66,8 +65,9 @@ app.post('/Login',(req,res)=>{
 
   let {email, password} = req.body;
 
-  
-  var sql = `SELECT userPass, salt FROM account WHERE emailAddress = '${email}'`;
+  console.log(email)
+  console.log(password)
+  var sql = `SELECT password, password_salt FROM Users WHERE email = '${email}'`;
 
    connection.query(sql, function(err, rows)
   {
@@ -79,8 +79,11 @@ app.post('/Login',(req,res)=>{
         //console.log(res)
     }
    else {
-
-    let correct = functions.isPasswordCorrect(rows[0]['userPass'], rows[0]['salt'], password)
+    console.log(rows[0])
+    console.log(rows[0])
+    let correct = functions.isPasswordCorrect(rows[0]['password'], rows[0]['password_salt'], password)
+    //let correct = functions.isPasswordCorrect('5ff9a7610f342f90274da0747e3dfa08ad8adddf3f166', 'qXGmD9z7L77Ob2q9TwUDXyDAXmukdQAV3PdC/mPP/CF/J0AvAACqQoCJM/lIG9e29OoUkyIt+jr3Fa5jFGZfVtfFjv9DYtFZHR4Ibh871Xm4fbYQMmFAl8q94dpy0a8gPqzBgzUKX6w4HBWB0fM7yv6lnZpqMWk8zcf5E0Hmohk=', password)
+    console.log(correct)
     //If success
     if(correct) {
       res.status(200).json('Login Succeful' + correct)
