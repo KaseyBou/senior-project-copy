@@ -5,7 +5,7 @@ import './Register.css';
 import CustomForm from '../../components/CustomForm/CustomForm';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import usePost from '../../hooks/usePostUserAccount.tsx';
+import usePost from '../../hooks/useUserAccount.tsx';
 
 const Register = () => {
 

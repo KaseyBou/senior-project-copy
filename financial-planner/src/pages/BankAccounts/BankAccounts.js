@@ -26,6 +26,13 @@ const Income = () => {
     //Initialization
     //const navigate = useNavigate();
 
+    //handles updates to input's
+    const inputHandler = () =>{
+
+
+        //setUser_id('');
+    }
+
     //returning JSX
     return (
         <>
@@ -68,7 +75,11 @@ const Income = () => {
                     <CustomForm
                         title="Add Account"
                         fields={['Bank', 'Account Type', 'Interest Rate', 'Monthly Account Fees', 'Balance']}
+                        fieldIDs={['bankName', 'accountType', 'interestRate', 'monthlyFees', 'balance']}
+                        warning={['Please Enter Bank Name', 'Please Enter Account Type', '', 'Enter Monthly Fees', 'Must Enter Balance']}
+                        warningIDs={['bankNameWarning', 'accountTypeWarning', 'monthlyFeeWarning', 'balanceWarning']}
                         fieldTypes={[ 'text', 'text', 'number', 'number', 'number']}
+                        onChange={inputHandler}
                         submitAction={handleCloseAdd}
                     />
                 </Modal>
@@ -77,7 +88,11 @@ const Income = () => {
                     <CustomForm
                         title="Edit Account"
                         fields={['Bank', 'Account Type', 'Interest Rate', 'Monthly Account Fees', 'Balance']}
+                        fieldIDs={['bankNameEdit', 'accountTypeEdit', 'interestRateEdit', 'monthlyFeesEdit', 'balanceEdit']}
+                        warning={['Please Enter Bank Name', 'Please Enter Account Type', '', 'Enter Monthly Fees', 'Must Enter Balance']}
+                        warningIDs={['bankNameWarningEdit', 'accountTypeWarningEdit', 'monthlyFeeWarningEdit', 'balanceWarningEdit']}
                         fieldTypes={[ 'text', 'text', 'number', 'number', 'number']}
+                        onChange={inputHandler}
                         submitAction={handleCloseEdit}
                     />
                 </Modal>
@@ -85,8 +100,12 @@ const Income = () => {
                 <Modal buttonText="Confirm Deletion" show={showDelete} handleShow={handleShowDelete} handleClose={handleCloseDelete}>
                     <CustomForm
                         title="Delete Account"
-                        fields={['Confirm Income Name', 'User Password']}
-                        fieldTypes={['text', 'password']}
+                        fields={[ 'User Password']}
+                        fieldIDs={['passwordDelete']}
+                        warning={['Must Enter Password']}
+                        warningIDs={['passwordDeleteWarning']}
+                        fieldTypes={[ 'password']}
+                        onChange={inputHandler}
                         submitAction={handleCloseDelete}
                     />
                 </Modal>

@@ -32,7 +32,8 @@ const Login = () => {
     //Login
     const Login = () =>{
         
-        const {data, loading, error} = postLogin(email, password)
+        postLogin(email, password)
+        /*const {data, loading, error} = postLogin(email, password)
         //dashboard();
         
         if (loading) {
@@ -45,7 +46,7 @@ const Login = () => {
     
         } else {
             warning.style.display = "none"
-        }
+        }*/
 
     }
 
@@ -58,6 +59,7 @@ const Login = () => {
                 fields={['Email', 'Password']}
                 fieldIDs={['email', 'password']}
                 warning={['Email/Password Do Not Match', 'Email/Password Do Not Match']}
+                warningIDs={['emailWarning', 'passwordWarning']}
                 fieldTypes={['text', 'text']}
                 onChange={inputHandler}
                 submitAction={Login}

@@ -3,7 +3,7 @@ import './Account.css';
 import { useState } from 'react';
 //import { useNavigate } from 'react-router-dom';
 import CustomForm from '../../components/CustomForm/CustomForm';
-import usePost from '../../hooks/usePostUserAccount.tsx';
+import usePost from '../../hooks/useUserAccount.tsx';
 
 const Account = () => {
 
