@@ -5,7 +5,7 @@ import './Register.css';
 import CustomForm from '../../components/CustomForm/CustomForm';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import usePost from '../../hooks/usePostUserAccount.tsx';
+import usePost from '../../hooks/useUserAccount.tsx';
 
 const Register = () => {
 
@@ -40,7 +40,9 @@ const Register = () => {
     //Register
     const Register = () =>{
         
+
         if(password === confirmPassword) {
+
             postRegister(firstName, lastName, email, password, phone)
             home();
         } else {
@@ -56,6 +58,8 @@ const Register = () => {
                 title='Register'
                 fields={["First Name", "Last Name", "E-Mail Address", "Phone Number", "Password", "Confirm Password"]}
                 fieldIDs={['firstName', 'lastName', 'email', 'phone', 'password', 'confirmPassword']}
+                warning={['Please Enter First Name', 'Please Enter Last Name', 'Enter valid email', 'Enter Valid Phone #', 'Passwords Must Match']}
+                warningIDs={['firstNameWarning', 'lastNameWarning', 'emailWarning', 'phoneWarning', 'passwordWarning', 'confirmPasswordWarning']}
                 fieldTypes={['text', 'text', 'text', 'text', 'password','password']}
                 onChange={inputHandler}
                 submitAction={Register}

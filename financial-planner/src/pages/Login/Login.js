@@ -1,11 +1,10 @@
 
-//import Loading from '../Loading/Loading';
+import Loading from '../../components/Loading/Loading.tsx';
 import './Login.css';
 import { useNavigate } from 'react-router-dom';
 import CustomForm from '../../components/CustomForm/CustomForm';
 import { useState } from 'react';
-import usePost from '../../hooks/usePostUserAccount.tsx';
-
+import usePost from '../../hooks/useUserAccount.tsx';
 
 const Login = () => {
 
@@ -29,21 +28,39 @@ const Login = () => {
         setPassword(document.getElementById("password").value);
     }
 
-         //Login
-         const Login = () =>{
-            
-            postLogin(email, password)
-            //dashboard();
-            
+    //Login
+    const Login = () =>{
+        
+        postLogin(email, password)
+        
+        //not complete
+        /*const {data, loading, error} = postLogin(email, password)
+        //dashboard();
+        
+        if (loading) {
+            return <Loading/>;
         }
+
+        let warning = document.querySelectorAll(".warning");
+        if(error) {
+            warning.style.display = "block"
+    
+        } else {
+            warning.style.display = "none"
+        }*/
+
+    }
+
 
     //returning JSX
     return (
         <>
             <CustomForm
                 title='Log In'
-                fields={['email', 'password']}
+                fields={['Email', 'Password']}
                 fieldIDs={['email', 'password']}
+                warning={['Email/Password Do Not Match', 'Email/Password Do Not Match']}
+                warningIDs={['emailWarning', 'passwordWarning']}
                 fieldTypes={['text', 'text']}
                 onChange={inputHandler}
                 submitAction={Login}

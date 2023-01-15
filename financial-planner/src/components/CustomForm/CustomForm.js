@@ -12,6 +12,8 @@ const CustomForm = (props) => {
         fields:PropTypes.array, // list of fields in form
         fieldTypes:PropTypes.array, // list of types of fields defined above (defaults to text)
         fieldIDs:PropTypes.array,
+        warning:PropTypes.array,
+        warningIDs:PropTypes.array,
         submitAction:PropTypes.func,
         onChange:PropTypes.func,
         isCancellable:PropTypes.bool
@@ -42,6 +44,9 @@ const CustomForm = (props) => {
                 </td>
                 <td>
                     <input type={type} className="formInput" name={props.fieldIDs[i]} id={props.fieldIDs[i]} onChange={props.onChange} />
+                </td>
+                <td className='column'>
+                    <p id={props.warningIDs[i]} className='warning'>{props.warning[i]}</p>
                 </td>
             </tr>
         </>
