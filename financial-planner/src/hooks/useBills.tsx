@@ -37,16 +37,53 @@ const useBills = (urlSegment : string) => {
             setError(false);
             const response = await axios.get(`${baseURL}${urlSegment}/${user_id}`)
             setData(response);
+            return response;
         }catch(error) {
             setError(true);
             console.log(error);
         } finally {
             setLoading(false);
-            return data;
+            //return data;
         }
     };
 
-    return {postBill, getBills}
+    const editBill = async(bill_id: number, bill_name: string, bill_source: string, pay_frequency: number, next_due: Date, amount: number, account_id: number, budget_id: number) => {
+        try {
+            setLoading(true);
+            setError(false);
+            const response = await axios.put(`${baseURL}${urlSegment}/${bill_id}`, {
+                account_id: `${account_id}`,
+                bill_name: `${bill_name}`,
+                bill_source: `${bill_source}`,
+                amount: `${amount}`,
+                next_due: `${next_due}`,
+                pay_frequency: `${pay_frequency}`,
+                budget_id: `${budget_id}`
+                })
+            setData(response);
+        }catch(error) {
+            setError(true);
+            console.log(error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const deleteBill = async(bill_id: number) => {
+        try {
+            setLoading(true);
+            setError(false);
+            const response = await axios.delete(`${baseURL}${urlSegment}/${bill_id}`)
+            setData(response);
+        }catch(error) {
+            setError(true);
+            console.log(error);
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    return {postBill, getBills, editBill, deleteBill}
     
 };
 

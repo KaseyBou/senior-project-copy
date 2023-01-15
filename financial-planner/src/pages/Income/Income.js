@@ -13,7 +13,7 @@ import useIncome from '../../hooks/useIncome.tsx';
 const Income = () => {
 
     // income hook instance
-    const { postIncome, getIncomes } = useIncome("Income");
+    const { postIncome, getIncomes, editIncome, deleteIncome } = useIncome("Income");
 
     // income state
     const [incomes, setIncomes] = useState(null);
@@ -21,9 +21,10 @@ const Income = () => {
     // on render, get list of incomes
     // TODO: use user ID from session data
     useEffect(() => {
+        deleteIncome(0)
         getIncomes(7).then((data) => {
             setIncomes(data);
-            console.log(data);
+            console.log(data.data);
         });
     }, [])
 
