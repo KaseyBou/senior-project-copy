@@ -34,6 +34,27 @@ const useIncome = (urlSegment : string) => {
             setError(false);
             const response = await axios.get(`${baseURL}${urlSegment}/${user_id}`)
             setData(response);
+            return response;
+        }catch(error) {
+            setError(true);
+            console.log(error);
+        } finally {
+            setLoading(false);
+            //return data;
+        }
+    };
+
+    const editIncome = async(income_id: number, account_id: number, gross_pay: number, pay_day: Date, pay_frequency: number) => {
+        try {
+            setLoading(true);
+            setError(false);
+            const response = await axios.put(`${baseURL}${urlSegment}/${income_id}`, {
+                account_id: `${account_id}`,
+                gross_pay: `${gross_pay}`,
+                pay_day: `${pay_day}`,
+                pay_frequency: `${pay_frequency}`
+            })
+            setData(response);
         }catch(error) {
             setError(true);
             console.log(error);
@@ -41,9 +62,25 @@ const useIncome = (urlSegment : string) => {
             setLoading(false);
             return data;
         }
-    };
+    }
 
-    return {postIncome, getIncomes}
+    const deleteIncome = async(income_id: number) => {
+        try {
+            setLoading(true);
+            setError(false);
+            const response = await axios.delete(`${baseURL}${urlSegment}/${income_id}`, {
+            })
+            setData(response);
+        }catch(error) {
+            setError(true);
+            console.log(error);
+        } finally {
+            setLoading(false);
+            return data;
+        }
+    }
+
+    return {postIncome, getIncomes, editIncome, deleteIncome}
     
 };
 
