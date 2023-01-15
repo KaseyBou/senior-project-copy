@@ -28,6 +28,8 @@ const connection = mysql.createConnection({
 });*/
 
 //---------------User Posts------------------------------------------------
+
+//register user account
 app.post('/Register',(req,res)=>{
 
   let {first_Name, last_Name, email, password, phone, profile_image, is_admin} = req.body;
@@ -62,6 +64,7 @@ app.post('/Register',(req,res)=>{
 
 });
 
+//edit user account
 app.post('/EditUser',(req,res)=>{
 
   let {first_Name, last_Name, email, password, phone, profile_image, user_id} = req.body;
@@ -98,6 +101,31 @@ app.post('/EditUser',(req,res)=>{
 
 });
 
+//delete user account
+app.post('/DeleteUser',(req,res)=>{
+
+  let {user_id} = req.body;
+
+
+  var sql = `DELETE FROM Bills, Deposits, Expenditures, Budgets, Incomes, Accounts, Users WHERE user_id = ${user_id}`;
+ 
+
+   connection.query(sql, function(err, rows)
+  {
+
+    if (err){
+      //If error
+        res.status(400).json('Unable To Edit');
+        console.log("Error inserting : %s ",err );
+    }
+   else
+    //If success
+    res.status(200).json('Account deleted Successfully!!')
+
+  });
+
+});
+
 
 app.post('/Login',(req,res)=>{
 
@@ -128,6 +156,111 @@ app.post('/Login',(req,res)=>{
 
    }
   });
+
+});
+
+// BANK ACCOUNT ********************************************************************************************
+
+//add bank account
+app.post('/BankAccount',(req,res)=>{
+
+  let {account_name, account_type, balance, interest, monthlyFees, user_id} = req.body;
+  
+    //var sql = "INSERT INTO Users (first_name, last_name, email, password, password_salt, phone, profile_image, is_admin) Values ('firstName', 'lastName', 'testingg@testing.com', 'password', 'password_salt', 'phone', 'profile_image', 'is_admin')";
+   var sql = `INSERT INTO Accounts (account_name, account_type, balance, interest, monthlyFees, user_id) Values ('${account_name}', '${account_type}', '${balance}', '${interest}', '${monthlyFees}','${user_id}')`;
+
+   connection.query(sql, function(err, rows)
+  {
+
+    if (err){
+      //If error
+        res.status(400).json('Sorry!!Unable To Add');
+        console.log("Error inserting : %s ",err );
+        return err;
+    }
+   else
+    //If success
+    res.status(200).json('Account Added Successfully!!')
+    
+  });
+
+
+});
+
+//edit bank account
+app.post('/EditAccount',(req,res)=>{
+
+  let {account_name, account_type, balance, interest, monthlyFees, user_id} = req.body;
+  
+    //var sql = "INSERT INTO Users (first_name, last_name, email, password, password_salt, phone, profile_image, is_admin) Values ('firstName', 'lastName', 'testingg@testing.com', 'password', 'password_salt', 'phone', 'profile_image', 'is_admin')";
+   var sql = `Update Accounts SET account_name = '${account_name}', account_type = '${account_type}', balance = '${balance}', interest = '${interest}', monthlyFees = '${monthlyFees}', user_id = '${user_id}' WHERE user_id = ${userID} AND account_id = ${account_id}`;
+   connection.query(sql, function(err, rows)
+  {
+
+    if (err){
+      //If error
+        res.status(400).json('Sorry!!Unable To Add');
+        console.log("Error inserting : %s ",err );
+        return err;
+    }
+   else
+    //If success
+    res.status(200).json('Account Added Successfully!!')
+    
+  });
+
+
+});
+
+//edit bank account
+app.post('/DeleteAccount',(req,res)=>{
+
+  let {account_id} = req.body;
+  
+    //var sql = "INSERT INTO Users (first_name, last_name, email, password, password_salt, phone, profile_image, is_admin) Values ('firstName', 'lastName', 'testingg@testing.com', 'password', 'password_salt', 'phone', 'profile_image', 'is_admin')";
+   var sql = `DELETE FROM Accounts WHERE user_id = ${userID} AND account_id = ${account_id}`;
+   connection.query(sql, function(err, rows)
+  {
+
+    if (err){
+      //If error
+        res.status(400).json('Sorry!!Unable To Add');
+        console.log("Error inserting : %s ",err );
+        return err;
+    }
+   else
+    //If success
+    res.status(200).json('Account Added Successfully!!')
+    
+  });
+
+
+});
+
+// ERROR LOG ********************************************************************************************
+
+//add error
+app.post('/Error',(req,res)=>{
+
+  let {error_message, user_id, date} = req.body;
+
+   var sql = `INSERT INTO ErrorLog (error_message, user_id, date) Values ('${error_message}', '${user_id}', '${date})`;
+
+   connection.query(sql, function(err, rows)
+  {
+
+    if (err){
+      //If error
+        res.status(400).json('Sorry!!Unable To Add');
+        console.log("Error inserting : %s ",err );
+        return err;
+    }
+   else
+    //If success
+    res.status(200).json('Account Added Successfully!!')
+    
+  });
+
 
 });
 

@@ -10,12 +10,16 @@ const useErrorLog = (urlSegment : string) => {
 
     //post error
     const postError = async(errorMsg: string, user_id: number) => {
+
+        let date = new Date().toISOString().slice(0, 19).replace('T', ' ');
+        
         try {
             setLoading(true);
             setError(false);
             const response = await axios.post(`${baseURL}${urlSegment}`, {
                 error_message: `${errorMsg}`,
-                user_id: `${user_id}`
+                user_id: `${user_id}`,
+                date: `${date}`
                 })
             setData(response);
         }catch(error) {
