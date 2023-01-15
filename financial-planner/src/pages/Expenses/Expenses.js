@@ -14,7 +14,7 @@ import useBills from '../../hooks/useBills.tsx';
 const Expenses = () => {
 
      // bill hook instance
-     const { postBill, getBills } = useBills("Bills");
+     const { postBill, getBills, editBill, deleteBill } = useBills("Bills");
 
      // income state
      const [bills, setBills] = useState(null);
@@ -24,7 +24,7 @@ const Expenses = () => {
      useEffect(() => {
          getBills(7).then((data) => {
              setBills(data);
-             console.log(data);
+             console.log(data.data);
          });
      }, [])
 
