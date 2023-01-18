@@ -183,6 +183,8 @@ const Expenses = () => {
                         fields={['Bill Title', 'Bill Source', 'Amount', 'Next Due Date', 'Pay Frequency', 'Account', 'Budget', ]}
                         fieldIDs={['billNameAdd', 'billCompanyAdd', 'billAmountAdd', 'billPaymentDateAdd', 'billFrequencyAdd', 'billAccountAdd', 'billBudgetAdd']}
                         fieldTypes={['text', 'text', 'number', 'date', 'number', 'text', 'text']}
+                        warning={['','','','','','','']}
+                        warningIDs={['', '','', '','','','']}
                         onChange={addBillInputHandler}
                         submitAction={addBill}
                     />
