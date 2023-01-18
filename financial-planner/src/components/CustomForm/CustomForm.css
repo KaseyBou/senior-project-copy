@@ -9,9 +9,9 @@
 }
 
 .formTable{
-    width: 50%;
+    width: 75%;
     table-layout: fixed;
-    margin-left: 25%
+    margin-left: 13%
 }
 
 .formLabel{
@@ -35,5 +35,6 @@
 .warning {
     color: red;
     text-align: left;
-    display: none;
+    
 }
+

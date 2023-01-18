@@ -129,6 +129,8 @@ const Income = () => {
                         title="Add Income"
                         fields={['Gross Pay', 'Pay Frequency', 'Pay Date', 'Account']}
                         fieldIDs={['grossPayAdd', 'payFrequencyAdd', 'payDateAdd', 'accountAdd']}
+                        warning={['','','','']}
+                        warningIDs={['', '','', '']}
                         fieldTypes={['number', 'number', 'date', 'number']}
                         onChange={addInputHandler}
                         submitAction={addIncome}

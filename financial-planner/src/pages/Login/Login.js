@@ -19,6 +19,9 @@ const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
+    const [emailWarning, setEmailWarning] = useState('');
+    const [passwordWarning, setPasswordWarning] = useState('');
+
     //calling postLogin function
     const { postLogin } = usePost('Login')
 
@@ -26,6 +29,18 @@ const Login = () => {
     const inputHandler = (e) =>{
         setEmail(document.getElementById("email").value);
         setPassword(document.getElementById("password").value);
+
+        if(email === "") {
+            setEmailWarning('Must Enter Valid Email');
+        }else {
+            setEmailWarning('');
+        }
+
+        if(password === "") {
+            setPasswordWarning('Enter Password')
+        }else {
+            setPasswordWarning('');
+        }
     }
 
     //Login
@@ -34,20 +49,14 @@ const Login = () => {
         postLogin(email, password)
         
         //not complete
-        /*const {data, loading, error} = postLogin(email, password)
+        const {data, loading, error} = postLogin(email, password)
         //dashboard();
         
         if (loading) {
             return <Loading/>;
         }
 
-        let warning = document.querySelectorAll(".warning");
-        if(error) {
-            warning.style.display = "block"
-    
-        } else {
-            warning.style.display = "none"
-        }*/
+
 
     }
 
@@ -59,7 +68,7 @@ const Login = () => {
                 title='Log In'
                 fields={['Email', 'Password']}
                 fieldIDs={['email', 'password']}
-                warning={['Email/Password Do Not Match', 'Email/Password Do Not Match']}
+                warning={[`${emailWarning}`, `${passwordWarning}`]}
                 warningIDs={['emailWarning', 'passwordWarning']}
                 fieldTypes={['text', 'text']}
                 onChange={inputHandler}

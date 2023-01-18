@@ -60,6 +60,7 @@ const Account = () => {
                 submitAction={editAccount}
                 fieldTypes={['text', 'text', 'email', 'tel', 'password', 'password', 'number']}
                 warning={['Please Enter First Name', 'Please Enter Last Name', 'Enter valid email', 'Enter Valid Phone #', 'Passwords Must Match']}
+                warningIDs={['firstNameWarning', 'lastNameWarning', 'emailWarning', 'phoneWarning', 'passwordWarning', 'confirmPasswordWarning']}
             ></CustomForm>
         </>
         );

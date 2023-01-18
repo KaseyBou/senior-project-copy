@@ -27,6 +27,15 @@ const Register = () => {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
 
+    //input warnings
+    const [firstNameWarning, setFirstNameWarning] = useState('');
+    const [lastNameWarning, setLastNameWarning] = useState('');
+    const [phoneWarning, setPhoneWarning] = useState('');
+    const [emailWarning, setEmailWarning] = useState('');
+    const [passwordWarning, setPasswordWarning] = useState('')
+    const [confirmPasswordWarning, setConfirmPasswordWarning] = useState('');
+
+
     //handles updates to input's
     const inputHandler = () =>{
         setFirstName(document.getElementById("firstName").value);
@@ -35,6 +44,40 @@ const Register = () => {
         setEmail(document.getElementById("email").value);
         setPassword(document.getElementById("password").value);
         setConfirmPassword(document.getElementById("confirmPassword").value);
+
+        if(firstName.length < 2 ) {
+            setFirstNameWarning('Please Enter First Name')
+        } else {
+            setFirstNameWarning('')
+        }
+
+        if(lastName.length < 2 ) {
+            setLastNameWarning('Please Enter Last Name')
+        } else {
+            setLastNameWarning('')
+        }
+
+        if(email.length < 4 ) {
+            setEmailWarning('Please Enter Valid Email')
+        } else {
+            setEmailWarning('')
+        }
+
+        if(phone.length < 2 ) {
+            setPhoneWarning('Please Enter Valid Phone')
+        } else {
+            setPhoneWarning('')
+        }
+
+        if(password.length < 4 ) {
+            setPasswordWarning('Password is not long enough')
+        } else {
+            setPasswordWarning('')
+        }
+
+        if(password !== confirmPassword) {
+            setConfirmPasswordWarning('Passwords do not match')
+        }
     }
 
     //Register
@@ -58,7 +101,7 @@ const Register = () => {
                 title='Register'
                 fields={["First Name", "Last Name", "E-Mail Address", "Phone Number", "Password", "Confirm Password"]}
                 fieldIDs={['firstName', 'lastName', 'email', 'phone', 'password', 'confirmPassword']}
-                warning={['Please Enter First Name', 'Please Enter Last Name', 'Enter valid email', 'Enter Valid Phone #', 'Passwords Must Match']}
+                warning={[`${firstNameWarning}`, `${lastNameWarning}`, `${emailWarning}`, `${phoneWarning}`, `${passwordWarning}`,`${confirmPasswordWarning}`]}
                 warningIDs={['firstNameWarning', 'lastNameWarning', 'emailWarning', 'phoneWarning', 'passwordWarning', 'confirmPasswordWarning']}
                 fieldTypes={['text', 'text', 'text', 'text', 'password','password']}
                 onChange={inputHandler}
