@@ -21,8 +21,9 @@ const connection = mysql.createConnection({
   
 })
 
-const {insertIncome, getIncomes, updateIncome, deleteIncome} = require('./routes/income');
+const { insertIncome, getIncomes, updateIncome, deleteIncome } = require('./routes/income');
 const { addBill, getBills, updateBill, deleteBill } = require("./routes/bills.js");
+const { getAccountDetails } = require('./routes/user.js');
 
 //connection.connect()
 
@@ -66,6 +67,9 @@ app.post('/Register',(req,res)=>{
 
 
 });
+
+// get details of user account
+app.get('/User/:user_id', getAccountDetails);
 
 //edit user account
 app.post('/EditUser',(req,res)=>{
