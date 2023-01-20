@@ -61,7 +61,8 @@ const useExpenditures = (urlSegment: string) => {
     account_id: number,
     recipient: string,
     date: Date,
-    total_amount: number
+    total_amount: number,
+    budget_id: number
   ) => {
     try {
       setLoading(true);
@@ -73,6 +74,7 @@ const useExpenditures = (urlSegment: string) => {
           recipient: `${recipient}`,
           date: `${date}`,
           total_amount: `${total_amount}`,
+          budget_id: `${budget_id}`,
         }
       );
       setData(response);

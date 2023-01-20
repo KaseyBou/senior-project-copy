@@ -23,6 +23,8 @@ const connection = mysql.createConnection({
 
 const {insertIncome, getIncomes, updateIncome, deleteIncome} = require('./routes/income');
 const { addBill, getBills, updateBill, deleteBill } = require("./routes/bills.js");
+const { addDeposit, getDeposit, updateDeposit, deleteDeposit } = require("./routes/deposits");
+const { addExpenditure, getExpenditure, updateExpenditure, deleteExpenditure } = require("./routes/expenditures");
 
 //connection.connect()
 
@@ -286,6 +288,28 @@ app.get('/Bills/:user_id', getBills);
 app.put('/Bills/:bill_id', updateBill);
 
 app.delete('/Bills/:bill_id', deleteBill);
+
+// DEPOSITS ***************************************************************************************************
+  
+app.post('/Deposits', addDeposit);
+
+app.get('/Deposits/:user_id', getDeposit);
+
+app.put('/Deposits/:deposit_id', updateDeposit);
+
+app.delete('/Deposits/:deposit_id', deleteDeposit);
+
+// EXPENDITURES ***************************************************************************************************
+  
+app.post('/Expenditures', addExpenditure);
+
+app.get('/Expenditures/:user_id', getExpenditure);
+
+app.put('/Expenditures/:expenditure_id', updateExpenditure);
+
+app.delete('/Expenditures/:expenditure_id', deleteExpenditure);
+
+
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
