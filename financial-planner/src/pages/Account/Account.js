@@ -1,6 +1,6 @@
 //import Loading from '../Loading/Loading';
 import './Account.css';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 //import { useNavigate } from 'react-router-dom';
 import CustomForm from '../../components/CustomForm/CustomForm';
 import usePost from '../../hooks/useUserAccount.tsx';
@@ -12,7 +12,7 @@ const Account = () => {
     //handles updates to input's
 
       //calling postRegister function
-      const { postEditUser } = usePost('EditUser')
+      const {postRegister, postLogin, postEditUser, postDeleteUser, getAccountDetails, data, loading, error} = usePost('EditUser')
 
       //state variables
       const [firstName, setFirstName] = useState('');
@@ -32,16 +32,27 @@ const Account = () => {
           setEmail(document.getElementById("email").value);
           setPassword(document.getElementById("password").value);
           setConfirmPassword(document.getElementById("confirmPassword").value);
-          setUser_id('');
+          // TODO
+          setUser_id(document.getElementById("userID").value);
       }
+      
+      // on page load, get user info and prefill form
+      // TODO: get user ID from session var
+      useEffect(() => {
+        getAccountDetails(8).then((data) => {
+            data = data.data[0];
+            document.getElementById("firstName").value = data.first_name;
+            document.getElementById("lastName").value = data.last_name;
+            document.getElementById("email").value = data.email;
+            document.getElementById("phone").value = data.phone;
+            inputHandler();
+        })
+      }, [])
 
       const editAccount = () => {
-
-        //get user_ID from how it is stored
-        //postEditUser()
+        // get user_ID from how it is stored
         if(password === confirmPassword) {
             postEditUser(firstName, lastName, email, password, phone, user_id)
-           // postEditUser("firstName", "lastName", "test@test.com", "", "000-000-0000", 7)
             console.log('hello')
         } else {
             console.log('not good')

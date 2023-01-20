@@ -118,9 +118,27 @@ const usePost = (urlSegment : string) => {
         }
         
     };
-
     
-    return {postRegister, postLogin, postEditUser, postDeleteUser, data, loading, error}
+    // get account details
+    const getAccountDetails = async (user_id: number) => {
+        try {
+            setLoading(true);
+            setError(false);
+            const response = await axios.get(`${baseURL}User/${user_id}`, {})
+            setData(response);
+            return response;
+        }catch(error) {
+            setError(true);
+            console.log(error);
+
+        } finally {
+
+            setLoading(false);
+
+        }
+    }
+    
+    return {postRegister, postLogin, postEditUser, postDeleteUser, getAccountDetails, data, loading, error}
 
 }
 
