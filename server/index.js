@@ -23,7 +23,9 @@ const connection = mysql.createConnection({
 
 const { insertIncome, getIncomes, updateIncome, deleteIncome } = require('./routes/income');
 const { addBill, getBills, updateBill, deleteBill } = require("./routes/bills.js");
-const { getAccountDetails } = require('./routes/user.js');
+const { registerUser, editUser, deleteUser, userLogin, getAccountDetails} = require("./routes/user.js");
+const { addAccount, editAccount, deleteAccount } = require("./routes/bankAccount.js");
+const { logError } = require('./routes/errorLog.js')
 
 //connection.connect()
 
@@ -68,208 +70,31 @@ app.post('/Register',(req,res)=>{
 
 });
 
-// get details of user account
-app.get('/User/:user_id', getAccountDetails);
-
 //edit user account
-app.post('/EditUser',(req,res)=>{
-
-  let {first_Name, last_Name, email, password, phone, profile_image, user_id} = req.body;
-
-  if(password === "") {
-
-      var sql = `Update Users SET first_name = '${first_Name}', last_name = '${last_Name}', email = '${email}', phone = '${phone}', profile_image = ${profile_image} WHERE user_id = ${user_id}`;
-  } 
-  else {
-      let returnData = functions.hashPassword(password)
-      salt = returnData[0];
-      hash = returnData[1];
-      //var sql = "INSERT INTO Users (first_name, last_name, email, password, password_salt, phone, profile_image, is_admin) Values ('firstName', 'lastName', 'testingg@testing.com', 'password', 'password_salt', 'phone', 'profile_image', 'is_admin')";
-      var sql = `Update Users SET first_name = '${first_Name}', last_name = '${last_Name}', email = '${email}', password = '${hash}', password_salt = '${salt}', phone = '${phone}', profile_image = ${profile_image} WHERE user_id = ${userID}`;
-  }
-  /*if(!firstName) return res.status(400).json('First Name can not be blank');
-  if(!lastName) return res.status(400).json('Last Name cant be blank');
-  if(!email) return res.status(400).json('Email cant be blank');
-  if(!password) return res.status(400).json('Password cant be blank');*/
-
-   connection.query(sql, function(err, rows)
-  {
-
-    if (err){
-      //If error
-        res.status(400).json('Unable To Edit');
-        console.log("Error inserting : %s ",err );
-    }
-   else
-    //If success
-    res.status(200).json('Account editted Successfully!!')
-
-  });
-
-});
+app.post('/EditUser', editUser);
 
 //delete user account
-app.post('/DeleteUser',(req,res)=>{
+app.post('/DeleteUser', deleteUser);
 
-  let {user_id} = req.body;
+app.post('/Login', userLogin);
 
-
-  var sql = `DELETE FROM Bills, Deposits, Expenditures, Budgets, Incomes, Accounts, Users WHERE user_id = ${user_id}`;
- 
-
-   connection.query(sql, function(err, rows)
-  {
-
-    if (err){
-      //If error
-        res.status(400).json('Unable To Edit');
-        console.log("Error inserting : %s ",err );
-    }
-   else
-    //If success
-    res.status(200).json('Account deleted Successfully!!')
-
-  });
-
-});
-
-
-app.post('/Login',(req,res)=>{
-
-  let {email, password} = req.body;
-
-  var sql = `SELECT password, password_salt FROM Users WHERE email = '${email}'`;
-
-   connection.query(sql, function(err, rows)
-  {
-
-    if (err){
-      //If error
-        res.status(400).json('Sorry!!Unable To Find');
-        console.log("Error inserting : %s ",err );
-        //console.log(res)
-    }
-   else {
-
-    let correct = functions.isPasswordCorrect(rows[0]['password'], rows[0]['password_salt'], password)
-    //let correct = functions.isPasswordCorrect('5ff9a7610f342f90274da0747e3dfa08ad8adddf3f166', 'qXGmD9z7L77Ob2q9TwUDXyDAXmukdQAV3PdC/mPP/CF/J0AvAACqQoCJM/lIG9e29OoUkyIt+jr3Fa5jFGZfVtfFjv9DYtFZHR4Ibh871Xm4fbYQMmFAl8q94dpy0a8gPqzBgzUKX6w4HBWB0fM7yv6lnZpqMWk8zcf5E0Hmohk=', password)
-    console.log(correct)
-    //If success
-    if(correct) {
-      res.status(200).json('Login Succeful' + correct)
-    } else {
-      res.status(400).json('Incorrect password');
-    }
-
-   }
-  });
-
-});
+app.get('/User/:user_id', getAccountDetails);
 
 // BANK ACCOUNT ********************************************************************************************
 
 //add bank account
-app.post('/BankAccount',(req,res)=>{
-
-  let {account_name, account_type, balance, interest, monthlyFees, user_id} = req.body;
-  
-    //var sql = "INSERT INTO Users (first_name, last_name, email, password, password_salt, phone, profile_image, is_admin) Values ('firstName', 'lastName', 'testingg@testing.com', 'password', 'password_salt', 'phone', 'profile_image', 'is_admin')";
-   var sql = `INSERT INTO Accounts (account_name, account_type, balance, interest, monthlyFees, user_id) Values ('${account_name}', '${account_type}', '${balance}', '${interest}', '${monthlyFees}','${user_id}')`;
-
-   connection.query(sql, function(err, rows)
-  {
-
-    if (err){
-      //If error
-        res.status(400).json('Sorry!!Unable To Add');
-        console.log("Error inserting : %s ",err );
-        return err;
-    }
-   else
-    //If success
-    res.status(200).json('Account Added Successfully!!')
-    
-  });
-
-
-});
+app.post('/BankAccount', addAccount);
 
 //edit bank account
-app.post('/EditAccount',(req,res)=>{
-
-  let {account_name, account_type, balance, interest, monthlyFees, user_id} = req.body;
-  
-    //var sql = "INSERT INTO Users (first_name, last_name, email, password, password_salt, phone, profile_image, is_admin) Values ('firstName', 'lastName', 'testingg@testing.com', 'password', 'password_salt', 'phone', 'profile_image', 'is_admin')";
-   var sql = `Update Accounts SET account_name = '${account_name}', account_type = '${account_type}', balance = '${balance}', interest = '${interest}', monthlyFees = '${monthlyFees}', user_id = '${user_id}' WHERE user_id = ${userID} AND account_id = ${account_id}`;
-   connection.query(sql, function(err, rows)
-  {
-
-    if (err){
-      //If error
-        res.status(400).json('Sorry!!Unable To Add');
-        console.log("Error inserting : %s ",err );
-        return err;
-    }
-   else
-    //If success
-    res.status(200).json('Account Added Successfully!!')
-    
-  });
-
-
-});
+app.post('/EditAccount', editAccount);
 
 //edit bank account
-app.post('/DeleteAccount',(req,res)=>{
-
-  let {account_id} = req.body;
-  
-    //var sql = "INSERT INTO Users (first_name, last_name, email, password, password_salt, phone, profile_image, is_admin) Values ('firstName', 'lastName', 'testingg@testing.com', 'password', 'password_salt', 'phone', 'profile_image', 'is_admin')";
-   var sql = `DELETE FROM Accounts WHERE user_id = ${userID} AND account_id = ${account_id}`;
-   connection.query(sql, function(err, rows)
-  {
-
-    if (err){
-      //If error
-        res.status(400).json('Sorry!!Unable To Add');
-        console.log("Error inserting : %s ",err );
-        return err;
-    }
-   else
-    //If success
-    res.status(200).json('Account Added Successfully!!')
-    
-  });
-
-
-});
+app.post('/DeleteAccount', deleteAccount);
 
 // ERROR LOG ********************************************************************************************
 
 //add error
-app.post('/Error',(req,res)=>{
-
-  let {error_message, user_id, date} = req.body;
-
-   var sql = `INSERT INTO ErrorLog (error_message, user_id, date) Values ('${error_message}', '${user_id}', '${date})`;
-
-   connection.query(sql, function(err, rows)
-  {
-
-    if (err){
-      //If error
-        res.status(400).json('Sorry!!Unable To Add');
-        console.log("Error inserting : %s ",err );
-        return err;
-    }
-   else
-    //If success
-    res.status(200).json('Account Added Successfully!!')
-    
-  });
-
-
-});
+app.post('/Error', logError);
 
 // INCOME ***************************************************************************************************
 

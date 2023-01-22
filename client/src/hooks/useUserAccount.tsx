@@ -72,16 +72,16 @@ const usePost = (urlSegment : string) => {
     };
 
     //hook to delete user account
-    const postDeleteUser = async( user_id: number) => {
-
+    const postDeleteUser = async( user_id: number, pw_attempt: string) => {
         try {
             setLoading(true);
             setError(false);
-            const response = await axios.post(`${baseURL}${urlSegment}`, {
-            user_id: user_id
-
+            const response = await axios.post(`${baseURL}DeleteUser`, {
+                user_id: user_id,
+                pw_attempt: pw_attempt
             })
             setData(response);
+            
         }catch(error) {
             setError(true);
             console.log(error);

@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 //import { useNavigate } from 'react-router-dom';
 import CustomForm from '../../components/CustomForm/CustomForm';
 import usePost from '../../hooks/useUserAccount.tsx';
+import Button from '../../components/Button/Button';
+import Modal from '../../components/Modal/Modal'
 
 const Account = () => {
 
@@ -22,6 +24,11 @@ const Account = () => {
       const [password, setPassword] = useState('');
       const [confirmPassword, setConfirmPassword] = useState('');
       const [user_id, setUser_id] = useState('');
+
+      // state variable for visibility of delete confirmation
+      const [showDelete, setShowDelete] = useState(false);
+      const handleShowDelete = () => setShowDelete(true);
+      const handleCloseDelete = () => setShowDelete(false);
   
       //handles updates to input's
       const inputHandler = () =>{
@@ -59,6 +66,13 @@ const Account = () => {
         }
       }
 
+      const delAccount = () => {
+        // TODO: you know the drill by this point
+        postDeleteUser(8, document.getElementById('passwordDelete').value)
+        // TODO: redirect to homepage
+        handleCloseDelete();
+      }
+
     //returning JSX
     return (
         <>
@@ -73,6 +87,19 @@ const Account = () => {
                 warning={['Please Enter First Name', 'Please Enter Last Name', 'Enter valid email', 'Enter Valid Phone #', 'Passwords Must Match']}
                 warningIDs={['firstNameWarning', 'lastNameWarning', 'emailWarning', 'phoneWarning', 'passwordWarning', 'confirmPasswordWarning']}
             ></CustomForm>
+            <Button text='Delete Account' function={handleShowDelete}/>
+            <Modal show={showDelete} handleShow={handleShowDelete} handleClose={handleCloseDelete}>
+                <CustomForm
+                    title = "Delete your account? (this cannot be undone)"
+                    fields = {['password']}
+                    fieldIDs = {['passwordDelete']}
+                    warning = {['']}
+                    warningIDs = {['']}
+                    fieldTypes = {['string']}
+                    // onChange = {console.log("placeholder")}
+                    submitAction = {delAccount}
+                />
+            </Modal>
         </>
         );
 }
