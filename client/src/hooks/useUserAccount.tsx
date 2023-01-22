@@ -72,16 +72,16 @@ const usePost = (urlSegment : string) => {
     };
 
     //hook to delete user account
-    const postDeleteUser = async( user_id: number) => {
-
+    const postDeleteUser = async( user_id: number, pw_attempt: string) => {
         try {
             setLoading(true);
             setError(false);
-            const response = await axios.post(`${baseURL}${urlSegment}`, {
-            user_id: user_id
-
+            const response = await axios.post(`${baseURL}DeleteUser`, {
+                user_id: user_id,
+                pw_attempt: pw_attempt
             })
             setData(response);
+            
         }catch(error) {
             setError(true);
             console.log(error);
@@ -118,9 +118,27 @@ const usePost = (urlSegment : string) => {
         }
         
     };
-
     
-    return {postRegister, postLogin, postEditUser, postDeleteUser, data, loading, error}
+    // get account details
+    const getAccountDetails = async (user_id: number) => {
+        try {
+            setLoading(true);
+            setError(false);
+            const response = await axios.get(`${baseURL}User/${user_id}`, {})
+            setData(response);
+            return response;
+        }catch(error) {
+            setError(true);
+            console.log(error);
+
+        } finally {
+
+            setLoading(false);
+
+        }
+    }
+    
+    return {postRegister, postLogin, postEditUser, postDeleteUser, getAccountDetails, data, loading, error}
 
 }
 

@@ -33,7 +33,39 @@ const { addExpenditure, getExpenditure, updateExpenditure, deleteExpenditure } =
 //---------------User Posts------------------------------------------------
 
 //register user account
-app.post('/Register', registerUser);
+app.post('/Register',(req,res)=>{
+
+  let {first_Name, last_Name, email, password, phone, profile_image, is_admin} = req.body;
+
+  let returnData = functions.hashPassword(password)
+  salt = returnData[0];
+  hash = returnData[1];
+  
+  /*if(!firstName) return res.status(400).json('First Name can not be blank');
+  if(!lastName) return res.status(400).json('Last Name cant be blank');
+  if(!email) return res.status(400).json('Email cant be blank');
+  if(!password) return res.status(400).json('Password cant be blank');*/
+  
+    //var sql = "INSERT INTO Users (first_name, last_name, email, password, password_salt, phone, profile_image, is_admin) Values ('firstName', 'lastName', 'testingg@testing.com', 'password', 'password_salt', 'phone', 'profile_image', 'is_admin')";
+   var sql = `INSERT INTO Users (first_name, last_name, email, password, password_salt, phone, profile_image, is_admin) Values ('${first_Name}', '${last_Name}', '${email}', '${hash}', '${salt}','${phone}', ${profile_image}, ${is_admin})`;
+
+   connection.query(sql, function(err, rows)
+  {
+
+    if (err){
+      //If error
+        res.status(400).json('Sorry!!Unable To Add');
+        console.log("Error inserting : %s ",err );
+        return err;
+    }
+   else
+    //If success
+    res.status(200).json('Account Added Successfully!!')
+    
+  });
+
+
+});
 
 //edit user account
 app.post('/EditUser', editUser);
@@ -42,6 +74,8 @@ app.post('/EditUser', editUser);
 app.post('/DeleteUser', deleteUser);
 
 app.post('/Login', userLogin);
+
+app.get('/User/:user_id', getAccountDetails);
 
 // BANK ACCOUNT ********************************************************************************************
 

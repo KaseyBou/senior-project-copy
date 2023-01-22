@@ -8,6 +8,8 @@ const connection = mysql.createConnection({
   
 })
 
+const functions = require('../helper-functions/functions')
+
 //---------------User Posts------------------------------------------------
 
 //register user
@@ -85,27 +87,42 @@ module.exports.editUser = (req,res) => {
 //delete user account
 module.exports.deleteUser = (req,res) => {
   
-    let {user_id} = req.body;
-  
-  
-    var sql = `DELETE FROM Bills, Deposits, Expenditures, Budgets, Incomes, Accounts, Users WHERE user_id = ${user_id}`;
-   
-  
-     connection.query(sql, function(err, rows)
+    let {user_id, pw_attempt} = req.body;
+
+    var sql = `SELECT password, password_salt FROM Users WHERE user_id = '${user_id}';`;
+
+    connection.query(sql, function(err, rows)
     {
-  
       if (err){
         //If error
-          res.status(400).json('Unable To Edit');
-          console.log("Error inserting : %s ",err );
+        res.status(400).json('Unable to retrieve user information');
+        console.log("Error retrieving : %s ",err );
+      } else {
+        // If password details retrieved successfully, compare to attempt
+        if(functions.isPasswordCorrect(rows[0].password, rows[0].password_salt, pw_attempt)){
+
+          // run delete if password matches
+          var sql = `DELETE FROM Users WHERE user_id = ${user_id}`;
+          connection.query(sql, function(err, rows)
+          {
+        
+            if (err){
+              //If error
+                res.status(400).json('Unable To Edit');
+                console.log("Error inserting : %s ",err );
+            }
+          else
+            //If success
+            res.status(200).json('Account deleted Successfully!!')
+        
+          });
+
+        } else {
+          res.status(301).json('incorrect password');
+        }
       }
-     else
-      //If success
-      res.status(200).json('Account deleted Successfully!!')
-  
     });
-  
-};
+  };
   
 //login
 module.exports.userLogin = (req,res) => {
@@ -139,3 +156,22 @@ module.exports.userLogin = (req,res) => {
     });
   
 };
+
+module.exports.getAccountDetails = (req, res) => {
+  user_id = req.params.user_id;
+
+  var sql = `SELECT email, first_name, last_name, phone, profile_image FROM Users WHERE user_id = '${user_id}';`;
+
+  connection.query(sql, function(err, rows)
+    {
+
+      if (err){
+        //If error
+        res.status(400).json('Unable to retrieve user information');
+         console.log("Error retrieving : %s ",err );
+      }
+    else
+      //If success
+      res.status(200).json(rows)
+    });
+}

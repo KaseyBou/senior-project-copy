@@ -21,10 +21,8 @@ const Income = () => {
     // on render, get list of incomes
     // TODO: use user ID from session data
     useEffect(() => {
-        deleteIncome(0)
-        getIncomes(7).then((data) => {
+        getIncomes(8).then((data) => {
             setIncomes(data);
-            console.log(data.data);
         });
     }, [])
 
