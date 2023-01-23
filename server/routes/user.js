@@ -147,6 +147,7 @@ module.exports.userLogin = (req,res) => {
       console.log(correct)
       //If success
       if(correct) {
+
         res.status(200).json('Login Succeful' + correct)
       } else {
         res.status(400).json('Incorrect password');

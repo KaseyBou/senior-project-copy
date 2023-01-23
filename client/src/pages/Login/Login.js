@@ -10,7 +10,8 @@ const Login = () => {
 
     //Initializing
     const navigate = useNavigate();
-
+    var emailValidator = require("email-validator");
+    
     const dashboard = () => {
         navigate("/Dashboard");
     };
@@ -30,7 +31,7 @@ const Login = () => {
         setEmail(document.getElementById("email").value);
         setPassword(document.getElementById("password").value);
 
-        if(email === "") {
+        if(email.length > 6) {
             setEmailWarning('Must Enter Valid Email');
         }else {
             setEmailWarning('');
@@ -47,14 +48,14 @@ const Login = () => {
     const Login = () =>{
         
         postLogin(email, password)
-        
+        dashboard();
         //not complete
-        const {data, loading, error} = postLogin(email, password)
+        /*const {data, loading, error} = postLogin(email, password)
         //dashboard();
         
         if (loading) {
             return <Loading/>;
-        }
+        }*/
 
 
 

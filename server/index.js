@@ -10,6 +10,12 @@ const bodyParser = require("body-parser")
 const cors = require('cors');
 app.use(cors());
 const mysql = require('mysql');
+app.use(express.urlencoded({ extended: true }));
+//serving public file
+app.use(express.static(__dirname));
+// cookie parser middleware
+const auth = require("./auth");
+
 const { Console } = require("console");
 const e = require("express");
 const connection = mysql.createConnection({
@@ -24,114 +30,82 @@ const connection = mysql.createConnection({
 //functions from routes
 const {insertIncome, getIncomes, updateIncome, deleteIncome} = require('./routes/income');
 const { addBill, getBills, updateBill, deleteBill } = require("./routes/bills.js");
-const {userLogin, deleteUser, editUser, registerUser } = require('./routes/user');
+const {userLogin, deleteUser, editUser, registerUser, getAccountDetails } = require('./routes/user');
 const {addAccount, editAccount, deleteAccount} = require('./routes/bankAccount');
-const {logError} = require('./routes/bankAccount');
+const {logError} = require('./routes/errorLog');
 const { addDeposit, getDeposit, updateDeposit, deleteDeposit } = require("./routes/deposits");
 const { addExpenditure, getExpenditure, updateExpenditure, deleteExpenditure } = require("./routes/expenditures");
 
 //---------------User Posts------------------------------------------------
 
 //register user account
-app.post('/Register',(req,res)=>{
-
-  let {first_Name, last_Name, email, password, phone, profile_image, is_admin} = req.body;
-
-  let returnData = functions.hashPassword(password)
-  salt = returnData[0];
-  hash = returnData[1];
-  
-  /*if(!firstName) return res.status(400).json('First Name can not be blank');
-  if(!lastName) return res.status(400).json('Last Name cant be blank');
-  if(!email) return res.status(400).json('Email cant be blank');
-  if(!password) return res.status(400).json('Password cant be blank');*/
-  
-    //var sql = "INSERT INTO Users (first_name, last_name, email, password, password_salt, phone, profile_image, is_admin) Values ('firstName', 'lastName', 'testingg@testing.com', 'password', 'password_salt', 'phone', 'profile_image', 'is_admin')";
-   var sql = `INSERT INTO Users (first_name, last_name, email, password, password_salt, phone, profile_image, is_admin) Values ('${first_Name}', '${last_Name}', '${email}', '${hash}', '${salt}','${phone}', ${profile_image}, ${is_admin})`;
-
-   connection.query(sql, function(err, rows)
-  {
-
-    if (err){
-      //If error
-        res.status(400).json('Sorry!!Unable To Add');
-        console.log("Error inserting : %s ",err );
-        return err;
-    }
-   else
-    //If success
-    res.status(200).json('Account Added Successfully!!')
-    
-  });
-
-
-});
+app.post('/Register', auth,  registerUser);
 
 //edit user account
-app.post('/EditUser', editUser);
+app.post('/EditUser',  auth, editUser);
 
 //delete user account
-app.post('/DeleteUser', deleteUser);
+app.post('/DeleteUser',  auth, deleteUser);
 
 app.post('/Login', userLogin);
 
-app.get('/User/:user_id', getAccountDetails);
+app.get('/User/:user_id',  auth, getAccountDetails);
 
 // BANK ACCOUNT ********************************************************************************************
 
 //add bank account
-app.post('/BankAccount', addAccount);
+app.post('/BankAccount',  auth, addAccount);
 
 //edit bank account
-app.post('/EditAccount', editAccount);
+app.post('/EditAccount',  auth, editAccount);
 
 //edit bank account
-app.post('/DeleteAccount', deleteAccount);
+app.post('/DeleteAccount',  auth, deleteAccount);
 
 // ERROR LOG ********************************************************************************************
 
 //add error
-app.post('/Error', logError);
+app.post('/Error',  auth, logError);
 
 // INCOME ***************************************************************************************************
 
-app.post('/Income', insertIncome);
+app.post('/Income',  auth, insertIncome);
 
-app.get('/Income/:user_id', getIncomes);
+app.get('/Income/:user_id',  auth, getIncomes);
 
-app.put('/Income/:income_id', updateIncome);
+app.put('/Income/:income_id',  auth, updateIncome);
 
-app.delete('/Income/:income_id', deleteIncome);
+app.delete('/Income/:income_id',  auth, deleteIncome);
 
 // BILLS ***************************************************************************************************
   
-app.post('/Bills', addBill);
+app.post('/Bills',  auth, addBill);
 
-app.get('/Bills/:user_id', getBills);
+app.get('/Bills/:user_id',  auth, getBills);
 
-app.put('/Bills/:bill_id', updateBill);
+app.put('/Bills/:bill_id',  auth, updateBill);
 
-app.delete('/Bills/:bill_id', deleteBill);
+app.delete('/Bills/:bill_id',  auth, deleteBill);
 
 // DEPOSITS ***************************************************************************************************
   
-app.post('/Deposits', addDeposit);
+app.post('/Deposits',  auth, addDeposit);
 
-app.get('/Deposits/:user_id', getDeposit);
+app.get('/Deposits/:user_id',  auth, getDeposit);
 
-app.put('/Deposits/:deposit_id', updateDeposit);
+app.put('/Deposits/:deposit_id',  auth, updateDeposit);
 
-app.delete('/Deposits/:deposit_id', deleteDeposit);
+app.delete('/Deposits/:deposit_id',  auth, deleteDeposit);
 
 // EXPENDITURES ***************************************************************************************************
   
-app.post('/Expenditures', addExpenditure);
+app.post('/Expenditures',  auth, addExpenditure);
 
-app.get('/Expenditures/:user_id', getExpenditure);
+app.get('/Expenditures/:user_id',  auth, getExpenditure);
 
-app.put('/Expenditures/:expenditure_id', updateExpenditure);
+app.put('/Expenditures/:expenditure_id',  auth, updateExpenditure);
 
-app.delete('/Expenditures/:expenditure_id', deleteExpenditure);
+app.delete('/Expenditures/:expenditure_id',  auth, deleteExpenditure);
 
 
 
@@ -143,7 +117,7 @@ app.use(bodyParser.json())
 
 
 
-app.get("/api", (req, res) => {
+app.get("/api", auth, (req, res) => {
     res.json({ message: "Hello from server!" });
   });
 

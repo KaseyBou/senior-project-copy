@@ -11,6 +11,7 @@ const Register = () => {
 
     //Initializing
     const navigate = useNavigate();
+    var emailValidator = require("email-validator");
 
     const home = () => {
         navigate("/");
@@ -35,6 +36,28 @@ const Register = () => {
     const [passwordWarning, setPasswordWarning] = useState('')
     const [confirmPasswordWarning, setConfirmPasswordWarning] = useState('');
 
+    const passwordValidation = (password) =>{
+        // Regex to check if a string contains uppercase, lowercase special character & number
+        var passwordRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[-+_!@#$%^&*.,?]).+$");
+ 
+        //if password
+        if (password.length <= 8 ) {
+         
+            //comparing password with regex
+            if (passwordRegex.test(password)) {
+            return true;
+            } else {
+            return false;
+            }
+        }
+    }
+
+    const validatePhone =(phone) => {
+
+        var phoneRegex = /^[+]*[(]{0,1}[0-9]{1,3}[)]{0,1}[-\s\./0-9]*$/g
+
+        return phoneRegex.test(phone);
+    }
 
     //handles updates to input's
     const inputHandler = () =>{
@@ -57,20 +80,20 @@ const Register = () => {
             setLastNameWarning('')
         }
 
-        if(email.length < 4 ) {
+        if(emailValidator.validate(email)) {
             setEmailWarning('Please Enter Valid Email')
         } else {
             setEmailWarning('')
         }
 
-        if(phone.length < 2 ) {
+        if(!validatePhone(phone)) {
             setPhoneWarning('Please Enter Valid Phone')
         } else {
             setPhoneWarning('')
         }
 
-        if(password.length < 4 ) {
-            setPasswordWarning('Password is not long enough')
+        if(!passwordValidation(password)) {
+            setPasswordWarning('Password must be 8 characters long & uppercase/lowercase letters and numbers')
         } else {
             setPasswordWarning('')
         }
@@ -84,12 +107,15 @@ const Register = () => {
     const Register = () =>{
         
 
-        if(password === confirmPassword) {
+        if(passwordValidation(password)) {
 
-            postRegister(firstName, lastName, email, password, phone)
-            home();
-        } else {
-            
+            if(password === confirmPassword) {
+
+                postRegister(firstName, lastName, email, password, phone)
+                home();
+            } else {
+                
+            }
         }
     }
 
