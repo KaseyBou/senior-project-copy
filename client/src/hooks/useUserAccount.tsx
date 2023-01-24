@@ -1,6 +1,9 @@
 //import { ResultType } from '@remix-run/router/dist/utils';
 import axios from 'axios';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+
+import Cookies from "universal-cookie";
+const cookies = new Cookies();
 
 const baseURL = 'http://localhost:3001/';
 
@@ -9,7 +12,11 @@ const usePost = (urlSegment : string) => {
     const [data, setData] = useState<any>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<boolean>(false);
-
+    
+    const [tokenHeader, setTokenHeader] = useState<any>('');
+    useEffect(() => {setTokenHeader({
+        Authorization: `Bearer ${cookies.get("TOKEN")}`}
+    )},[])
 
     //hook to register user account
     const postRegister = async(first_Name: string, last_Name: string, email: string, password: string, phone: string) => {
@@ -104,6 +111,9 @@ const usePost = (urlSegment : string) => {
             email: `${email}`,
             password: `${password}`
 
+            }).then((response) => {
+                cookies.set("TOKEN", response.data.token, {path: "/",});
+                return response;
             })
             setData(response);
             return 

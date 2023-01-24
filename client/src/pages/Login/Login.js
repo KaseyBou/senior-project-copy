@@ -6,11 +6,12 @@ import CustomForm from '../../components/CustomForm/CustomForm';
 import { useState } from 'react';
 import usePost from '../../hooks/useUserAccount.tsx';
 
+
 const Login = () => {
 
     //Initializing
     const navigate = useNavigate();
-    var emailValidator = require("email-validator");
+    //var emailValidator = require("email-validator");
     
     const dashboard = () => {
         navigate("/Dashboard");
