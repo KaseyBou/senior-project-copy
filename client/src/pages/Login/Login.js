@@ -48,7 +48,7 @@ const Login = () => {
     const Login = () =>{
         
         postLogin(email, password)
-        dashboard();
+        //dashboard();
         //not complete
         /*const {data, loading, error} = postLogin(email, password)
         //dashboard();

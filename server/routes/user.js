@@ -148,7 +148,21 @@ module.exports.userLogin = (req,res) => {
       //If success
       if(correct) {
 
-        res.status(200).json('Login Succeful' + correct)
+        //   create JWT token
+        const token = jwt.sign(
+          {
+            userEmail: email,
+          },
+          "RANDOM-TOKEN",
+          { expiresIn: "24h" }
+        );
+
+          //   return success response
+          response.status(200).send({
+          message: "Login Successful",
+          email: user.email,
+          token,
+        });
       } else {
         res.status(400).json('Incorrect password');
       }
