@@ -30,7 +30,7 @@ const connection = mysql.createConnection({
 //functions from routes
 const {insertIncome, getIncomes, updateIncome, deleteIncome} = require('./routes/income');
 const { addBill, getBills, updateBill, deleteBill } = require("./routes/bills.js");
-const {userLogin, deleteUser, editUser, registerUser, getAccountDetails } = require('./routes/user');
+const {userLogin, deleteUser, editUser, registerUser, getAccountDetails, addSessionToken } = require('./routes/user');
 const {addAccount, editAccount, deleteAccount} = require('./routes/bankAccount');
 const {logError} = require('./routes/errorLog');
 const { addDeposit, getDeposit, updateDeposit, deleteDeposit } = require("./routes/deposits");
@@ -48,6 +48,8 @@ app.post('/EditUser',  auth, editUser);
 app.post('/DeleteUser',  auth, deleteUser);
 
 app.post('/Login', userLogin);
+
+app.post('/AddSession', addSessionToken)
 
 app.get('/User/:user_id',  auth, getAccountDetails);
 

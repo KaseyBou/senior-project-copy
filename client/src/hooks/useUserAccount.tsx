@@ -128,6 +128,33 @@ const usePost = (urlSegment : string) => {
         }
         
     };
+
+    //add user session
+    const postAddUserSession = async(token: string, email: string) => {
+
+        try {
+            setLoading(true);
+            setError(false);
+            const response = await axios.post(`${baseURL}${urlSegment}`, {
+            email: `${email}`,
+            token: `${token}`
+
+            }).then((response) => {
+                return response;
+            })
+            setData(response);
+            return 
+        }catch(error) {
+            setError(true);
+            console.log(error);
+
+        } finally {
+
+            setLoading(false);
+
+        }
+        
+    };
     
     // get account details
     const getAccountDetails = async (user_id: number) => {
@@ -148,7 +175,7 @@ const usePost = (urlSegment : string) => {
         }
     }
     
-    return {postRegister, postLogin, postEditUser, postDeleteUser, getAccountDetails, data, loading, error}
+    return {postRegister, postLogin, postEditUser, postDeleteUser, getAccountDetails, postAddUserSession, data, loading, error}
 
 }
 

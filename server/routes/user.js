@@ -157,7 +157,7 @@ module.exports.userLogin = (req,res) => {
           "RANDOM-TOKEN",
           { expiresIn: "24h" }
         );
-
+          
           //   return success response
           res.status(200).send({
           message: "Login Successful",
@@ -165,7 +165,7 @@ module.exports.userLogin = (req,res) => {
           token,
         });
 
-        console.log(res)
+        //console.log(res)
       } else {
         res.status(400).json('Incorrect password');
       }
@@ -193,3 +193,26 @@ module.exports.getAccountDetails = (req, res) => {
       res.status(200).json(rows)
     });
 }
+
+//edit user account
+module.exports.addSessionToken = (req,res) => {
+  
+  let {token, email} = req.body;
+
+  var sql = `Update Users SET token = '${token}' WHERE email = '${email}'`;
+
+   connection.query(sql, function(err, rows)
+  {
+
+    if (err){
+      //If error
+        res.status(400).json('Unable To Edit');
+        console.log("Error inserting : %s ",err );
+    }
+   else
+    //If success
+    res.status(200).json('Account editted Successfully!!')
+
+  });
+
+};

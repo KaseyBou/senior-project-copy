@@ -26,7 +26,8 @@ const Login = () => {
     const [passwordWarning, setPasswordWarning] = useState('');
 
     //calling postLogin function
-    const { postLogin } = usePost('Login')
+    const { postLogin } = usePost('Login');
+    const { postAddUserSession} = usePost('AddSession');
 
     //handles updates to input's
     const inputHandler = (e) =>{
@@ -51,8 +52,12 @@ const Login = () => {
         
         postLogin(email, password)
 
-        if(cookies.get("TOKEN").length != 0) {
-            dashboard();
+        if(cookies.get("TOKEN").length !== 0) {
+            
+            let token = cookies.get("TOKEN");
+            console.log(token);
+            postAddUserSession(token, email)
+            //dashboard();
         }
 
 
