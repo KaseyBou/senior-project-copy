@@ -1,5 +1,8 @@
 import axios from 'axios';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+
+import Cookies from "universal-cookie";
+const cookies = new Cookies();
 
 const baseURL = 'http://localhost:3001/';
 
@@ -7,6 +10,11 @@ const useIncome = (urlSegment : string) => {
     const [data, setData] = useState<any>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<boolean>(false);
+
+    const [tokenHeader, setTokenHeader] = useState<any>('');
+    useEffect(() => {setTokenHeader({
+        Authorization: `Bearer ${cookies.get("TOKEN")}`}
+    )},[])
 
     const postIncome = async(account_id: number, gross_pay: number, pay_day: Date, pay_frequency: number, user_id: number) => {
         try {
@@ -18,7 +26,7 @@ const useIncome = (urlSegment : string) => {
                 pay_day: `${pay_day}`,
                 pay_frequency: `${pay_frequency}`,
                 user_id: `${user_id}`
-                })
+                },tokenHeader)
             setData(response);
         }catch(error) {
             setError(true);
@@ -32,7 +40,7 @@ const useIncome = (urlSegment : string) => {
         try {
             setLoading(true);
             setError(false);
-            const response = await axios.get(`${baseURL}${urlSegment}/${user_id}`)
+            const response = await axios.get(`${baseURL}${urlSegment}/${user_id}`, tokenHeader)
             setData(response);
             return response;
         }catch(error) {

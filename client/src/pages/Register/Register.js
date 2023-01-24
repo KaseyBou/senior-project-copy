@@ -11,7 +11,7 @@ const Register = () => {
 
     //Initializing
     const navigate = useNavigate();
-    var emailValidator = require("email-validator");
+    //var emailValidator = require("email-validator");
 
     const home = () => {
         navigate("/");
@@ -80,7 +80,7 @@ const Register = () => {
             setLastNameWarning('')
         }
 
-        if(emailValidator.validate(email)) {
+        if(false) { //emailValidator.validate(email)
             setEmailWarning('Please Enter Valid Email')
         } else {
             setEmailWarning('')

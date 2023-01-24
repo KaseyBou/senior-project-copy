@@ -6,11 +6,12 @@ import CustomForm from '../../components/CustomForm/CustomForm';
 import { useState } from 'react';
 import usePost from '../../hooks/useUserAccount.tsx';
 
+
 const Login = () => {
 
     //Initializing
     const navigate = useNavigate();
-    var emailValidator = require("email-validator");
+    //var emailValidator = require("email-validator");
     
     const dashboard = () => {
         navigate("/Dashboard");
@@ -49,6 +50,7 @@ const Login = () => {
         
         postLogin(email, password)
         dashboard();
+        
         //not complete
         /*const {data, loading, error} = postLogin(email, password)
         //dashboard();
