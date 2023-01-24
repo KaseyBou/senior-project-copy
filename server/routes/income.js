@@ -43,10 +43,10 @@ module.exports.getIncomes = (req,res)=>{
         //If error
         res.status(400).json('Sorry!!Unable To Add');
          console.log("Error inserting : %s ",err );
+      } else {
+        //If success
+        res.status(200).json(rows)
       }
-    else
-      //If success
-      res.status(200).json(rows)
 
     });
 

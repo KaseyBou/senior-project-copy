@@ -12,8 +12,13 @@ const useIncome = (urlSegment : string) => {
     const [error, setError] = useState<boolean>(false);
 
     const [tokenHeader, setTokenHeader] = useState<any>('');
-    useEffect(() => {setTokenHeader({
-        Authorization: `Bearer ${cookies.get("TOKEN")}`}
+    useEffect(() => {
+        console.log(cookies.get("TOKEN"));
+        setTokenHeader({
+            headers: {
+                Authorization: `${cookies.get("TOKEN")}`
+            }
+        }
     )},[])
 
     const postIncome = async(account_id: number, gross_pay: number, pay_day: Date, pay_frequency: number, user_id: number) => {
