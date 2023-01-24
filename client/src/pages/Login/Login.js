@@ -5,7 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import CustomForm from '../../components/CustomForm/CustomForm';
 import { useState } from 'react';
 import usePost from '../../hooks/useUserAccount.tsx';
-
+import Cookies from 'universal-cookie';
+const cookies = new Cookies();
 
 const Login = () => {
 
@@ -49,15 +50,10 @@ const Login = () => {
     const Login = () =>{
         
         postLogin(email, password)
-        //dashboard();
-        //not complete
-        /*const {data, loading, error} = postLogin(email, password)
-        //dashboard();
-        
-        if (loading) {
-            return <Loading/>;
-        }*/
 
+        if(cookies.get("TOKEN").length != 0) {
+            dashboard();
+        }
 
 
     }

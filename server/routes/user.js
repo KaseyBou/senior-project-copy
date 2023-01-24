@@ -1,4 +1,5 @@
 const mysql = require('mysql');
+const jwt = require("jsonwebtoken");
 const connection = mysql.createConnection({
   host: 'financial-planner.c3p10rqx8lpz.us-east-1.rds.amazonaws.com',
   port: 3306,
@@ -158,11 +159,13 @@ module.exports.userLogin = (req,res) => {
         );
 
           //   return success response
-          response.status(200).send({
+          res.status(200).send({
           message: "Login Successful",
-          email: user.email,
+          email: email,
           token,
         });
+
+        console.log(res)
       } else {
         res.status(400).json('Incorrect password');
       }
