@@ -3,10 +3,11 @@
 import './Register.css';
 //import { useNavigate } from 'react-router-dom';
 import CustomForm from '../../components/CustomForm/CustomForm';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import usePost from '../../hooks/useUserAccount.tsx';
 
+import functions from './functions'
 const Register = () => {
 
     //Initializing
@@ -19,6 +20,9 @@ const Register = () => {
 
       //calling postRegister function
     const { postRegister } = usePost('Register')
+
+    //validation functions
+    const {passwordValidation, validateEmail, validatePhone} = functions();
 
     //state variables
     const [firstName, setFirstName] = useState('');
@@ -36,31 +40,9 @@ const Register = () => {
     const [passwordWarning, setPasswordWarning] = useState('')
     const [confirmPasswordWarning, setConfirmPasswordWarning] = useState('');
 
-    const passwordValidation = (password) =>{
-        // Regex to check if a string contains uppercase, lowercase special character & number
-        var passwordRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[-+_!@#$%^&*.,?]).+$");
- 
-        //if password
-        if (password.length <= 8 ) {
-         
-            //comparing password with regex
-            if (passwordRegex.test(password)) {
-            return true;
-            } else {
-            return false;
-            }
-        }
-    }
-
-    const validatePhone =(phone) => {
-
-        var phoneRegex = /^[+]*[(]{0,1}[0-9]{1,3}[)]{0,1}[-\s\./0-9]*$/g
-
-        return phoneRegex.test(phone);
-    }
-
     //handles updates to input's
     const inputHandler = () =>{
+
         setFirstName(document.getElementById("firstName").value);
         setLastName(document.getElementById("lastName").value);
         setPhone(document.getElementById("phone").value);
@@ -80,7 +62,7 @@ const Register = () => {
             setLastNameWarning('')
         }
 
-        if(false) { //emailValidator.validate(email)
+        if(!validateEmail(email)) { //emailValidator.validate(email)
             setEmailWarning('Please Enter Valid Email')
         } else {
             setEmailWarning('')
@@ -103,11 +85,14 @@ const Register = () => {
         }
     }
 
+    useEffect(() => {     
+        inputHandler()
+    })
     //Register
     const Register = () =>{
         
 
-        if(passwordValidation(password)) {
+        if(passwordValidation(password) && validateEmail(email) && validatePhone(phone) && lastName.length > 2 && firstName.length > 2) {
 
             if(password === confirmPassword) {
 
