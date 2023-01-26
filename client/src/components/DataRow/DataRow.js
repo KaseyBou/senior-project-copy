@@ -8,7 +8,8 @@ const DataRow = (props) => {
     //defining proptypes
     DataRow.propTypes = {
         title:PropTypes.string,
-        rows:PropTypes.string, // list of subrows in row
+        labels:PropTypes.array, // list of labels for subrows
+        rows:PropTypes.array, // list of subrows in row
         HandleEdit:PropTypes.func,
         HandleDelete:PropTypes.func
     }
@@ -16,6 +17,7 @@ const DataRow = (props) => {
     //default props
     DataRow.defaultProp = {
         title: "",
+        labels: [],
         rows: [],
         HandleEdit:() => {},
         HandleDelete:() => {}
@@ -26,7 +28,11 @@ const DataRow = (props) => {
     if(props.rows){
         for(var i = 0; i < props.rows.length; i++){
             subrowsJSX.push(
-                <p className='DataSubrow'>{props.rows[i]}</p>
+                <div className='DataSubrow'>
+                    <b>{props.labels[i]}</b>
+                    <span>{props.rows[i]}</span>
+                    <br />
+                </div>
             )
         }
     }

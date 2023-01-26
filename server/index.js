@@ -49,8 +49,6 @@ app.post('/DeleteUser',  auth, deleteUser);
 
 app.post('/Login', userLogin);
 
-app.post('/AddSession', addSessionToken)
-
 app.get('/User/:user_id',  auth, getAccountDetails);
 
 // BANK ACCOUNT ********************************************************************************************
@@ -73,7 +71,7 @@ app.post('/Error',  auth, logError);
 
 app.post('/Income',  auth, insertIncome);
 
-app.get('/Income/:user_id',  auth, getIncomes);
+app.get('/Income',  auth, getIncomes);
 
 app.put('/Income/:income_id',  auth, updateIncome);
 
