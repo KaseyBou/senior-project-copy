@@ -1,5 +1,6 @@
-import { useState } from 'react';
-
+import { useState, useEffect } from 'react';
+import Cookies from "universal-cookie";
+import {useNavigate} from "react-router-dom";
 //import Loading from '../Loading/Loading';
 import './Deposits.css';
 //import { useNavigate } from 'react-router-dom';
@@ -10,6 +11,9 @@ import CustomForm from '../../components/CustomForm/CustomForm';
 import SearchBar from '../../components/SearchBar/SearchBar';
 
 const Income = () => {
+
+    const cookies = new Cookies();
+    const navigate = useNavigate();
     // modal visibility states and functions
     const [showEdit, setShowEdit] = useState(false);
     const handleCloseEdit = () => setShowEdit(false);
@@ -25,6 +29,13 @@ const Income = () => {
 
     //Initialization
     //const navigate = useNavigate();
+
+    useEffect(() => {
+        if(cookies.get("TOKEN") === undefined) {
+          navigate("/")
+        }
+
+    },[])
 
     //returning JSX
     return (

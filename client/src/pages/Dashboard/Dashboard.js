@@ -1,9 +1,15 @@
 
 //import Loading from '../Loading/Loading';
 import './Dashboard.css';
-import { useNavigate } from 'react-router-dom';
+import { redirect, useNavigate } from 'react-router-dom';
 import ColumnBox from '../../components/ColumnBox/ColumnBox'
 import Button from '../../components/Button/Button'
+import Cookies from "universal-cookie";
+import {useEffect} from "react";
+
+import functions from '../../utils/functions';
+
+const cookies = new Cookies();
 
 const Dashboard = () => {
 
@@ -26,6 +32,14 @@ const Dashboard = () => {
         navigate("/Income");
       };
 
+    useEffect(() => {
+        if(cookies.get("TOKEN") === undefined) {
+          navigate("/")
+        }
+        
+
+    },[])
+ 
     //returning JSX
     return (
         <>
@@ -44,7 +58,8 @@ const Dashboard = () => {
                 </div>
             </div>
         </>
-        );
+    );
+    
 }
 
 export default Dashboard

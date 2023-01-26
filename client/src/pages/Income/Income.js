@@ -1,4 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
+import Cookies from "universal-cookie";
+import {useNavigate} from "react-router-dom";
 
 //import Loading from '../Loading/Loading';
 import './Income.css';
@@ -11,6 +13,9 @@ import SearchBar from '../../components/SearchBar/SearchBar';
 import useIncome from '../../hooks/useIncome.tsx';
 
 const Income = () => {
+
+    const cookies = new Cookies();
+    const navigate = useNavigate();
 
     // income hook instance
     const { postIncome, getIncomes, editIncome, deleteIncome } = useIncome("Income");
@@ -124,6 +129,13 @@ const Income = () => {
             deleteIncome(localStorage.getItem("deleting"))
             handleCloseDelete();
         }
+
+        useEffect(() => {
+            if(cookies.get("TOKEN") === undefined) {
+                navigate("/")
+            }
+    
+        },[])
 
     //returning JSX
     return (
