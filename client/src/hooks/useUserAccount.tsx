@@ -14,8 +14,13 @@ const usePost = (urlSegment : string) => {
     const [error, setError] = useState<boolean>(false);
     
     const [tokenHeader, setTokenHeader] = useState<any>('');
-    useEffect(() => {setTokenHeader({
-        Authorization: `Bearer ${cookies.get("TOKEN")}`}
+    useEffect(() => {
+        console.log(cookies.get("TOKEN"));
+        setTokenHeader({
+            headers: {
+                Authorization: `${cookies.get("TOKEN")}`
+            }
+        }
     )},[])
 
     //hook to register user account
@@ -64,7 +69,7 @@ const usePost = (urlSegment : string) => {
             profile_image: null,
             user_id: user_id
 
-            })
+            },tokenHeader)
             setData(response);
         }catch(error) {
             setError(true);
@@ -86,7 +91,7 @@ const usePost = (urlSegment : string) => {
             const response = await axios.post(`${baseURL}DeleteUser`, {
                 user_id: user_id,
                 pw_attempt: pw_attempt
-            })
+            },tokenHeader)
             setData(response);
             
         }catch(error) {
@@ -139,7 +144,7 @@ const usePost = (urlSegment : string) => {
             email: `${email}`,
             token: `${token}`
 
-            }).then((response) => {
+            }, tokenHeader).then((response) => {
                 return response;
             })
             setData(response);
@@ -161,7 +166,7 @@ const usePost = (urlSegment : string) => {
         try {
             setLoading(true);
             setError(false);
-            const response = await axios.get(`${baseURL}User/${user_id}`, {})
+            const response = await axios.get(`${baseURL}User/${user_id}`, tokenHeader)
             setData(response);
             return response;
         }catch(error) {

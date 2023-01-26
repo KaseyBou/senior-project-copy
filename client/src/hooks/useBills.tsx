@@ -1,12 +1,23 @@
 import axios from 'axios';
-import { useState } from 'react';
-
+import { useState, useEffect } from 'react';
+import Cookies from "universal-cookie";
+const cookies = new Cookies();
 const baseURL = 'http://localhost:3001/';
 
 const useBills = (urlSegment : string) => {
     const [data, setData] = useState<any>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<boolean>(false);
+
+    const [tokenHeader, setTokenHeader] = useState<any>('');
+    useEffect(() => {
+        console.log(cookies.get("TOKEN"));
+        setTokenHeader({
+            headers: {
+                Authorization: `${cookies.get("TOKEN")}`
+            }
+        }
+    )},[])
 
     const postBill = async(user_id: number, bill_name: string, bill_source: string, pay_frequency: number, next_due: Date, amount: number, account_id: number, budget_id: number) => {
         try {
@@ -21,7 +32,7 @@ const useBills = (urlSegment : string) => {
                 pay_frequency: `${pay_frequency}`,
                 user_id: `${user_id}`,
                 budget_id: `${budget_id}`
-                })
+                }, tokenHeader)
             setData(response);
         }catch(error) {
             setError(true);
@@ -35,7 +46,7 @@ const useBills = (urlSegment : string) => {
         try {
             setLoading(true);
             setError(false);
-            const response = await axios.get(`${baseURL}${urlSegment}/${user_id}`)
+            const response = await axios.get(`${baseURL}${urlSegment}/${user_id}`, tokenHeader)
             setData(response);
             return response;
         }catch(error) {
@@ -59,7 +70,7 @@ const useBills = (urlSegment : string) => {
                 next_due: `${next_due}`,
                 pay_frequency: `${pay_frequency}`,
                 budget_id: `${budget_id}`
-                })
+                }, tokenHeader)
             setData(response);
         }catch(error) {
             setError(true);
@@ -73,7 +84,7 @@ const useBills = (urlSegment : string) => {
         try {
             setLoading(true);
             setError(false);
-            const response = await axios.delete(`${baseURL}${urlSegment}/${bill_id}`)
+            const response = await axios.delete(`${baseURL}${urlSegment}/${bill_id}`, tokenHeader)
             setData(response);
         }catch(error) {
             setError(true);

@@ -66,7 +66,7 @@ const useIncome = (urlSegment : string) => {
                 gross_pay: `${gross_pay}`,
                 pay_day: `${pay_day}`,
                 pay_frequency: `${pay_frequency}`
-            })
+            }, tokenHeader)
             setData(response);
         }catch(error) {
             setError(true);
@@ -81,8 +81,7 @@ const useIncome = (urlSegment : string) => {
         try {
             setLoading(true);
             setError(false);
-            const response = await axios.delete(`${baseURL}${urlSegment}/${income_id}`, {
-            })
+            const response = await axios.delete(`${baseURL}${urlSegment}/${income_id}`, tokenHeader)
             setData(response);
         }catch(error) {
             setError(true);

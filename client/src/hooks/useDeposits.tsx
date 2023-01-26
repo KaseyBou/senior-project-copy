@@ -1,5 +1,7 @@
 import axios from 'axios';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import Cookies from "universal-cookie";
+const cookies = new Cookies();
 
 const baseURL = 'http://localhost:3001/';
 
@@ -7,6 +9,16 @@ const useDeposits = (urlSegment: string) => {
   const [data, setData] = useState<any>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<boolean>(false);
+
+  const [tokenHeader, setTokenHeader] = useState<any>('');
+  useEffect(() => {
+      console.log(cookies.get("TOKEN"));
+      setTokenHeader({
+          headers: {
+              Authorization: `${cookies.get("TOKEN")}`
+          }
+      }
+  )},[])
 
   //add a deposit
   const postDeposit = async (
@@ -25,7 +37,7 @@ const useDeposits = (urlSegment: string) => {
         date: `${date}`,
         total_amount: `${total_amount}`,
         account_id: `${account_id}`,
-      });
+      }, tokenHeader);
       setData(response);
     } catch (error) {
       setError(true);
@@ -40,7 +52,7 @@ const useDeposits = (urlSegment: string) => {
     try {
       setLoading(true);
       setError(false);
-      const response = await axios.get(`${baseURL}${urlSegment}/${user_id}`);
+      const response = await axios.get(`${baseURL}${urlSegment}/${user_id}`, tokenHeader);
       setData(response);
       return response;
     } catch (error) {
@@ -71,7 +83,7 @@ const useDeposits = (urlSegment: string) => {
           deposit_source: `${deposit_source}`,
           date: `${date}`,
           total_amount: `${total_amount}`,
-        }
+        }, tokenHeader
       );
       setData(response);
     } catch (error) {
@@ -90,7 +102,7 @@ const useDeposits = (urlSegment: string) => {
       setError(false);
       const response = await axios.delete(
         `${baseURL}${urlSegment}/${deposit_id}`,
-        {}
+         tokenHeader
       );
       setData(response);
     } catch (error) {
