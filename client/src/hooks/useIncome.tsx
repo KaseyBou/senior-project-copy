@@ -11,17 +11,14 @@ const useIncome = (urlSegment : string) => {
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<boolean>(false);
 
-    const [tokenHeader, setTokenHeader] = useState<any>('');
-    useEffect(() => {
-        console.log(cookies.get("TOKEN"));
-        setTokenHeader({
+    const tokenHeader =
+        {
             headers: {
-                Authorization: `${cookies.get("TOKEN")}`
+                authorization: `${cookies.get("TOKEN")}`
             }
         }
-    )},[])
 
-    const postIncome = async(account_id: number, gross_pay: number, pay_day: Date, pay_frequency: number, user_id: number) => {
+    const postIncome = async(account_id: number, gross_pay: number, pay_day: Date, pay_frequency: number) => {
         try {
             setLoading(true);
             setError(false);
@@ -30,7 +27,6 @@ const useIncome = (urlSegment : string) => {
                 gross_pay: `${gross_pay}`,
                 pay_day: `${pay_day}`,
                 pay_frequency: `${pay_frequency}`,
-                user_id: `${user_id}`
                 },tokenHeader)
             setData(response);
         }catch(error) {
@@ -41,11 +37,11 @@ const useIncome = (urlSegment : string) => {
         }
     };
 
-    const getIncomes = async(user_id: number) => {
+    const getIncomes = async() => {
         try {
             setLoading(true);
             setError(false);
-            const response = await axios.get(`${baseURL}${urlSegment}/${user_id}`, tokenHeader)
+            const response = await axios.get(`${baseURL}${urlSegment}`, tokenHeader)
             setData(response);
             return response;
         }catch(error) {
@@ -66,7 +62,7 @@ const useIncome = (urlSegment : string) => {
                 gross_pay: `${gross_pay}`,
                 pay_day: `${pay_day}`,
                 pay_frequency: `${pay_frequency}`
-            })
+            }, tokenHeader)
             setData(response);
         }catch(error) {
             setError(true);
@@ -81,8 +77,7 @@ const useIncome = (urlSegment : string) => {
         try {
             setLoading(true);
             setError(false);
-            const response = await axios.delete(`${baseURL}${urlSegment}/${income_id}`, {
-            })
+            const response = await axios.delete(`${baseURL}${urlSegment}/${income_id}`, tokenHeader)
             setData(response);
         }catch(error) {
             setError(true);

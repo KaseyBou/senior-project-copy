@@ -144,8 +144,7 @@ module.exports.userLogin = (req,res) => {
      else {
   
       let correct = functions.isPasswordCorrect(rows[0]['password'], rows[0]['password_salt'], password)
-      //let correct = functions.isPasswordCorrect('5ff9a7610f342f90274da0747e3dfa08ad8adddf3f166', 'qXGmD9z7L77Ob2q9TwUDXyDAXmukdQAV3PdC/mPP/CF/J0AvAACqQoCJM/lIG9e29OoUkyIt+jr3Fa5jFGZfVtfFjv9DYtFZHR4Ibh871Xm4fbYQMmFAl8q94dpy0a8gPqzBgzUKX6w4HBWB0fM7yv6lnZpqMWk8zcf5E0Hmohk=', password)
-      console.log(correct)
+      //console.log(correct)
       //If success
       if(correct) {
 
@@ -157,15 +156,13 @@ module.exports.userLogin = (req,res) => {
           "RANDOM-TOKEN",
           { expiresIn: "24h" }
         );
-          
+
           //   return success response
           res.status(200).send({
           message: "Login Successful",
           email: email,
           token,
         });
-
-        //console.log(res)
       } else {
         res.status(400).json('Incorrect password');
       }
@@ -193,26 +190,3 @@ module.exports.getAccountDetails = (req, res) => {
       res.status(200).json(rows)
     });
 }
-
-//edit user account
-module.exports.addSessionToken = (req,res) => {
-  
-  let {token, email} = req.body;
-
-  var sql = `Update Users SET token = '${token}' WHERE email = '${email}'`;
-
-   connection.query(sql, function(err, rows)
-  {
-
-    if (err){
-      //If error
-        res.status(400).json('Unable To Edit');
-        console.log("Error inserting : %s ",err );
-    }
-   else
-    //If success
-    res.status(200).json('Account editted Successfully!!')
-
-  });
-
-};

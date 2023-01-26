@@ -1,4 +1,5 @@
-const crypto = require('node:crypto')
+const crypto = require('node:crypto');
+const jwt = require("jsonwebtoken");
 
 function hashPassword(password) {
     let salt = crypto.randomBytes(128).toString('base64');
@@ -19,4 +20,14 @@ function isPasswordCorrect(savedHash, savedSalt, passwordAttempt) {
     return savedHash == crypto.pbkdf2Sync(passwordAttempt, savedSalt, savedIterations, 64, 'sha256').toString('hex');
 }
 
-module.exports = {hashPassword, isPasswordCorrect}
+const getEmail = async(token) => {
+    const decodedToken = await jwt.verify(token, "RANDOM-TOKEN", async(err, decodedToken) => {
+        if(err){
+          console.log(err);
+        }
+        return decodedToken;
+      });
+    return decodedToken.userEmail;
+}
+
+module.exports = {hashPassword, isPasswordCorrect, getEmail}

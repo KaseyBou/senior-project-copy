@@ -8,11 +8,16 @@ const connection = mysql.createConnection({
   
 })
 
-module.exports.insertIncome = (req,res) => {
+const {hashPassword, isPasswordCorrect, getEmail} = require('../helper-functions/functions')
 
-    let {account_id, gross_pay, pay_day, pay_frequency, user_id} = req.body;
+module.exports.insertIncome = async(req,res) => {
+
+    let {account_id, gross_pay, pay_day, pay_frequency} = req.body;
+    let email = getEmail(req.headers.authorization).then((email) => {return email;});
     
-    var sql = `INSERT INTO Incomes (account_id, gross_pay, pay_day, pay_frequency, user_id) Values ('${account_id}', '${gross_pay}', '${pay_day}', '${pay_frequency}','${user_id}')`;
+    var sql = `INSERT INTO Incomes (account_id, gross_pay, pay_day, pay_frequency, user_id) 
+      Values ('${account_id}', '${gross_pay}', '${pay_day}', '${pay_frequency}',
+      (SELECT user_id FROM Users WHERE email = '${await email}'))`;
   
     connection.query(sql, function(err, rows)
       {
@@ -29,12 +34,11 @@ module.exports.insertIncome = (req,res) => {
       });
 }
 
+// TODO: don't use SELECT * because that gives out encrypted passwords and stuff
+module.exports.getIncomes = async(req,res)=>{
+  let email = getEmail(req.headers.authorization).then((email) => {return email;});
 
-module.exports.getIncomes = (req,res)=>{
-  console.log(req)
-  user_id = req.params.user_id;
-
-  var sql = `SELECT * FROM Incomes WHERE user_id = ${user_id}`;
+  var sql = `SELECT * FROM Incomes INNER JOIN Users ON Users.user_id = Incomes.user_id WHERE email = '${await email}'`;
 
   connection.query(sql, function(err, rows)
     {
@@ -52,12 +56,15 @@ module.exports.getIncomes = (req,res)=>{
 
   }
 
-module.exports.updateIncome = (req, res) => {
+module.exports.updateIncome = async(req, res) => {
   income_id = req.params.income_id;
 
   let {account_id, gross_pay, pay_day, pay_frequency} = req.body;
+  let email = getEmail(req.headers.authorization).then((email) => {return email;});
 
-var sql = `UPDATE Incomes SET account_id = '${account_id}', gross_pay = '${gross_pay}', pay_day = '${pay_day}', pay_frequency = '${pay_frequency}' WHERE income_id = '${income_id}'`;
+  var sql = `UPDATE Incomes SET account_id = '${account_id}', gross_pay = '${gross_pay}', pay_day = '${pay_day}',
+    pay_frequency = '${pay_frequency}' WHERE income_id = '${income_id}'
+    AND user_id=(SELECT user_id FROM Users WHERE email = '${await email}')`;
 
 connection.query(sql, function(err, rows)
   {
@@ -74,10 +81,12 @@ connection.query(sql, function(err, rows)
   });
 }
 
-module.exports.deleteIncome = (req, res) => {
+module.exports.deleteIncome = async(req, res) => {
   income_id = req.params.income_id;
+  let email = getEmail(req.headers.authorization).then((email) => {return email;});
 
-  var sql = `DELETE FROM Incomes WHERE income_id = '${income_id}'`
+  var sql = `DELETE FROM Incomes WHERE income_id = '${income_id}'
+    AND user_id=(SELECT user_id FROM Users WHERE email = '${await email}')`;
 
   connection.query(sql, function(err, rows)
   {
