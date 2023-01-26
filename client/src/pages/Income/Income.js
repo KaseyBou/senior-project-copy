@@ -1,4 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
+import Cookies from "universal-cookie";
+import {useNavigate} from "react-router-dom";
 
 //import Loading from '../Loading/Loading';
 import './Income.css';
@@ -11,6 +13,9 @@ import SearchBar from '../../components/SearchBar/SearchBar';
 import useIncome from '../../hooks/useIncome.tsx';
 
 const Income = () => {
+
+    const cookies = new Cookies();
+    const navigate = useNavigate();
 
     // income hook instance
     const { postIncome, getIncomes, editIncome, deleteIncome } = useIncome("Income");
@@ -53,36 +58,43 @@ const Income = () => {
     //Initialization
     //const navigate = useNavigate();
 
-        //handles updates to input's
-        const editInputHandler = () =>{
-            setPayDateEdit(document.getElementById("payDateEdit").value);
-            setPayFrequencyEdit(document.getElementById("payFrequencyEdit").value);
-            setGrossPayEdit(document.getElementById("grossPayEdit").value);
+    //handles updates to input's
+    const editInputHandler = () =>{
+        setPayDateEdit(document.getElementById("payDateEdit").value);
+        setPayFrequencyEdit(document.getElementById("payFrequencyEdit").value);
+        setGrossPayEdit(document.getElementById("grossPayEdit").value);
 
+    }
+
+    //handles updates to input's
+    const addInputHandler = () =>{
+        setPayDateAdd(document.getElementById("payDateAdd").value);
+        setPayFrequencyAdd(document.getElementById("payFrequencyAdd").value);
+        setGrossPayAdd(document.getElementById("grossPayAdd").value);
+        setAccountAdd(document.getElementById("accountAdd").value);
+
+    }
+
+    //handles updates to input's
+    const deleteInputHandler = () =>{
+        setPassword(document.getElementById("password").value);
+
+    }
+
+    // post Income to server
+    const addIncome = () => {
+        // TODO: get user ID from session variable
+        postIncome(accountAdd, grossPayAdd, payDateAdd, payFrequencyAdd, 7);
+        handleCloseAdd();
+    }
+
+    useEffect(() => {
+        if(cookies.get("TOKEN") === undefined) {
+            navigate("/")
         }
 
-        //handles updates to input's
-        const addInputHandler = () =>{
-            setPayDateAdd(document.getElementById("payDateAdd").value);
-            setPayFrequencyAdd(document.getElementById("payFrequencyAdd").value);
-            setGrossPayAdd(document.getElementById("grossPayAdd").value);
-            setAccountAdd(document.getElementById("accountAdd").value);
+    },[])
 
-        }
-
-        //handles updates to input's
-        const deleteInputHandler = () =>{
-            setPassword(document.getElementById("password").value);
-
-        }
-
-        // post Income to server
-        const addIncome = () => {
-            // TODO: get user ID from session variable
-            postIncome(accountAdd, grossPayAdd, payDateAdd, payFrequencyAdd, 7);
-            handleCloseAdd();
-        }
-    
     //returning JSX
     return (
         <>

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-
+import Cookies from "universal-cookie";
+import {useNavigate} from "react-router-dom";
 //import Loading from '../Loading/Loading';
 import './Expenses.css';
 //import { useNavigate } from 'react-router-dom';
@@ -12,6 +13,9 @@ import SearchBar from '../../components/SearchBar/SearchBar';
 import useBills from '../../hooks/useBills.tsx';
 
 const Expenses = () => {
+
+    const cookies = new Cookies();
+    const navigate = useNavigate();
 
      // bill hook instance
      const { postBill, getBills, editBill, deleteBill } = useBills("Bills");
@@ -122,6 +126,13 @@ const Expenses = () => {
         handleCloseBillAdd();
     }
 
+    useEffect(() => {
+        if(cookies.get("TOKEN") === undefined) {
+          navigate("/")
+        }
+
+    },[])
+    
     //returning JSX
     return (
         <>

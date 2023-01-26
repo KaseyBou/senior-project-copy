@@ -3,7 +3,9 @@
 
 //import Loading from '../Loading/Loading';
 import './Savings.css';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import Cookies from "universal-cookie";
+import {useNavigate} from "react-router-dom";
 import Button from 'react-bootstrap/Button';
 //import Modal from '../../components/Modal/Modal';
 //import DataRow from '../../components/DataRow/DataRow';
@@ -13,7 +15,8 @@ import InformationDisplay from '../../components/InformationDisplay/InformationD
 
 const Savings = () => {
 
-    //Initialization
+    //intializing
+    const cookies = new Cookies();
     const navigate = useNavigate();
 
     const income = () => {
@@ -27,6 +30,14 @@ const Savings = () => {
     const deposits = () => {
         navigate("/Deposits");
       };
+
+    
+    useEffect(() => {
+        if(cookies.get("TOKEN") === undefined) {
+            navigate("/")
+        }
+
+    },[])
     //returning JSX
     return (
         <>
