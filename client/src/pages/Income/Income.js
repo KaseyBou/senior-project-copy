@@ -11,6 +11,7 @@ import DataRow from '../../components/DataRow/DataRow';
 import CustomForm from '../../components/CustomForm/CustomForm';
 import SearchBar from '../../components/SearchBar/SearchBar';
 import useIncome from '../../hooks/useIncome.tsx';
+import useAccount from '../../hooks/useAccount.tsx';
 
 const Income = () => {
 
@@ -20,11 +21,23 @@ const Income = () => {
     // income hook instance
     const { postIncome, getIncomes, editIncome, deleteIncome } = useIncome("Income");
 
+    // account hook instance
+    const {postAccount, postDeleteAccount, getAccounts} = useAccount("BankAccounts")
+
     // income state
     const [incomes, setIncomes] = useState(null);
+    // list of accounts
+    const [accountList, setAccountList] = useState(null);
+
+    // redirect if not logged in
+    useEffect(() => {
+        if(cookies.get("TOKEN") === undefined) {
+            navigate("/")
+        }
+
+    },[])
 
     // on render, get list of incomes
-    // TODO: use user ID from session data
     useEffect(() => {
         getIncomes().then((data) => {
             setIncomes(data.data.map((income) => {
@@ -38,6 +51,16 @@ const Income = () => {
                 />
                 )
             }));
+        })
+    }, [])
+
+    //generate dropdown list of accounts, add it to add and edit forms
+    useEffect(() => {
+        getAccounts().then((accounts) => {
+            setAccountList(accounts.data.map((account) => {
+                console.log(account);
+                return <option value={account.account_id}>{account.account_name}</option>
+            }))
         })
     }, [])
 
@@ -57,7 +80,10 @@ const Income = () => {
     const [showAdd, setShowAdd] = useState(false);
     const handleCloseAdd = () => {
         setShowAdd(false);
-        
+        setGrossPayAddWarning('');
+        setAccountAddWarning('');
+        setPayDateAddWarning('');
+        setPayFrequencyAddWarning('');
     }
     const handleShowAdd = () => setShowAdd(true);
 
@@ -91,17 +117,31 @@ const Income = () => {
             setAccountEdit(document.getElementById("accountEdit").value);
         }
 
-        //handles updates to input's
+        //handles updates to inputs
         const addInputHandler = () =>{
             setPayDateAdd(document.getElementById("payDateAdd").value);
             let now = new Date(Date.now());
             let nowString = now.getMonth()+1 + "/" + now.getDate() + "/" + (now.getYear()+1900);
-            if(payDateAdd < now){
+            if(document.getElementById("payDateAdd").value < now){
                 setPayDateAddWarning(`Next pay date cannot be before ${nowString}`);
+            } else {
+                setPayDateAddWarning('');
             }
 
             setPayFrequencyAdd(document.getElementById("payFrequencyAdd").value);
+            if(document.getElementById("payFrequencyAdd").value < 1){
+                setPayFrequencyAddWarning('Pay frequency cannot be less than 1');
+            } else {
+                setPayFrequencyAddWarning('');
+            }
+
             setGrossPayAdd(document.getElementById("grossPayAdd").value);
+            if(document.getElementById("grossPayAdd").value < 1){
+                setGrossPayAddWarning('Gross pay cannot be less than 1');
+            } else {
+                setGrossPayAddWarning('');
+            }
+
             setAccountAdd(document.getElementById("accountAdd").value);
 
         }
@@ -130,13 +170,6 @@ const Income = () => {
             handleCloseDelete();
         }
 
-        useEffect(() => {
-            if(cookies.get("TOKEN") === undefined) {
-                navigate("/")
-            }
-    
-        },[])
-
     //returning JSX
     return (
         <>
@@ -152,9 +185,10 @@ const Income = () => {
                         title="Add Income"
                         fields={['Gross Pay', 'Pay Frequency', 'Pay Date', 'Account']}
                         fieldIDs={['grossPayAdd', 'payFrequencyAdd', 'payDateAdd', 'accountAdd']}
-                        warning={[grossPayAdd, payFrequencyAddWarning, payDateAddWarning, accountAddWarning]}
+                        warning={[grossPayAddWarning, payFrequencyAddWarning, payDateAddWarning, accountAddWarning]}
                         warningIDs={['grossPayAddWarning', 'payFrequencyAddWarning','payDateAddWarning', 'accountAddWarning']}
-                        fieldTypes={['number', 'number', 'date', 'number']}
+                        fieldTypes={['number', 'number', 'date', 'select']}
+                        selectFields={accountList}
                         onChange={addInputHandler}
                         submitAction={addIncome}
                     />

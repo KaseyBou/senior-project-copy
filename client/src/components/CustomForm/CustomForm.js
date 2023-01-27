@@ -36,21 +36,43 @@ const CustomForm = (props) => {
             type = 'text'
         }
 
-        fieldsJSX.push(
-        <>
-            <tr>
-                <td>
-                    <label htmlFor={props.fields[i]} className="formLabel">{props.fields[i]}</label>
-                </td>
-                <td>
-                    <input type={type} className="formInput" name={props.fieldIDs[i]} id={props.fieldIDs[i]} onChange={props.onChange} />
-                </td>
-                <td className='column'>
-                    <p id={props.warningIDs[i]} className='warning'>{props.warning[i]}</p>
-                </td>
-            </tr>
-        </>
-        )
+        // all cases aside from select
+        if (type !== 'select'){
+            fieldsJSX.push(
+            <>
+                <tr>
+                    <td>
+                        <label htmlFor={props.fields[i]} className="formLabel">{props.fields[i]}</label>
+                    </td>
+                    <td>
+                        <input type={type} className="formInput" name={props.fieldIDs[i]} id={props.fieldIDs[i]} onChange={props.onChange} />
+                    </td>
+                    <td className='column'>
+                        <p id={props.warningIDs[i]} className='warning'>{props.warning[i]}</p>
+                    </td>
+                </tr>
+            </>
+            )
+        } else {
+            // if select, insert a select tag instead of input
+            fieldsJSX.push(
+            <>
+                <tr>
+                    <td>
+                        <label htmlFor={props.fields[i]} className="formLabel">{props.fields[i]}</label>
+                    </td>
+                    <td>
+                        <select className="formInput" name={props.fieldIDs[i]} id={props.fieldIDs[i]} onChange={props.onChange}>
+                            {props.selectFields}
+                        </select>
+                    </td>
+                    <td className='column'>
+                        <p id={props.warningIDs[i]} className='warning'>{props.warning[i]}</p>
+                    </td>
+                </tr>
+            </>
+            )
+        }
     }
 
     //returning jsx

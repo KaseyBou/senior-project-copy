@@ -11,7 +11,7 @@ import CustomForm from '../../components/CustomForm/CustomForm';
 import SearchBar from '../../components/SearchBar/SearchBar';
 import useDeposits from '../../hooks/useDeposits.tsx';
 
-const Income = () => {
+const Deposit = () => {
 
     //intializing
     const cookies = new Cookies();
@@ -189,4 +189,4 @@ const Income = () => {
     );
 }
 
-export default Income
+export default Deposit
