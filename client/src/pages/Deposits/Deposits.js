@@ -10,6 +10,7 @@ import DataRow from '../../components/DataRow/DataRow';
 import CustomForm from '../../components/CustomForm/CustomForm';
 import SearchBar from '../../components/SearchBar/SearchBar';
 import useDeposits from '../../hooks/useDeposits.tsx';
+import useAccount from '../../hooks/useAccount.tsx';
 
 const Deposit = () => {
 
@@ -71,6 +72,7 @@ const Deposit = () => {
     //const navigate = useNavigate();
 
     const addInputHandler = () => {
+        setAddSource(document.getElementById('addSource').value)
         setAddAccount(document.getElementById('addDepositAccount').value);
         setAddDepositDate(document.getElementById('addDepositDate').value);
         setAddAmount(document.getElementById('addDepositAmount').value);
@@ -79,6 +81,7 @@ const Deposit = () => {
     }
 
     const editInputHandler = () => {
+        setEditSource(document.getElementById('addSource').value)
         setEditAccount(document.getElementById('editDepositAccount').value);
         setEditDepositDate(document.getElementById('editDepositDate').value);
         setEditAmount(document.getElementById('editDepositAmount').value);
@@ -94,10 +97,16 @@ const Deposit = () => {
     // income state
     const [deposits, setDeposits] = useState(null);
 
+    // account hook instance
+    const {postAccount, postDeleteAccount, getAccounts} = useAccount("BankAccounts")
+    // list of accounts
+    const [accountList, setAccountList] = useState(null);
+
     // post Income to server
     const addDeposit = () => {
         // TODO: get user ID from session variable
-        postDeposit(addSource, addAccount, addDepositDate, addAmount);
+        //console.log(addSource, addDepositDate, addAmount, addAccount)
+        postDeposit(addSource, addDepositDate, addAmount, addAccount);
         handleCloseAdd();
     }
 
@@ -126,15 +135,26 @@ const Deposit = () => {
                 return(
                     <DataRow
                     title=""
-                    labels={["Gross Pay: ", "Next Pay Date: ", "Pay Frequency: "]}
-                    rows={[deposit.account_id, deposit.date, deposit.total_amount]}
+                    labels={["Source:", "Account:", "Date:", "Amount:"]}
+                    rows={[deposit.source, deposit.account_id, deposit.date, deposit.total_amount]}
                     HandleEdit={() => handleShowEdit(deposit.deposit_id)}
                     HandleDelete={() => handleShowDelete(deposit.deposit_id)}
                 />
                 )
-            }));
+            }
+            ));
         })
-    }, [])
+    },[])
+
+        //generate dropdown list of accounts, add it to add and edit forms
+        useEffect(() => {
+            getAccounts().then((accounts) => {
+                setAccountList(accounts.data.map((account) => {
+                    console.log(account);
+                    return <option value={account.account_id}>{account.account_name}</option>
+                }))
+            })
+        },[])
 
     //returning JSX
     return (
@@ -149,10 +169,11 @@ const Deposit = () => {
                     <CustomForm
                         title="Add Deposit"
                         fields={['Source', 'Account', 'Deposit Date', 'Amount', 'Confirm Amount']}
-                        fieldIDs={['addSource','addDepositAccount', 'addDepositDate', 'AddDepositAmount', 'AddConfirmAmount']}
-                        fieldTypes={['text', 'text', 'date', 'number', 'number']}
+                        fieldIDs={['addSource','addDepositAccount', 'addDepositDate', 'addDepositAmount', 'addConfirmAmount']}
+                        fieldTypes={['text', 'select', 'date', 'number', 'number']}
                         warning={[addSourceWarning, addAccountWarning, addDepositDateWarning, addAmountWarning, confirmAddAmountWarning]}
                         warningIDs={['addSourceWarning', 'addDepositAccountWarning', 'addDepositDateWarning', 'addAmountWarning', 'confirmAddAmountWarning']}
+                        selectFields={accountList}
                         onChange={addInputHandler}
                         submitAction={addDeposit}
                     />
@@ -164,9 +185,10 @@ const Deposit = () => {
                         title="Edit Deposit"
                         fields={['Source', 'Account', 'Deposit Date', 'Amount', 'Confirm Amount']}
                         fieldIDs={['editSource', 'editDepositAccount', 'editDepositDate', 'editDepositAmount', 'editConfirmAmount']}
-                        fieldTypes={['text', 'text', 'date', 'number', 'number']}
+                        fieldTypes={['text', 'select', 'date', 'number', 'number']}
                         warning={[editSource, editAccountWarning, editDepositDateWarning, editAmountWarning, confirmEditAmountWarning]}
                         warningIDs={['editSourceWarning', 'editDepositAccountWarning', 'editDepositDateWarning', 'editAmountWarning', 'confirmEditAmountWarning']}
+                        selectFields={accountList}
                         onChange={editInputHandler}
                         submitAction={changeDeposit}
                     />

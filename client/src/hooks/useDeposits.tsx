@@ -18,13 +18,14 @@ const useDeposits = (urlSegment: string) => {
   }
 
   //add a deposit
-  const postDeposit = async (deposit_source: string, date: Date, total_amount: number, account_id: number
+  const postDeposit = async (source: string, date: Date, total_amount: number, account_id: number
   ) => {
     try {
+      console.log(source, date, total_amount, account_id)
       setLoading(true);
       setError(false);
       const response = await axios.post(`${baseURL}${urlSegment}`, {
-        deposit_source: `${deposit_source}`,
+        source: `${source}`,
         date: `${date}`,
         total_amount: `${total_amount}`,
         account_id: `${account_id}`,
