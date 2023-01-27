@@ -20,6 +20,34 @@ function isPasswordCorrect(savedHash, savedSalt, passwordAttempt) {
     return savedHash == crypto.pbkdf2Sync(passwordAttempt, savedSalt, savedIterations, 64, 'sha256').toString('hex');
 }
 
+const passwordValidation = (password) =>{
+    // Regex to check if a string contains uppercase, lowercase special character & number
+    var passwordRegex = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
+
+    //if password
+    if (password.length >= 8 ) {
+     
+        //comparing password with regex
+        return passwordRegex.test(password);
+       
+    }
+}
+
+const validatePhone =(phone) => {
+
+    var phoneRegex = /^\(?(\d{3})\)?[- ]?(\d{3})[- ]?(\d{4})$/
+
+    return phoneRegex.test(phone);
+}
+
+const validateEmail = (email) => {
+
+    var emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+
+    return emailRegex.test(email);
+}
+
+module.exports = {hashPassword, isPasswordCorrect, passwordValidation, validateEmail, validatePhone}
 const getEmail = async(token) => {
     const decodedToken = await jwt.verify(token, "RANDOM-TOKEN", async(err, decodedToken) => {
         if(err){

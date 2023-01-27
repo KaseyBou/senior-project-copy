@@ -11,7 +11,7 @@ const Functions = () => {
 
         if(cookies.get("TOKEN") === undefined) {
 
-            return true;
+            return false;
         }
 
         return true;

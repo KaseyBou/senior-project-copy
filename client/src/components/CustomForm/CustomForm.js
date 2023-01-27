@@ -31,7 +31,7 @@ const CustomForm = (props) => {
         // if a field type is given, use it. otherwise, default to text
         var type
         try{
-            type = props.fieldTypes[i]
+            type = props.fieldTypes[i];
         } catch {
             type = 'text'
         }
