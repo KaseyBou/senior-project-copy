@@ -27,7 +27,6 @@ const Login = () => {
 
     //calling postLogin function
     const { postLogin } = usePost('Login');
-    const { postAddUserSession} = usePost('AddSession');
 
     //handles updates to input's
     const inputHandler = (e) =>{
@@ -56,7 +55,6 @@ const Login = () => {
             
             let token = cookies.get("TOKEN");
             console.log(token);
-            postAddUserSession(token, email)
             //dashboard();
         }
 

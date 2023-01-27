@@ -8,7 +8,7 @@ const connection = mysql.createConnection({
   
 })
 
-// BANK ACCOUNT ********************************************************************************************
+const {hashPassword, isPasswordCorrect, getEmail} = require('../helper-functions/functions')
 
 //add bank account
 module.exports.addAccount = (req,res) => {
@@ -82,6 +82,24 @@ module.exports.deleteAccount = (req,res) => {
       res.status(200).json('Account Added Successfully!!')
       
     });
-  
-  
 };
+
+module.exports.getAccounts = async(req, res) => {
+  let email = getEmail(req.headers.authorization).then((email) => {return email;});
+
+  var sql = `SELECT * FROM Accounts INNER JOIN Users ON Users.user_id = Accounts.user_id WHERE email = '${await email}'`;
+
+  connection.query(sql, function(err, rows)
+    {
+
+      if (err){
+        //If error
+        res.status(400).json('Sorry!!Unable To Add');
+         console.log("Error inserting : %s ",err );
+      } else {
+        //If success
+        res.status(200).json(rows)
+      }
+
+    });
+}

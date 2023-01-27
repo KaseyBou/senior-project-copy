@@ -31,7 +31,7 @@ const connection = mysql.createConnection({
 const {insertIncome, getIncomes, updateIncome, deleteIncome} = require('./routes/income');
 const { addBill, getBills, updateBill, deleteBill } = require("./routes/bills.js");
 const {userLogin, deleteUser, editUser, registerUser, getAccountDetails, addSessionToken } = require('./routes/user');
-const {addAccount, editAccount, deleteAccount} = require('./routes/bankAccount');
+const {addAccount, editAccount, deleteAccount, getAccounts} = require('./routes/bankAccount');
 const {logError} = require('./routes/errorLog');
 const { addDeposit, getDeposit, updateDeposit, deleteDeposit } = require("./routes/deposits");
 const { addExpenditure, getExpenditure, updateExpenditure, deleteExpenditure } = require("./routes/expenditures");
@@ -61,6 +61,9 @@ app.post('/EditAccount',  auth, editAccount);
 
 //edit bank account
 app.post('/DeleteAccount',  auth, deleteAccount);
+
+// get list of bank accounts
+app.get('/BankAccounts', auth, getAccounts);
 
 // ERROR LOG ********************************************************************************************
 

@@ -10,15 +10,12 @@ const useAccount = (urlSegment : string) => {
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<boolean>(false);
 
-    const [tokenHeader, setTokenHeader] = useState<any>('');
-    useEffect(() => {
-        console.log(cookies.get("TOKEN"));
-        setTokenHeader({
+    const tokenHeader =
+        {
             headers: {
-                Authorization: `${cookies.get("TOKEN")}`
+                authorization: `${cookies.get("TOKEN")}`
             }
         }
-    )},[])
 
     //add/edit bank account
     const postAccount = async(user_id: number, bank: string, accountType: string, interestRate: number, accountFees: number, balance: number) => {
@@ -59,22 +56,24 @@ const useAccount = (urlSegment : string) => {
         }
     };
 
-    const getAccount = async(user_id: number) => {
+    // get list of bank accounts
+    const getAccounts = async() => {
         try {
             setLoading(true);
             setError(false);
-            const response = await axios.get(`${baseURL}${urlSegment}/${user_id}`, tokenHeader)
+            const response = await axios.get(`${baseURL}BankAccounts`, tokenHeader)
             setData(response);
+            return response;
         }catch(error) {
             setError(true);
             console.log(error);
         } finally {
             setLoading(false);
-            return data;
+            //return data;
         }
     };
 
-    return {postAccount, getAccount, postDeleteAccount}
+    return {postAccount, postDeleteAccount, getAccounts}
     
 };
 
