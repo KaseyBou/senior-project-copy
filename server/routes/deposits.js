@@ -7,10 +7,16 @@ const connection = mysql.createConnection({
   password: 'Capital34Candy',
 });
 
-module.exports.addDeposit = (req, res) => {
-  let { user_id, deposit_source, date, total_amount, account_id } = req.body;
+const {hashPassword, isPasswordCorrect, getEmail} = require('../helper-functions/functions')
 
-  var sql = `INSERT INTO Deposits(user_id, deposit_source, date, total_amount, account_id) VALUES ('${user_id}', '${deposit_source}', '${date}', '${total_amount}', '${account_id}'`;
+module.exports.addDeposit = async(req, res) => {
+  let {deposit_source, date, total_amount, account_id } = req.body;
+  let email = getEmail(req.headers.authorization).then((email) => {return email;});
+
+  var sql = `INSERT INTO Deposits(source, date, total_amount, account_id, user_id) 
+  VALUES ('${deposit_source}', '${date}', '${total_amount}', '${account_id}',
+   (SELECT user_id FROM Users WHERE email = 'test@test.com'))`;
+  //(SELECT user_id FROM Users WHERE email = '${await email}')'`;
 
   connection.query(sql, function (err, rows) {
     if (err) {
@@ -25,10 +31,10 @@ module.exports.addDeposit = (req, res) => {
   });
 };
 
-module.exports.getDeposit = (req, res) => {
-  user_id = req.params.user_id;
-
-  var sql = `SELECT * FROM Deposits WHERE user_id = ${user_id}`;
+module.exports.getDeposit = async(req, res) => {
+  let email = getEmail(req.headers.authorization).then((email) => {return email;});
+  console.log(email)
+  var sql = `SELECT * FROM Deposits INNER JOIN Users ON Users.user_id = Deposits.user_id WHERE email = 'test@test.com'`;
 
   connection.query(sql, function (err, rows) {
     if (err) {
@@ -41,12 +47,16 @@ module.exports.getDeposit = (req, res) => {
   });
 };
 
-module.exports.updateDeposit = (req, res) => {
+module.exports.updateDeposit = async(req, res) => {
   deposit_id = req.params.deposit_id;
 
   let { account_id, deposit_source, date, total_amount } = req.body;
+  let email = getEmail(req.headers.authorization).then((email) => {return email;});
 
-  var sql = `UPDATE Deposits SET account_id = '${account_id}', deposit_source = '${deposit_source}', date = '${date}', total_amount = '${total_amount}'`;
+  var sql = `UPDATE Deposits SET account_id = '${account_id}', source = '${deposit_source}', date = '${date}',
+   total_amount = '${total_amount}' WHERE deposit_id = '${deposit_id}'
+   AND user_id=(SELECT user_id FROM Users WHERE email = 'test@test.com')`;
+   //AND user_id=(SELECT user_id FROM Users WHERE email = '${await email}')`;
 
   connection.query(sql, function (err, rows) {
     if (err) {
@@ -59,10 +69,12 @@ module.exports.updateDeposit = (req, res) => {
   });
 };
 
-module.exports.deleteDeposit = (req, res) => {
-  expenditure_id = req.params.expenditure_id;
-
-  var sql = `DELETE FROM Deposits WHERE deposit_id = '${deposit_id}'`;
+module.exports.deleteDeposit = async(req, res) => {
+  deposit_id = req.params.deposit_id;
+  let email = getEmail(req.headers.authorization).then((email) => {return email;});
+  var sql = `DELETE FROM Deposits WHERE deposit_id = '${deposit_id}'
+  AND user_id=(SELECT user_id FROM Users WHERE email = 'test@test.com')`;
+  //AND user_id=(SELECT user_id FROM Users WHERE email = '${await email}')`;
 
   connection.query(sql, function (err, rows) {
     if (err) {

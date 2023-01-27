@@ -91,7 +91,7 @@ app.delete('/Bills/:bill_id',  auth, deleteBill);
   
 app.post('/Deposits',  auth, addDeposit);
 
-app.get('/Deposits/:user_id',  auth, getDeposit);
+app.get('/Deposits',  auth, getDeposit);
 
 app.put('/Deposits/:deposit_id',  auth, updateDeposit);
 
