@@ -138,18 +138,7 @@ const Expenses = () => {
         <>
             <SearchBar/>
             <div id="ExpenseList">
-                <DataRow
-                    title="Expense 1"
-                    rows={["subrow 1", "subrow 2", "subrow 3"]}
-                    HandleEdit={handleShowEdit}
-                    HandleDelete={handleShowDelete}
-                />
-                <DataRow
-                    title="Bill 2"
-                    rows={["subrow 1", "subrow 2", "subrow 3"]}
-                    HandleEdit={handleShowBillEdit}
-                    HandleDelete={handleShowDelete}
-                />
+                
             </div>
 
             <div className='bottomTaskBar'>
