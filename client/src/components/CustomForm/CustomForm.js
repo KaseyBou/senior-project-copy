@@ -45,9 +45,11 @@ const CustomForm = (props) => {
                         <label htmlFor={props.fields[i]} className="formLabel">{props.fields[i]}</label>
                     </td>
                     <td>
-                        <input type={type} className="formInput" name={props.fieldIDs[i]} id={props.fieldIDs[i]} onChange={props.onChange} />
+                        <input type={type} className="formInput" colSpan="2" name={props.fieldIDs[i]} id={props.fieldIDs[i]} onChange={props.onChange} />
                     </td>
-                    <td className='column'>
+                </tr>
+                <tr> 
+                    <td className='column' colSpan="3">
                         <p id={props.warningIDs[i]} className='warning'>{props.warning[i]}</p>
                     </td>
                 </tr>
@@ -62,11 +64,13 @@ const CustomForm = (props) => {
                         <label htmlFor={props.fields[i]} className="formLabel">{props.fields[i]}</label>
                     </td>
                     <td>
-                        <select className="formInput" name={props.fieldIDs[i]} id={props.fieldIDs[i]} onChange={props.onChange}>
+                        <select className="formInput" name={props.fieldIDs[i]} id={props.fieldIDs[i]} onChange={props.onChange} colSpan="2">
                             {props.selectFields}
                         </select>
                     </td>
-                    <td className='column'>
+                </tr>
+                <tr>
+                    <td className='column' colSpan="3">
                         <p id={props.warningIDs[i]} className='warning'>{props.warning[i]}</p>
                     </td>
                 </tr>

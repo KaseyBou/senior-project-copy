@@ -38,27 +38,29 @@ const Income = () => {
     },[])
 
     // on render, get list of incomes
-    useEffect(() => {
+    const fetchIncomeList = () => {
         getIncomes().then((data) => {
             setIncomes(data.data.map((income) => {
+                let date = new Date(income.pay_day);
+                let dateString = date.getMonth()+1 + " / " + date.getDate() + " / " + (date.getYear()+1900);
                 return(
                     <DataRow
                     title={income.title}
                     labels={["Gross Pay: ", "Next Pay Date: ", "Pay Frequency: "]}
-                    rows={[income.gross_pay, income.pay_day, income.pay_frequency]}
+                    rows={[income.gross_pay, dateString, income.pay_frequency]}
                     HandleEdit={() => handleShowEdit(income.income_id)}
                     HandleDelete={() => handleShowDelete(income.income_id)}
                 />
                 )
             }));
         })
-    }, [])
+    }
+    useEffect(fetchIncomeList, [])
 
     //generate dropdown list of accounts, add it to add and edit forms
     useEffect(() => {
         getAccounts().then((accounts) => {
             setAccountList(accounts.data.map((account) => {
-                console.log(account);
                 return <option value={account.account_id}>{account.account_name}</option>
             }))
         })
@@ -66,13 +68,34 @@ const Income = () => {
 
     // modal visibility states and functions
     const [showEdit, setShowEdit] = useState(false);
-    const handleCloseEdit = () => setShowEdit(false);
+    const handleCloseEdit = () => {
+        setShowEdit(false);
+        fetchIncomeList();
+    }
     const handleShowEdit = (id) => {
         setShowEdit(true);
         localStorage.setItem("editing", id);
+
+        // load existing data into form
+        getIncomes().then((data) => {
+            for(let entry of data.data){
+                if(entry.income_id === id){
+                    document.getElementById("grossPayEdit").value = entry.gross_pay;
+                    document.getElementById("payFrequencyEdit").value = entry.pay_frequency;
+                    document.getElementById("payDateEdit").value = entry.pay_day.toString().substring(0, 10);
+                    document.getElementById("accountEdit").value = entry.account_id;
+                    console.log(entry);
+                }
+            }
+            // run validation to clear error messages
+            editInputHandler();
+        })
     }
     const [showDelete, setShowDelete] = useState(false);
-    const handleCloseDelete = () => setShowDelete(false);
+    const handleCloseDelete = () => {
+        setShowDelete(false);
+        fetchIncomeList();
+    }
     const handleShowDelete = (id) => {
         setShowDelete(true);
         localStorage.setItem("deleting", id);
@@ -84,6 +107,7 @@ const Income = () => {
         setAccountAddWarning('');
         setPayDateAddWarning('');
         setPayFrequencyAddWarning('');
+        fetchIncomeList();
     }
     const handleShowAdd = () => setShowAdd(true);
 
@@ -105,75 +129,126 @@ const Income = () => {
     const [payFrequencyAddWarning, setPayFrequencyAddWarning] = useState('');
     const [payDateAddWarning, setPayDateAddWarning] = useState('');
     const [accountAddWarning, setAccountAddWarning] = useState('');
+    const [grossPayEditWarning, setGrossPayEditWarning] = useState('');
+    const [payFrequencyEditWarning, setPayFrequencyEditWarning] = useState('');
+    const [payDateEditWarning, setPayDateEditWarning] = useState('');
+    const [accountEditWarning, setAccountEditWarning] = useState('');
 
     //Initialization
     //const navigate = useNavigate();
 
-        //handles updates to input's
-        const editInputHandler = () =>{
-            setPayDateEdit(document.getElementById("payDateEdit").value);
-            setPayFrequencyEdit(document.getElementById("payFrequencyEdit").value);
-            setGrossPayEdit(document.getElementById("grossPayEdit").value);
-            setAccountEdit(document.getElementById("accountEdit").value);
+    //handles updates to input's
+    const editInputHandler = () =>{
+        setPayDateEdit(document.getElementById("payDateEdit").value);
+        setPayFrequencyEdit(document.getElementById("payFrequencyEdit").value);
+        setGrossPayEdit(document.getElementById("grossPayEdit").value);
+        setAccountEdit(document.getElementById("accountEdit").value);
+    }
+
+    //handles updates to inputs
+    const addInputHandler = () =>{
+        setPayDateAdd(document.getElementById("payDateAdd").value);
+        setPayFrequencyAdd(document.getElementById("payFrequencyAdd").value);
+        setGrossPayAdd(document.getElementById("grossPayAdd").value);
+        setAccountAdd(document.getElementById("accountAdd").value);
+    }
+
+    // validation effect hooks
+    // ADD VALIDATION
+    useEffect(() => {
+        let now = new Date(Date.now());
+        let nowString = now.getMonth()+1 + "/" + now.getDate() + "/" + (now.getYear()+1900);
+        if(new Date(payDateAdd).getTime() < new Date(nowString).getTime() && document.getElementById("payDateAdd") && document.getElementById("payDateAdd").value){
+            setPayDateAddWarning(`Next pay date cannot be on or before ${nowString}`);
+        } else {
+            setPayDateAddWarning('');
         }
 
-        //handles updates to inputs
-        const addInputHandler = () =>{
-            setPayDateAdd(document.getElementById("payDateAdd").value);
-            let now = new Date(Date.now());
-            let nowString = now.getMonth()+1 + "/" + now.getDate() + "/" + (now.getYear()+1900);
-            if(document.getElementById("payDateAdd").value < now){
-                setPayDateAddWarning(`Next pay date cannot be before ${nowString}`);
-            } else {
-                setPayDateAddWarning('');
-            }
-
-            setPayFrequencyAdd(document.getElementById("payFrequencyAdd").value);
-            if(document.getElementById("payFrequencyAdd").value < 1){
-                setPayFrequencyAddWarning('Pay frequency cannot be less than 1');
-            } else {
-                setPayFrequencyAddWarning('');
-            }
-
-            setGrossPayAdd(document.getElementById("grossPayAdd").value);
-            if(document.getElementById("grossPayAdd").value < 1){
-                setGrossPayAddWarning('Gross pay cannot be less than 1');
-            } else {
-                setGrossPayAddWarning('');
-            }
-
-            setAccountAdd(document.getElementById("accountAdd").value);
-
+        if(payFrequencyAdd < 1 && document.getElementById("payFrequencyAdd") && document.getElementById("payFrequencyAdd").value){
+            setPayFrequencyAddWarning('Pay frequency cannot be less than 1');
+        } else {
+            setPayFrequencyAddWarning('');
         }
 
-        //handles updates to input's
-        const deleteInputHandler = () =>{
-            setPassword(document.getElementById("password").value);
+        if(grossPayAdd < 1 && document.getElementById("grossPayAdd") && document.getElementById("grossPayAdd").value){
+            setGrossPayAddWarning('Gross pay cannot be less than 1');
+        } else {
+            setGrossPayAddWarning('');
+        }
+    
+    }, [payDateAdd, payFrequencyAdd, grossPayAdd])
+
+    // EDIT VALIDATION
+    useEffect(() => {
+        let now = new Date(Date.now());
+        let nowString = now.getMonth()+1 + "/" + now.getDate() + "/" + (now.getYear()+1900);
+        if(new Date(payDateEdit).getTime() < new Date(nowString).getTime() && document.getElementById("payDateEdit") && document.getElementById("payDateEdit").value){
+            setPayDateEditWarning(`Next pay date cannot be on or before ${nowString}`);
+        } else {
+            setPayDateEditWarning('');
         }
 
-        // post Income to server
-        const addIncome = () => {
-            // TODO: get user ID from session variable
+        if(payFrequencyEdit < 1 && document.getElementById("payFrequencyEdit") && document.getElementById("payFrequencyEdit").value){
+            setPayFrequencyEditWarning('Pay frequency cannot be less than 1');
+        } else {
+            setPayFrequencyEditWarning('');
+        }
+
+        if(grossPayEdit < 1 && document.getElementById("grossPayEdit") && document.getElementById("grossPayEdit").value){
+            setGrossPayEditWarning('Gross pay cannot be less than 1');
+        } else {
+            setGrossPayEditWarning('');
+        }
+    
+    }, [payDateEdit, payFrequencyEdit, grossPayEdit])
+
+    //handles updates to input's
+    const deleteInputHandler = () =>{
+        setPassword(document.getElementById("password").value);
+    }
+
+    // post Income to server
+    const addIncome = () => {
+        // make sure no syntax errors are present and nothing is blank
+        if(accountAdd && grossPayAdd && payDateAdd && payFrequencyAdd
+        && !accountAddWarning && !grossPayAddWarning && !payFrequencyAddWarning && !payDateAddWarning){
             postIncome(accountAdd, grossPayAdd, payDateAdd, payFrequencyAdd);
             handleCloseAdd();
-        }
 
-        // post update
-        const changeIncome = () => {
-            editIncome(localStorage.getItem("editing"), accountEdit, grossPayEdit, payDateEdit, payFrequencyEdit)
+            // clear form data from state
+            setAccountAdd(null);
+            setGrossPayAdd(null);
+            setPayDateAdd(null);
+            setPayFrequencyAdd(null);
+        }
+    }
+
+    // post update
+    const changeIncome = () => {
+        // make sure no syntax errors are present and nothing is blank
+        if(accountEdit && grossPayEdit && payDateEdit && payFrequencyEdit
+        && !accountEditWarning && !grossPayEditWarning && !payFrequencyEditWarning && !payDateEditWarning){
+            editIncome(localStorage.getItem("editing"), accountEdit, grossPayEdit, payDateEdit, payFrequencyEdit);
             handleCloseEdit();
-        }
 
-        // post delete
-        const removeIncome = () => {
-            deleteIncome(localStorage.getItem("deleting"))
-            handleCloseDelete();
+            // clear form data from state
+            setAccountEdit(null);
+            setGrossPayEdit(null);
+            setPayDateEdit(null);
+            setPayFrequencyEdit(null);
         }
+    }
+
+    // post delete
+    const removeIncome = () => {
+        deleteIncome(localStorage.getItem("deleting"));
+        handleCloseDelete();
+    }
 
     //returning JSX
     return (
         <>
-            <SearchBar/>
+            <h1>Income</h1>
             <div id="IncomeList">
                 {incomes}
             </div>
@@ -199,9 +274,10 @@ const Income = () => {
                         title="Edit Income"
                         fields={['Gross Pay', 'Pay Frequency', 'Pay Date', 'Account']}
                         fieldIDs={['grossPayEdit', 'payFrequencyEdit', 'payDateEdit', 'accountEdit']}
-                        warning={['','','','']}
-                        warningIDs={['', '','', '']}
-                        fieldTypes={['number', 'number', 'date']}
+                        warning={[grossPayEditWarning, payFrequencyEditWarning, payDateEditWarning, accountEditWarning]}
+                        warningIDs={['grossPayEditWarning', 'payFrequencyEditWarning','payDateEditWarning', 'accountEditWarning']}
+                        fieldTypes={['number', 'number', 'date', 'select']}
+                        selectFields={accountList}
                         onChange={editInputHandler}
                         submitAction={changeIncome}
                     />
