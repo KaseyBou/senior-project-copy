@@ -66,6 +66,17 @@ app.post('/DeleteAccount',  auth, deleteAccount);
 // get list of bank accounts
 app.get('/BankAccounts', auth, getAccounts);
 
+// BUDGET ********************************************************************************************
+
+
+app.post('/Budget',  auth, insertBudget);
+
+app.get('/Budget',  auth, editBudget);
+
+app.put('/Budget/:budget_id',  auth, deleteBudget);
+
+app.delete('/BankAccounts', auth, deleteBudget);
+
 // ERROR LOG ********************************************************************************************
 
 //add error
