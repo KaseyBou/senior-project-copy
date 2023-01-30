@@ -53,9 +53,7 @@ const Login = () => {
 
         if(cookies.get("TOKEN").length !== 0) {
             
-            let token = cookies.get("TOKEN");
-            console.log(token);
-            //dashboard();
+            dashboard();
         }
 
 

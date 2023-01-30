@@ -1,6 +1,8 @@
 //import {useContext} from 'react';
 import './Navbar.css';
 import { useNavigate } from 'react-router-dom';
+import Cookies from "universal-cookie";
+import React from 'react';
 //import { useSelector} from 'react-redux';
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
@@ -45,6 +47,16 @@ const HomeNavbar = () => {
       navigate("/Report");
     };
 
+    const account = () => {
+      navigate("/Account");
+    }
+
+    const logout = () => {
+      cookies.remove("TOKEN");
+      home();
+    }
+
+    const cookies = new Cookies();
     //-------------End of Navigation
     return (
 
@@ -61,8 +73,18 @@ const HomeNavbar = () => {
             <Nav.Link className="text-white" onClick={() =>report()}>Report</Nav.Link>
           </Nav>
           <Nav className=' d-flex justify-content-end'>
-              <Nav.Link className="text-white" onClick={() =>login()}>Login</Nav.Link>
-              <Nav.Link className="text-white" onClick={() =>register()}>Register</Nav.Link>
+          {cookies.get("TOKEN") === undefined ? (
+            <React.Fragment>
+                <Nav.Link className="text-white" onClick={() =>login()}>Login</Nav.Link>
+                <Nav.Link className="text-white" onClick={() =>register()}>Register</Nav.Link>
+            </React.Fragment>
+          ) : (
+            <React.Fragment>
+              <Nav.Link className="text-white" onClick={() =>account()}>Account</Nav.Link>
+              <Nav.Link className="text-white" onClick={() =>logout()}>Logout</Nav.Link>
+            </React.Fragment>
+          )}
+
           </Nav>
         </Navbar.Collapse>
       </Container>
