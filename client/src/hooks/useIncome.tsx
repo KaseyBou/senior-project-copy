@@ -64,6 +64,7 @@ const useIncome = (urlSegment : string) => {
                 pay_frequency: `${pay_frequency}`
             }, tokenHeader)
             setData(response);
+            console.log(response);
         }catch(error) {
             setError(true);
             console.log(error);
