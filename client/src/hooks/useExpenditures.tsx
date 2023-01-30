@@ -21,19 +21,12 @@ const useExpenditures = (urlSegment: string) => {
   )},[])
 
   //add expenditure
-  const postExpenditure = async (
-    user_id: number,
-    recipient: string,
-    date: Date,
-    total_amount: number,
-    account_id: number,
-    budget_id: number
+  const postExpenditure = async (recipient: string, date: Date, total_amount: number, account_id: number, budget_id: number
   ) => {
     try {
       setLoading(true);
       setError(false);
       const response = await axios.post(`${baseURL}${urlSegment}`, {
-        user_id: `${user_id}`,
         recipient: `${recipient}`,
         date: `${date}`,
         total_amount: `${total_amount}`,
@@ -50,11 +43,11 @@ const useExpenditures = (urlSegment: string) => {
   };
 
   // Retrieve Expenditure
-  const getExpenditure = async (user_id: number) => {
+  const getExpenditure = async () => {
     try {
       setLoading(true);
       setError(false);
-      const response = await axios.get(`${baseURL}${urlSegment}/${user_id}`, tokenHeader);
+      const response = await axios.get(`${baseURL}${urlSegment}`, tokenHeader);
       setData(response);
       return response;
     } catch (error) {
@@ -68,13 +61,7 @@ const useExpenditures = (urlSegment: string) => {
 
   //edit Expenditure
 
-  const editExpenditure = async (
-    expenditure_id: number,
-    account_id: number,
-    recipient: string,
-    date: Date,
-    total_amount: number,
-    budget_id: number
+  const editExpenditure = async (expenditure_id: number,account_id: number, recipient: string, date: Date, total_amount: number, budget_id: number
   ) => {
     try {
       setLoading(true);
@@ -118,11 +105,7 @@ const useExpenditures = (urlSegment: string) => {
     }
   };
 
-  return {
-    postExpenditure,
-    getExpenditure,
-    editExpenditure,
-    deleteExpenditure,
+  return {postExpenditure, getExpenditure, editExpenditure, deleteExpenditure,
   };
 };
 
