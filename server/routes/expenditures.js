@@ -7,11 +7,13 @@ const connection = mysql.createConnection({
   password: 'Capital34Candy',
 });
 
-module.exports.addExpenditure = (req, res) => {
-  let { user_id, recipient, date, total_amount, account_id, budget_id } =
-    req.body;
+module.exports.addExpenditure = async(req, res) => {
+  let { recipient, date, total_amount, account_id, budget_id } = req.body;
 
-  var sql = `INSERT INTO Expenditures(user_id, recipient, date, total_amount, account_id, budget_id) VALUES ('${user_id}', '${recipient}', '${date}', '${total_amount}', '${account_id}', '${budget_id}')`;
+    
+  let email = getEmail(req.headers.authorization).then((email) => {return email;});
+  var sql = `INSERT INTO Expenditures(recipient, date, total_amount, account_id, budget_id, user_id) VALUES ('${recipient}', '${date}', '${total_amount}', '${account_id}', '${budget_id}'
+  (SELECT user_id FROM Users WHERE email = '${await email}'))`;
 
   connection.query(sql, function (err, rows) {
     if (err) {
@@ -26,10 +28,10 @@ module.exports.addExpenditure = (req, res) => {
   });
 };
 
-module.exports.getExpenditure = (req, res) => {
-  user_id = req.params.user_id;
+module.exports.getExpenditure = async(req, res) => {
+  let email = getEmail(req.headers.authorization).then((email) => {return email;});
 
-  var sql = `SELECT * FROM Expenditures WHERE user_id = ${user_id}`;
+  var sql = `SELECT * FROM Expenditures INNER JOIN Users ON Users.user_id = Expenditures.user_id WHERE email = '${await email}'`;
 
   connection.query(sql, function (err, rows) {
     if (err) {
@@ -42,12 +44,14 @@ module.exports.getExpenditure = (req, res) => {
   });
 };
 
-module.exports.updateExpenditure = (req, res) => {
+module.exports.updateExpenditure = async(req, res) => {
   expenditure_id = req.params.expenditure_id;
 
   let { account_id, recipient, date, total_amount, budget_id } = req.body;
+  let email = getEmail(req.headers.authorization).then((email) => {return email;});
 
-  var sql = `UPDATE Expenditures SET account_id = '${account_id}', recipient = '${recipient}', date = '${date}', total_amount = '${total_amount}', budget_id = '${budget_id}'`;
+  var sql = `UPDATE Expenditures SET account_id = '${account_id}', recipient = '${recipient}', date = '${date}', total_amount = '${total_amount}', budget_id = '${budget_id}'
+  WHERE expenditure_id = '${expenditure_id}' AND user_id=(SELECT user_id FROM Users WHERE email = '${await email}')`;
 
   connection.query(sql, function (err, rows) {
     if (err) {
@@ -60,10 +64,11 @@ module.exports.updateExpenditure = (req, res) => {
   });
 };
 
-module.exports.deleteExpenditure = (req, res) => {
+module.exports.deleteExpenditure = async(req, res) => {
   expenditure_id = req.params.expenditure_id;
+  let email = getEmail(req.headers.authorization).then((email) => {return email;});
 
-  var sql = `DELETE FROM Expenditures WHERE expenditure_id = '${expenditure_id}'`;
+  var sql = `DELETE FROM Expenditures WHERE expenditure_id = '${expenditure_id}' AND user_id=(SELECT user_id FROM Users WHERE email = '${await email}')`;
 
   connection.query(sql, function (err, rows) {
     if (err) {

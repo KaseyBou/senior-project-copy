@@ -122,8 +122,7 @@ const Deposit = () => {
         handleCloseDelete();
     }
 
-    // on render, get list of incomes
-    // TODO: use user ID from session data
+    // on render, get list of Deposits
     useEffect(() => {
 
         if(cookies.get("TOKEN") === undefined) {

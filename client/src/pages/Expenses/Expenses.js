@@ -11,6 +11,8 @@ import CustomForm from '../../components/CustomForm/CustomForm';
 import SearchBar from '../../components/SearchBar/SearchBar';
 
 import useBills from '../../hooks/useBills.tsx';
+import useExpenditures from '../../hooks/useExpenditures.tsx';
+import useAccount from '../../hooks/useAccount.tsx';
 
 const Expenses = () => {
 
@@ -19,9 +21,16 @@ const Expenses = () => {
 
      // bill hook instance
      const { postBill, getBills, editBill, deleteBill } = useBills("Bills");
+     
+     const { postExpenditure, getExpenditure, editExpenditure, deleteExpenditure} = useExpenditures("Expenditures")
+    // account hook instance
+    const {postAccount, postDeleteAccount, getAccounts} = useAccount("BankAccounts")
 
+    // list of accounts
+    const [accountList, setAccountList] = useState(null);
      // income state
      const [bills, setBills] = useState(null);
+     const [expenditures, setExpenditures] = useState(null);
  
      // on render, get list of bills
      // TODO: use user ID from session data
@@ -32,6 +41,38 @@ const Expenses = () => {
          });
      }, [])
 
+     useEffect(() => {
+
+        if(cookies.get("TOKEN") === undefined) {
+            navigate("/")
+        }
+
+        getExpenditure().then((data) => {
+            setExpenditures(data.data.map((expenditure) => {
+                return(
+                    <DataRow
+                    title=""
+                    labels={["Recepient:", "Account:", "Date:", "Amount:", "Category"]}
+                    rows={[expenditure.recepient, expenditure.account_id, expenditure.date, expenditure.total_amount, expenditure.budget_id]}
+                    HandleEdit={() => handleShowEdit(expenditure.expenditure_id)}
+                    HandleDelete={() => handleShowDelete(expenditure.expenditure_id)}
+                />
+                )
+            }
+            ));
+        })
+    },[])
+
+    //generate dropdown list of accounts, add it to add and edit forms
+    useEffect(() => {
+        getAccounts().then((accounts) => {
+            setAccountList(accounts.data.map((account) => {
+                console.log(account);
+                return <option value={account.account_id}>{account.account_name}</option>
+            }))
+        })
+    },[])
+
     // modal visibility states and functions
     const [showEdit, setShowEdit] = useState(false);
     const handleCloseEdit = () => setShowEdit(false);
@@ -40,6 +81,39 @@ const Expenses = () => {
     const [totalSpentEdit, setTotalSpentEdit] = useState('')
     const [categoryEdit, setCategoryEdit] = useState('');
     const [notesEdit, setNotesEdit] = useState('');
+
+    const [showDelete, setShowDelete] = useState(false);
+    const handleCloseDelete = () => setShowDelete(false);
+    const handleShowDelete = () => setShowDelete(true);
+    const [passwordDelete, setPasswordDelete] = useState('');
+
+    const [showAdd, setShowAdd] = useState(false);
+    const handleCloseAdd = () => setShowAdd(false);
+    const handleShowAdd = () => setShowAdd(true);
+
+    //Values
+    const [forAdd, setForAdd] = useState('');
+    const [dateAdd, setDateAdd] = useState('');
+    const [totalSpentAdd, setTotalSpentAdd] = useState('')
+    const [categoryAdd, setCategoryAdd] = useState('');
+    const [accountAdd, setAccountAdd] = useState('');
+    //Warnings
+    const [forAddWarning, setForAddWarning] = useState('');
+    const [addDateWarning, setAddDateWarning] = useState('');
+    const [totalSpentAddWarning, setTotalSpentAddWarning] = useState('')
+    const [categoryAddWarning, setCategoryAddWarning] = useState('');
+    const [accountAddWarning, setAccountAddWarning] = useState('');
+
+    //handles updates to input's
+    const addExpenseInputHandler = () =>{
+        setForAdd(document.getElementById("forAdd").value);
+        setDateAdd(document.getElementById(""))
+        setTotalSpentAdd(document.getElementById("totalSpentAdd").value);
+        setCategoryAdd(document.getElementById("categoryAdd").value);
+        setAccountAdd(document.getElementById("accountAdd").value);
+
+    }
+    
     //handles updates to input's
     const editExpenseInputHandler = () =>{
         setForEdit(document.getElementById("forEdit").value);
@@ -49,29 +123,20 @@ const Expenses = () => {
 
     }
 
-    const [showDelete, setShowDelete] = useState(false);
-    const handleCloseDelete = () => setShowDelete(false);
-    const handleShowDelete = () => setShowDelete(true);
-    const [passwordDelete, setPasswordDelete] = useState('');
     const deleteInputHandler = () =>{
         setPasswordDelete(document.getElementById("passwordDelete").value);
     }
 
-    const [showAdd, setShowAdd] = useState(false);
-    const handleCloseAdd = () => setShowAdd(false);
-    const handleShowAdd = () => setShowAdd(true);
-    const [forAdd, setForAdd] = useState('');
-    const [totalSpentAdd, setTotalSpentAdd] = useState('')
-    const [categoryAdd, setCategoryAdd] = useState('');
-    const [notesAdd, setNotesAdd] = useState('');
-    //handles updates to input's
-    // const addExpenseInputHandler = () =>{
-    //     setForAdd(document.getElementById("forAdd").value);
-    //     setTotalSpentAdd(document.getElementById("totalSpentAdd").value);
-    //     setCategoryAdd(document.getElementById("categoryAdd").value);
-    //     setNotesAdd(document.getElementById("notesAdd").value);
+    //Post expense to server
+    const addExpense = () => {
+        // TODO: get user ID from session var
+        postExpenditure(forAdd, dateAdd, totalSpentAdd, accountAdd, categoryAdd);
+        handleCloseAdd();
+    }
 
-    // }
+    const editExpense = () => {
+
+    }
 
     //Add Bill Modal Information
     const [showBillAdd, setShowBillAdd] = useState(false);
@@ -125,20 +190,13 @@ const Expenses = () => {
         postBill(7, billNameAdd, billCompanyAdd, billFrequencyAdd, billPaymentDateAdd, billAmountAdd, billAccountAdd, billBudgetAdd);
         handleCloseBillAdd();
     }
-
-    useEffect(() => {
-        if(cookies.get("TOKEN") === undefined) {
-          navigate("/")
-        }
-
-    },[])
     
     //returning JSX
     return (
         <>
             <SearchBar/>
             <div id="ExpenseList">
-                
+                {expenditures}
             </div>
 
             <div className='bottomTaskBar'>
@@ -146,33 +204,41 @@ const Expenses = () => {
                 <Modal buttonText="Add Expense" show={showAdd} handleShow={handleShowAdd} handleClose={handleCloseAdd}>
                     <CustomForm
                         title="Add Expense"
-                        fields={['For', 'Total Spent', 'Category', 'Details/Notes']}
-                        fieldIDs={['forAdd', 'totalSpentAdd', 'categoryAdd', 'notesAdd']}
-                        fieldTypes={['text', 'number', 'text', 'textbox']}
-                        onChange={addBill}
-                        submitAction={addBill}
+                        fields={['For', 'Date', 'Total Spent', 'Category', 'Account']}
+                        fieldIDs={['forAdd', 'dateAdd', 'totalSpentAdd', 'categoryAdd', 'accountAdd']}
+                        fieldTypes={['text', 'date', 'number', 'select', 'select']}
+                        selectFields={accountList}
+                        warning={[forAddWarning, addDateWarning, totalSpentAddWarning, categoryAddWarning, accountAddWarning]}
+                        warningIDs={['forAddWarning', 'addDateWarning', 'totalSpentAddWarning', 'categoryAddWarning', 'accountAddWarning']}
+                        onChange={addExpenseInputHandler}
+                        submitAction={addExpense}
                     />
                 </Modal>
 
                 <Modal buttonText="Confirm Changes" show={showEdit} handleShow={handleShowEdit} handleClose={handleCloseEdit}>
                     <CustomForm
-                        title="Edit Expense"
-                        fields={['For', 'Total Spent', 'Category', 'Details/Notes']}
-                        fieldIDs={['forEdit', 'totalSpentEdit', 'categoryEdit', 'notesEdit']}
-                        fieldTypes={['text', 'number', 'text', 'textbox']}
+                        title="Add Expense"
+                        fields={['For', 'Date', 'Total Spent', 'Category', 'Account']}
+                        fieldIDs={['forEdit', 'dateEdit', 'totalSpentEdit', 'categoryEdit', 'accountEdit']}
+                        fieldTypes={['text', 'date', 'number', 'select', 'select']}
+                        selectFields={accountList}
+                        warning={[forAddWarning, addDateWarning, totalSpentAddWarning, categoryAddWarning, accountAddWarning]}
+                        warningIDs={['forAddWarning', 'addDateWarning', 'totalSpentAddWarning', 'categoryAddWarning', 'accountAddWarning']}
                         onChange={editExpenseInputHandler}
-                        submitAction={handleCloseEdit}
+                        submitAction={editExpense}
                     />
                 </Modal>
 
                 <Modal buttonText="Confirm Deletion" show={showDelete} handleShow={handleShowDelete} handleClose={handleCloseDelete}>
                     <CustomForm
-                        title="Delete"
-                        fields={['Password']}
+                        title="Delete Deposit"
+                        fields={['User Password']}
                         fieldIDs={['passwordDelete']}
                         fieldTypes={['password']}
+                        warning={['']}
+                        warningIDs={['passwordWarning']}
                         onChange={deleteInputHandler}
-                        submitAction={handleCloseDelete}
+                        submitAction={''}
                     />
                 </Modal>
 
