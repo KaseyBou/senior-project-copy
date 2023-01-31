@@ -75,7 +75,7 @@ app.get('/Budget',  auth, getBudget);
 
 app.put('/Budget/:budget_id',  auth, updateBudget);
 
-app.delete('/BankAccounts', auth, deleteBudget);
+app.delete('/Budget', auth, deleteBudget);
 
 // ERROR LOG ********************************************************************************************
 
