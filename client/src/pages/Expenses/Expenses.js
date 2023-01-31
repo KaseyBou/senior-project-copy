@@ -13,7 +13,7 @@ import SearchBar from '../../components/SearchBar/SearchBar';
 import useBills from '../../hooks/useBills.tsx';
 import useExpenditures from '../../hooks/useExpenditures.tsx';
 import useAccount from '../../hooks/useAccount.tsx';
-import useBudget from '../../hooks/useBudget';
+import useBudget from '../../hooks/useBudget.tsx';
 
 const Expenses = () => {
 
@@ -26,7 +26,7 @@ const Expenses = () => {
      const { postExpenditure, getExpenditure, editExpenditure, deleteExpenditure} = useExpenditures("Expenditures")
     // account hook instance
     const {postAccount, postDeleteAccount, getAccounts} = useAccount("BankAccounts")
-    const {getCategories} = useBudget("Budget");
+    const { getCategories } = useBudget("Budget");
 
     // list of accounts
     const [accountList, setAccountList] = useState(null);
@@ -71,6 +71,13 @@ const Expenses = () => {
             setAccountList(accounts.data.map((account) => {
                 console.log(account);
                 return <option value={account.account_id}>{account.account_name}</option>
+            }))
+        })
+
+        getCategories().then((category) => {
+            setAccountList(category.data.map((category) => {
+                console.log(category);
+                return <option value={category.budget_id}>{category.category_name}</option>
             }))
         })
     },[])

@@ -8,7 +8,7 @@ const connection = mysql.createConnection({
   
 })
 
-const {hashPassword, isPasswordCorrect, getEmail} = require('../helper-functions/functions')
+const {getEmail} = require('../helper-functions/functions')
 
 module.exports.insertBudget = async(req,res) => {
 
@@ -38,7 +38,7 @@ module.exports.insertBudget = async(req,res) => {
 module.exports.getBudget = async(req,res)=>{
   let email = getEmail(req.headers.authorization).then((email) => {return email;});
 
-  var sql = `SELECT * FROM Budgets INNER JOIN Users ON Users.user_id = Incomes.user_id WHERE email = '${await email}'`;
+  var sql = `SELECT * FROM Budgets INNER JOIN Users ON Users.user_id = Budgets.user_id WHERE email = '${await email}'`;
 
   connection.query(sql, function(err, rows)
     {

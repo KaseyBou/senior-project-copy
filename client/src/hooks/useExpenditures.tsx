@@ -10,15 +10,12 @@ const useExpenditures = (urlSegment: string) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<boolean>(false);
 
-  const [tokenHeader, setTokenHeader] = useState<any>('');
-  useEffect(() => {
-      console.log(cookies.get("TOKEN"));
-      setTokenHeader({
-          headers: {
-              Authorization: `${cookies.get("TOKEN")}`
-          }
+  const tokenHeader =
+  {
+      headers: {
+          authorization: `${cookies.get("TOKEN")}`
       }
-  )},[])
+  }
 
   //add expenditure
   const postExpenditure = async (recipient: string, date: Date, total_amount: number, account_id: number, budget_id: number

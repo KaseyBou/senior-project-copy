@@ -7,12 +7,14 @@ const connection = mysql.createConnection({
   password: 'Capital34Candy',
 });
 
+const {getEmail} = require('../helper-functions/functions')
+
 module.exports.addExpenditure = async(req, res) => {
   let { recipient, date, total_amount, account_id, budget_id } = req.body;
 
     
   let email = getEmail(req.headers.authorization).then((email) => {return email;});
-  var sql = `INSERT INTO Expenditures(recipient, date, total_amount, account_id, budget_id, user_id) VALUES ('${recipient}', '${date}', '${total_amount}', '${account_id}', '${budget_id}'
+  var sql = `INSERT INTO Expenditures(recipient, date, total_amount, account_id, budget_id, user_id) VALUES ('${recipient}', '${date}', '${total_amount}', '${account_id}', '${budget_id}',
   (SELECT user_id FROM Users WHERE email = '${await email}'))`;
 
   connection.query(sql, function (err, rows) {

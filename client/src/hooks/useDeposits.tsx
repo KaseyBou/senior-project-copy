@@ -58,7 +58,7 @@ const useDeposits = (urlSegment: string) => {
 
   //edit deposit
 
-  const editDeposit = async (deposit_id: number, account_id: number, deposit_source: number, date: Date, total_amount: number
+  const editDeposit = async (deposit_id: number, account_id: number, deposit_source: string, date: Date, total_amount: number
   ) => {
     try {
       setLoading(true);
@@ -67,7 +67,7 @@ const useDeposits = (urlSegment: string) => {
         `${baseURL}${urlSegment}/${deposit_id}`,
         {
           account_id: `${account_id}`,
-          deposit_source: `${deposit_source}`,
+          source: `${deposit_source}`,
           date: `${date}`,
           total_amount: `${total_amount}`,
         }, tokenHeader

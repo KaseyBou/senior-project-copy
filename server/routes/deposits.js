@@ -51,12 +51,12 @@ module.exports.updateDeposit = async(req, res) => {
   deposit_id = req.params.deposit_id;
 
   let { account_id, source, date, total_amount } = req.body;
+  //console.log(account_id, source, date, total_amount)
   let email = getEmail(req.headers.authorization).then((email) => {return email;});
 
-  var sql = `UPDATE Deposits SET account_id = '${account_id}', source = '${source}', date = '${date}',
+  var sql = `UPDATE Deposits SET source = '${source}', account_id = '${account_id}', date = '${date}',
    total_amount = '${total_amount}' WHERE deposit_id = '${deposit_id}'
    AND user_id=(SELECT user_id FROM Users WHERE email = '${await email}')`;
-   //AND user_id=(SELECT user_id FROM Users WHERE email = '${await email}')`;
 
   connection.query(sql, function (err, rows) {
     if (err) {

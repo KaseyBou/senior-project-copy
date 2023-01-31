@@ -24,6 +24,21 @@ const Deposit = () => {
     const handleShowEdit = (id) => {
         setShowEdit(true);
         localStorage.setItem("editing", id);
+
+        // load existing data into form
+        getDeposit().then((data) => {
+            for(let deposit of data.data){
+                if(deposit.deposit_id === id){
+                    document.getElementById("editSource").value = deposit.source;
+                    document.getElementById("editDepositAccount").value = deposit.account_id;
+                    document.getElementById("editDepositDate").value = deposit.date.toString().substring(0, 10);
+                    document.getElementById("editDepositAmount").value = deposit.total_amount;
+                    console.log(deposit);
+                }
+            }
+            // run validation to clear error messages
+            editInputHandler();
+        })
     }
 
     const [showDelete, setShowDelete] = useState(false);
@@ -41,7 +56,7 @@ const Deposit = () => {
     //Values
     const [addSource, setAddSource] = useState('');
     const [addAccount, setAddAccount] = useState('');
-    const [addDepositDate, setAddDepositDate] = useState('');
+    const [addDepositDate, setAddDepositDate] = useState(new Date());
     const [addAmount, setAddAmount] = useState('');
     const [confirmAddAmount, setConfirmAddAmount] = useState('');
     //Warnings
@@ -75,13 +90,14 @@ const Deposit = () => {
         setAddSource(document.getElementById('addSource').value)
         setAddAccount(document.getElementById('addDepositAccount').value);
         setAddDepositDate(document.getElementById('addDepositDate').value);
+        console.log(addDepositDate)
         setAddAmount(document.getElementById('addDepositAmount').value);
         setConfirmAddAmount(document.getElementById('addConfirmAmount').value);
 
     }
 
     const editInputHandler = () => {
-        setEditSource(document.getElementById('addSource').value)
+        setEditSource(document.getElementById('editSource').value)
         setEditAccount(document.getElementById('editDepositAccount').value);
         setEditDepositDate(document.getElementById('editDepositDate').value);
         setEditAmount(document.getElementById('editDepositAmount').value);
@@ -98,7 +114,7 @@ const Deposit = () => {
     const [deposits, setDeposits] = useState(null);
 
     // account hook instance
-    const {postAccount, postDeleteAccount, getAccounts} = useAccount("BankAccounts")
+    const {getAccounts} = useAccount("BankAccounts")
     // list of accounts
     const [accountList, setAccountList] = useState(null);
 
@@ -112,8 +128,11 @@ const Deposit = () => {
 
     // post update
     const changeDeposit = () => {
-        editDeposit(localStorage.getItem("editing"), editSource, editAccount, editDepositDate, editAmount)
-        handleCloseEdit();
+
+        if(editSource && editAccount && editDepositDate && editAmount && !editSourceWarning && !editAccountWarning && !editDepositDateWarning && !editAmountWarning && editAmount === confirmEditAmount) {
+            editDeposit(localStorage.getItem("editing"),  editAccount, editSource, editDepositDate, editAmount);
+            handleCloseEdit();
+        }
     }
 
     // post delete
@@ -130,12 +149,15 @@ const Deposit = () => {
         }
 
         getDeposit().then((data) => {
+            
             setDeposits(data.data.map((deposit) => {
+                let theDate = new Date(deposit.date);
+                let dateString = theDate.getMonth()+1 + " / " + theDate.getDate() + " / " + (theDate.getYear()+1900);
                 return(
                     <DataRow
                     title=""
                     labels={["Source:", "Account:", "Date:", "Amount:"]}
-                    rows={[deposit.source, deposit.account_id, deposit.date, deposit.total_amount]}
+                    rows={[deposit.source, deposit.account_id, dateString, deposit.total_amount]}
                     HandleEdit={() => handleShowEdit(deposit.deposit_id)}
                     HandleDelete={() => handleShowDelete(deposit.deposit_id)}
                 />
@@ -149,7 +171,6 @@ const Deposit = () => {
         useEffect(() => {
             getAccounts().then((accounts) => {
                 setAccountList(accounts.data.map((account) => {
-                    console.log(account);
                     return <option value={account.account_id}>{account.account_name}</option>
                 }))
             })
@@ -185,7 +206,7 @@ const Deposit = () => {
                         fields={['Source', 'Account', 'Deposit Date', 'Amount', 'Confirm Amount']}
                         fieldIDs={['editSource', 'editDepositAccount', 'editDepositDate', 'editDepositAmount', 'editConfirmAmount']}
                         fieldTypes={['text', 'select', 'date', 'number', 'number']}
-                        warning={[editSource, editAccountWarning, editDepositDateWarning, editAmountWarning, confirmEditAmountWarning]}
+                        warning={[editSourceWarning, editAccountWarning, editDepositDateWarning, editAmountWarning, confirmEditAmountWarning]}
                         warningIDs={['editSourceWarning', 'editDepositAccountWarning', 'editDepositDateWarning', 'editAmountWarning', 'confirmEditAmountWarning']}
                         selectFields={accountList}
                         onChange={editInputHandler}

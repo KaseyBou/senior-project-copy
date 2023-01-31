@@ -71,9 +71,9 @@ app.get('/BankAccounts', auth, getAccounts);
 
 app.post('/Budget',  auth, insertBudget);
 
-app.get('/Budget',  auth, editBudget);
+app.get('/Budget',  auth, getBudget);
 
-app.put('/Budget/:budget_id',  auth, deleteBudget);
+app.put('/Budget/:budget_id',  auth, updateBudget);
 
 app.delete('/BankAccounts', auth, deleteBudget);
 
@@ -116,7 +116,7 @@ app.delete('/Deposits/:deposit_id',  auth, deleteDeposit);
   
 app.post('/Expenditures',  auth, addExpenditure);
 
-app.get('/Expenditures/:user_id',  auth, getExpenditure);
+app.get('/Expenditures/',  auth, getExpenditure);
 
 app.put('/Expenditures/:expenditure_id',  auth, updateExpenditure);
 
