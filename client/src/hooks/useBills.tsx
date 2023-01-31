@@ -11,7 +11,6 @@ const useBills = (urlSegment : string) => {
 
     const [tokenHeader, setTokenHeader] = useState<any>('');
     useEffect(() => {
-        console.log(cookies.get("TOKEN"));
         setTokenHeader({
             headers: {
                 Authorization: `${cookies.get("TOKEN")}`

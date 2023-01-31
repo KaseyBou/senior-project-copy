@@ -106,7 +106,7 @@ app.delete('/Bills/:bill_id',  auth, deleteBill);
   
 app.post('/Deposits',  auth, addDeposit);
 
-app.get('/Deposits/',  auth, getDeposit);
+app.get('/Deposits',  auth, getDeposit);
 
 app.put('/Deposits/:deposit_id',  auth, updateDeposit);
 
@@ -116,7 +116,7 @@ app.delete('/Deposits/:deposit_id',  auth, deleteDeposit);
   
 app.post('/Expenditures',  auth, addExpenditure);
 
-app.get('/Expenditures/',  auth, getExpenditure);
+app.get('/Expenditures',  auth, getExpenditure);
 
 app.put('/Expenditures/:expenditure_id',  auth, updateExpenditure);
 

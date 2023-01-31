@@ -29,7 +29,11 @@ const Expenses = () => {
     const { getCategories } = useBudget("Budget");
 
     // list of accounts
-    const [accountList, setAccountList] = useState(null);
+    const [accountList, setAccountList] = useState([]);
+    const [selectAccountList, setSelectAccountList] = useState([]);
+
+    const [categoryList, setCategoryList] = useState([]);
+    const [categorySelectList, setCategorySelectList] = useState([]);
      // income state
      const [bills, setBills] = useState(null);
      const [expenditures, setExpenditures] = useState(null);
@@ -39,23 +43,75 @@ const Expenses = () => {
      useEffect(() => {
          getBills(7).then((data) => {
              setBills(data);
-             console.log(data.data);
+             //console.log(data.data);
          });
      }, [])
 
-     useEffect(() => {
+    //support functionality
+    useEffect(() => {
 
         if(cookies.get("TOKEN") === undefined) {
             navigate("/")
         }
 
+        //getting accounts for display and form
+        getAccounts().then((accounts) => {
+
+            //setting account select options
+            setSelectAccountList(accounts.data.map((account) => {
+                return <option value={account.account_id}>{account.account_name}</option>
+            }))
+
+            //setting account list **Push is not the correct method for adding to useState array
+            accounts.data.map((account) => {
+                //return setAccountList(accountList => [...accountList, {id: account.account_id, name: account.account_name}]);
+                return accountList.push([account.account_id, account.account_name])
+            })
+
+        })
+
+        //get budget categories
+        getCategories().then((categories) => {
+            setCategorySelectList(categories.data.map((category) => {
+                return <option value={category.budget_id}>{category.category_name}</option>
+            }))
+
+            //setting category list **Push is not the correct method for adding to useState array
+            categories.data.map((category) => {
+                //return setAccountList(accountList => [...accountList, {id: account.account_id, name: account.account_name}]);
+                return categoryList.push([category.budget_ID, category.category_name])
+            })
+        })
+
+        fetchExpenses();
+    },[])
+
+    const fetchExpenses = () => {
+
         getExpenditure().then((data) => {
+            
             setExpenditures(data.data.map((expenditure) => {
+                let theDate = new Date(expenditure.date);
+                let dateString = theDate.getMonth()+1 + " / " + theDate.getDate() + " / " + (theDate.getYear()+1900);
+                let accountName;
+                let categoryName;
+                //grabbing bank account name for display
+                for(let i = 0; i < accountList.length; i++) {
+                    if(accountList[i][0] === expenditure.account_id) {
+                        accountName = accountList[i][1];
+                    }
+                }
+                for(let i = 0; i < categoryList.length; i++) {
+                    if(categoryList[i][0] === expenditure.budget_id) {
+                        categoryName = categoryList[i][1];
+                    }
+                }
+
                 return(
                     <DataRow
                     title=""
-                    labels={["Recepient:", "Account:", "Date:", "Amount:", "Category"]}
-                    rows={[expenditure.recepient, expenditure.account_id, expenditure.date, expenditure.total_amount, expenditure.budget_id]}
+                    labels={["For: ", "Account: ", "Date: ", "Amount: ", "Category: "]}
+                    rows={[expenditure.recipient, accountName, dateString, '$' + expenditure.total_amount, categoryName]}
                     HandleEdit={() => handleShowEdit(expenditure.expenditure_id)}
                     HandleDelete={() => handleShowDelete(expenditure.expenditure_id)}
                 />
@@ -63,37 +119,43 @@ const Expenses = () => {
             }
             ));
         })
-    },[])
-
-    //generate dropdown list of accounts, add it to add and edit forms
-    useEffect(() => {
-        getAccounts().then((accounts) => {
-            setAccountList(accounts.data.map((account) => {
-                console.log(account);
-                return <option value={account.account_id}>{account.account_name}</option>
-            }))
-        })
-
-        getCategories().then((category) => {
-            setAccountList(category.data.map((category) => {
-                console.log(category);
-                return <option value={category.budget_id}>{category.category_name}</option>
-            }))
-        })
-    },[])
+        
+    }
 
     // modal visibility states and functions
     const [showEdit, setShowEdit] = useState(false);
     const handleCloseEdit = () => setShowEdit(false);
-    const handleShowEdit = () => setShowEdit(true);
+    const handleShowEdit = (id) => {
+        setShowEdit(true);
+        localStorage.setItem("editing", id);
+
+        // load existing data into form
+        getExpenditure().then((data) => {
+            for(let expenditure of data.data){
+                if(expenditure.expenditure_id === id){
+                    document.getElementById("forEdit").value = expenditure.recipient;
+                    document.getElementById("totalSpentEdit").value = expenditure.total_amount;
+                    document.getElementById("dateEdit").value = expenditure.date;
+                    document.getElementById("categoryEdit").value = expenditure.budget_id;
+                    document.getElementById("accountEdit").value = expenditure.account_id;
+                }
+            }
+            // run validation to clear error messages
+            editExpenseInputHandler();
+        })
+    }
     const [forEdit, setForEdit] = useState('');
+    const [dateEdit, setDateEdit] = useState('');
     const [totalSpentEdit, setTotalSpentEdit] = useState('')
     const [categoryEdit, setCategoryEdit] = useState('');
-    const [notesEdit, setNotesEdit] = useState('');
+    const [accountEdit, setAccountEdit] = useState('');
 
     const [showDelete, setShowDelete] = useState(false);
     const handleCloseDelete = () => setShowDelete(false);
-    const handleShowDelete = () => setShowDelete(true);
+    const handleShowDelete = (id) => {
+        setShowDelete(true);
+        localStorage.setItem("deleting", id);
+    }
     const [passwordDelete, setPasswordDelete] = useState('');
 
     const [showAdd, setShowAdd] = useState(false);
@@ -116,7 +178,7 @@ const Expenses = () => {
     //handles updates to input's
     const addExpenseInputHandler = () =>{
         setForAdd(document.getElementById("forAdd").value);
-        setDateAdd(document.getElementById(""))
+        setDateAdd(document.getElementById("dateAdd").value)
         setTotalSpentAdd(document.getElementById("totalSpentAdd").value);
         setCategoryAdd(document.getElementById("categoryAdd").value);
         setAccountAdd(document.getElementById("accountAdd").value);
@@ -126,9 +188,10 @@ const Expenses = () => {
     //handles updates to input's
     const editExpenseInputHandler = () =>{
         setForEdit(document.getElementById("forEdit").value);
+        setDateEdit(document.getElementById("dateEdit").value)
         setTotalSpentEdit(document.getElementById("totalSpentEdit").value);
         setCategoryEdit(document.getElementById("categoryEdit").value);
-        setNotesEdit(document.getElementById("notesEdit").value);
+        setAccountEdit(document.getElementById("accountEdit").value);
 
     }
 
@@ -138,13 +201,32 @@ const Expenses = () => {
 
     //Post expense to server
     const addExpense = () => {
-        // TODO: get user ID from session var
-        postExpenditure(forAdd, dateAdd, totalSpentAdd, accountAdd, categoryAdd);
-        handleCloseAdd();
+
+        if(forAdd && dateAdd && totalSpentAdd && accountAdd && categoryAdd) {
+            postExpenditure(forAdd, dateAdd, totalSpentAdd, accountAdd, categoryAdd);
+            handleCloseAdd();
+            fetchExpenses();
+            setForAdd(null);
+            setDateAdd(null)
+            setTotalSpentAdd(null);
+            setCategoryAdd(null);
+            setAccountAdd(null);
+        }
     }
 
     const editExpense = () => {
+        if(forEdit && dateEdit && totalSpentEdit && accountEdit && categoryEdit) {
+            editExpenditure(forEdit, dateEdit, totalSpentEdit, accountEdit, categoryEdit);
+            handleCloseAdd();
+            fetchExpenses();
+        }
+    }
 
+    // post delete
+    const removeExpenses = () => {
+        deleteExpenditure(localStorage.getItem("deleting"))
+        handleCloseDelete();
+        fetchExpenses();
     }
 
     //Add Bill Modal Information
@@ -216,7 +298,7 @@ const Expenses = () => {
                         fields={['For', 'Date', 'Total Spent', 'Category', 'Account']}
                         fieldIDs={['forAdd', 'dateAdd', 'totalSpentAdd', 'categoryAdd', 'accountAdd']}
                         fieldTypes={['text', 'date', 'number', 'select', 'select']}
-                        selectFields={accountList}
+                        selectFields={selectAccountList}
                         warning={[forAddWarning, addDateWarning, totalSpentAddWarning, categoryAddWarning, accountAddWarning]}
                         warningIDs={['forAddWarning', 'addDateWarning', 'totalSpentAddWarning', 'categoryAddWarning', 'accountAddWarning']}
                         onChange={addExpenseInputHandler}
@@ -226,11 +308,11 @@ const Expenses = () => {
 
                 <Modal buttonText="Confirm Changes" show={showEdit} handleShow={handleShowEdit} handleClose={handleCloseEdit}>
                     <CustomForm
-                        title="Add Expense"
+                        title="Edit Expense"
                         fields={['For', 'Date', 'Total Spent', 'Category', 'Account']}
                         fieldIDs={['forEdit', 'dateEdit', 'totalSpentEdit', 'categoryEdit', 'accountEdit']}
                         fieldTypes={['text', 'date', 'number', 'select', 'select']}
-                        selectFields={accountList}
+                        selectFields={selectAccountList}
                         warning={[forAddWarning, addDateWarning, totalSpentAddWarning, categoryAddWarning, accountAddWarning]}
                         warningIDs={['forAddWarning', 'addDateWarning', 'totalSpentAddWarning', 'categoryAddWarning', 'accountAddWarning']}
                         onChange={editExpenseInputHandler}
@@ -240,14 +322,14 @@ const Expenses = () => {
 
                 <Modal buttonText="Confirm Deletion" show={showDelete} handleShow={handleShowDelete} handleClose={handleCloseDelete}>
                     <CustomForm
-                        title="Delete Deposit"
+                        title="Delete Expense"
                         fields={['User Password']}
                         fieldIDs={['passwordDelete']}
                         fieldTypes={['password']}
                         warning={['']}
                         warningIDs={['passwordWarning']}
                         onChange={deleteInputHandler}
-                        submitAction={''}
+                        submitAction={removeExpenses}
                     />
                 </Modal>
 
