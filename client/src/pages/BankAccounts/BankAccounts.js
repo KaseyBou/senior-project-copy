@@ -9,7 +9,7 @@ import DataRow from '../../components/DataRow/DataRow';
 import CustomForm from '../../components/CustomForm/CustomForm';
 import SearchBar from '../../components/SearchBar/SearchBar';
 
-const Income = () => {
+const BankAccounts = () => {
     // modal visibility states and functions
     const [showEdit, setShowEdit] = useState(false);
     const handleCloseEdit = () => setShowEdit(false);
@@ -114,4 +114,4 @@ const Income = () => {
     );
 }
 
-export default Income
+export default BankAccounts

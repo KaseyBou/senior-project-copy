@@ -18,45 +18,24 @@ const Deposit = () => {
     const cookies = new Cookies();
     const navigate = useNavigate();
 
-    // modal visibility states and functions
-    const [showEdit, setShowEdit] = useState(false);
-    const handleCloseEdit = () => setShowEdit(false);
-    const handleShowEdit = (id) => {
-        setShowEdit(true);
-        localStorage.setItem("editing", id);
+    // income hook instance
+    const { postDeposit, getDeposit, editDeposit, deleteDeposit } = useDeposits("Deposits");
+    // income state
+    const [deposits, setDeposits] = useState(null);
 
-        // load existing data into form
-        getDeposit().then((data) => {
-            for(let deposit of data.data){
-                if(deposit.deposit_id === id){
-                    document.getElementById("editSource").value = deposit.source;
-                    document.getElementById("editDepositAccount").value = deposit.account_id;
-                    document.getElementById("editDepositDate").value = deposit.date.toString().substring(0, 10);
-                    document.getElementById("editDepositAmount").value = deposit.total_amount;
-                    console.log(deposit);
-                }
-            }
-            // run validation to clear error messages
-            editInputHandler();
-        })
-    }
+    // account hook instance
+    const {getAccounts} = useAccount("BankAccounts")
+    // list of accounts for form
+    const [accountSelectList, setSelectAccountList] = useState(null);
 
-    const [showDelete, setShowDelete] = useState(false);
-    const handleCloseDelete = () => setShowDelete(false);
-    const handleShowDelete = (id) => {
-        setShowDelete(true);
-        localStorage.setItem("deleting", id);
-    }
-
-    const [showAdd, setShowAdd] = useState(false);
-    const handleCloseAdd = () => setShowAdd(false);
-    const handleShowAdd = () => setShowAdd(true);
+    //list of accounts
+    const [accountList, setAccountList] = useState([]);
 
     //add deposit values & warnings
     //Values
     const [addSource, setAddSource] = useState('');
     const [addAccount, setAddAccount] = useState('');
-    const [addDepositDate, setAddDepositDate] = useState(new Date());
+    const [addDepositDate, setAddDepositDate] = useState('');
     const [addAmount, setAddAmount] = useState('');
     const [confirmAddAmount, setConfirmAddAmount] = useState('');
     //Warnings
@@ -84,14 +63,105 @@ const Deposit = () => {
     const [userPassword, setUserPassword] = useState('');
     const [passwordWarning, setPasswordWarning] = useState('');
     //Initialization
-    //const navigate = useNavigate();
+    const fetchDeposits = () => {
+        //getting and setting deposits for deposit list
+        getDeposit().then((data) => {
+            setDeposits(data.data.map((deposit) => {
+                let theDate = new Date(deposit.date);
+                let dateString = theDate.getMonth()+1 + " / " + theDate.getDate() + " / " + (theDate.getYear()+1900);
+                let accountName;
+
+                //grabbing bank account name for display
+                for(let i = 0; i < accountList.length; i++) {
+                    if(accountList[i][0] === deposit.account_id) {
+                        accountName = accountList[i][1];
+                    }
+                }
+                    return(
+                    <DataRow
+                    title=""
+                    labels={["Source:", "Account:", "Date:", "Amount:"]}
+                    rows={[deposit.source, accountName, dateString, deposit.total_amount]}
+                    HandleEdit={() => handleShowEdit(deposit.deposit_id)}
+                    HandleDelete={() => handleShowDelete(deposit.deposit_id)}
+                />
+                )
+            }
+            ));
+        })
+    }
+
+    // on render, get list of Deposits
+    useEffect(() => {
+
+        //verifying user is logged in
+        if(cookies.get("TOKEN") === undefined) {
+            navigate("/")
+        }
+
+        //getting accounts for display and form
+        getAccounts().then((accounts) => {
+
+            //setting account select options
+            setSelectAccountList(accounts.data.map((account) => {
+                return <option value={account.account_id}>{account.account_name}</option>
+            }))
+
+            //setting account list **Push is not the correct method for adding to useState array
+            accounts.data.map((account) => {
+                //return setAccountList(accountList => [...accountList, {id: account.account_id, name: account.account_name}]);
+                return accountList.push([account.account_id, account.account_name])
+            })
+
+        })
+
+        fetchDeposits();
+    },[])
+
+    // modal visibility states and functions
+    const [showEdit, setShowEdit] = useState(false);
+    const handleCloseEdit = () => setShowEdit(false);
+    const handleShowEdit = (id) => {
+        setShowEdit(true);
+        localStorage.setItem("editing", id);
+
+        // load existing data into form
+        getDeposit().then((data) => {
+            for(let deposit of data.data){
+                if(deposit.deposit_id === id){
+                    document.getElementById("editSource").value = deposit.source;
+                    document.getElementById("editDepositAccount").value = deposit.account_id;
+                    document.getElementById("editDepositDate").value = deposit.date.toString().substring(0, 10);
+                    document.getElementById("editDepositAmount").value = deposit.total_amount;
+                }
+            }
+            // run validation to clear error messages
+            editInputHandler();
+        })
+    }
+
+    const [showDelete, setShowDelete] = useState(false);
+    const handleCloseDelete = () => setShowDelete(false);
+    const handleShowDelete = (id) => {
+        setShowDelete(true);
+        localStorage.setItem("deleting", id);
+    }
+
+    const [showAdd, setShowAdd] = useState(false);
+    const handleCloseAdd = () => setShowAdd(false);
+    const handleShowAdd = () => setShowAdd(true);
 
     const addInputHandler = () => {
         setAddSource(document.getElementById('addSource').value)
         setAddAccount(document.getElementById('addDepositAccount').value);
         setAddDepositDate(document.getElementById('addDepositDate').value);
-        console.log(addDepositDate)
         setAddAmount(document.getElementById('addDepositAmount').value);
+
+        if(addAmount < 1 && !addAmount) {
+            setAddAmountWarning("Amount must be greater than 0")
+        } else {
+            setAddAmountWarning("")
+        }
         setConfirmAddAmount(document.getElementById('addConfirmAmount').value);
 
     }
@@ -101,6 +171,11 @@ const Deposit = () => {
         setEditAccount(document.getElementById('editDepositAccount').value);
         setEditDepositDate(document.getElementById('editDepositDate').value);
         setEditAmount(document.getElementById('editDepositAmount').value);
+        if(editAmount < 1) {
+            setEditAmountWarning("Amount must be greater than 0")
+        } else {
+            setEditAmountWarning("")
+        }
         setConfirmEditAmount(document.getElementById('editConfirmAmount').value);
     }
 
@@ -108,22 +183,18 @@ const Deposit = () => {
         setUserPassword(document.getElementById('userPassword').value);
     }
 
-     // income hook instance
-     const { postDeposit, getDeposit, editDeposit, deleteDeposit } = useDeposits("Deposits");
-    // income state
-    const [deposits, setDeposits] = useState(null);
-
-    // account hook instance
-    const {getAccounts} = useAccount("BankAccounts")
-    // list of accounts
-    const [accountList, setAccountList] = useState(null);
-
-    // post Income to server
+    //  add deposit
     const addDeposit = () => {
-        // TODO: get user ID from session variable
-        //console.log(addSource, addDepositDate, addAmount, addAccount)
-        postDeposit(addSource, addDepositDate, addAmount, addAccount);
-        handleCloseAdd();
+        if(addSource && addAccount && addDepositDate && addAmount && !addSourceWarning && !addAccountWarning && !addDepositDateWarning && !addAmountWarning && addAmount === confirmAddAmount) {
+            postDeposit(addSource, addDepositDate, addAmount, addAccount);
+            handleCloseAdd();
+            setAddSource(null)
+            setAddAccount(null);
+            setAddDepositDate(null);
+            setAddAmount(null);
+            setConfirmAddAmount(null);
+            fetchDeposits();
+        }
     }
 
     // post update
@@ -132,6 +203,7 @@ const Deposit = () => {
         if(editSource && editAccount && editDepositDate && editAmount && !editSourceWarning && !editAccountWarning && !editDepositDateWarning && !editAmountWarning && editAmount === confirmEditAmount) {
             editDeposit(localStorage.getItem("editing"),  editAccount, editSource, editDepositDate, editAmount);
             handleCloseEdit();
+            fetchDeposits();
         }
     }
 
@@ -139,42 +211,8 @@ const Deposit = () => {
     const removeDeposit = () => {
         deleteDeposit(localStorage.getItem("deleting"))
         handleCloseDelete();
+        fetchDeposits();
     }
-
-    // on render, get list of Deposits
-    useEffect(() => {
-
-        if(cookies.get("TOKEN") === undefined) {
-            navigate("/")
-        }
-
-        getDeposit().then((data) => {
-            
-            setDeposits(data.data.map((deposit) => {
-                let theDate = new Date(deposit.date);
-                let dateString = theDate.getMonth()+1 + " / " + theDate.getDate() + " / " + (theDate.getYear()+1900);
-                return(
-                    <DataRow
-                    title=""
-                    labels={["Source:", "Account:", "Date:", "Amount:"]}
-                    rows={[deposit.source, deposit.account_id, dateString, deposit.total_amount]}
-                    HandleEdit={() => handleShowEdit(deposit.deposit_id)}
-                    HandleDelete={() => handleShowDelete(deposit.deposit_id)}
-                />
-                )
-            }
-            ));
-        })
-    },[])
-
-        //generate dropdown list of accounts, add it to add and edit forms
-        useEffect(() => {
-            getAccounts().then((accounts) => {
-                setAccountList(accounts.data.map((account) => {
-                    return <option value={account.account_id}>{account.account_name}</option>
-                }))
-            })
-        },[])
 
     //returning JSX
     return (
@@ -193,7 +231,7 @@ const Deposit = () => {
                         fieldTypes={['text', 'select', 'date', 'number', 'number']}
                         warning={[addSourceWarning, addAccountWarning, addDepositDateWarning, addAmountWarning, confirmAddAmountWarning]}
                         warningIDs={['addSourceWarning', 'addDepositAccountWarning', 'addDepositDateWarning', 'addAmountWarning', 'confirmAddAmountWarning']}
-                        selectFields={accountList}
+                        selectFields={accountSelectList}
                         onChange={addInputHandler}
                         submitAction={addDeposit}
                     />
@@ -208,7 +246,7 @@ const Deposit = () => {
                         fieldTypes={['text', 'select', 'date', 'number', 'number']}
                         warning={[editSourceWarning, editAccountWarning, editDepositDateWarning, editAmountWarning, confirmEditAmountWarning]}
                         warningIDs={['editSourceWarning', 'editDepositAccountWarning', 'editDepositDateWarning', 'editAmountWarning', 'confirmEditAmountWarning']}
-                        selectFields={accountList}
+                        selectFields={accountSelectList}
                         onChange={editInputHandler}
                         submitAction={changeDeposit}
                     />
