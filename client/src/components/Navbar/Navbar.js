@@ -65,13 +65,15 @@ const HomeNavbar = () => {
         <Navbar.Brand className="text-white" onClick={() =>home()}>Financial Planner</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto">
+        {cookies.get("TOKEN") !== undefined ? (
+          <Nav className="d-flex me-auto">
             <Nav.Link className="text-white" onClick={() =>budget()}>Budget</Nav.Link>
             <Nav.Link className="text-white" onClick={() =>expenses()}>Expenses</Nav.Link>
             <Nav.Link className="text-white" onClick={() =>savings()}>Savings</Nav.Link>
             <Nav.Link className="text-white" onClick={() =>income()}>Income</Nav.Link>
             <Nav.Link className="text-white" onClick={() =>report()}>Report</Nav.Link>
           </Nav>
+        ):(<Nav className="d-flex me-auto"></Nav>)}
           <Nav className=' d-flex justify-content-end'>
           {cookies.get("TOKEN") === undefined ? (
             <React.Fragment>

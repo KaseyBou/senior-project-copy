@@ -80,14 +80,13 @@ const Deposit = () => {
                     return(
                     <DataRow
                     title=""
-                    labels={["Source:", "Account:", "Date:", "Amount:"]}
-                    rows={[deposit.source, accountName, dateString, deposit.total_amount]}
+                    labels={["Source: ", "Account: ", "Date: ", "Amount: "]}
+                    rows={[deposit.source, accountName, dateString, '$' + deposit.total_amount]}
                     HandleEdit={() => handleShowEdit(deposit.deposit_id)}
                     HandleDelete={() => handleShowDelete(deposit.deposit_id)}
                 />
                 )
-            }
-            ));
+            }));
         })
     }
 
@@ -96,7 +95,7 @@ const Deposit = () => {
 
         //verifying user is logged in
         if(cookies.get("TOKEN") === undefined) {
-            navigate("/")
+            navigate("/");
         }
 
         //getting accounts for display and form
@@ -113,9 +112,9 @@ const Deposit = () => {
                 return accountList.push([account.account_id, account.account_name])
             })
 
-        })
+        }).then(fetchDeposits())
 
-        fetchDeposits();
+        
     },[])
 
     // modal visibility states and functions

@@ -68,12 +68,12 @@ const Expenses = () => {
                 return accountList.push([account.account_id, account.account_name])
             })
 
-        })
+        }).then(
 
         //get budget categories
         getCategories().then((categories) => {
             setCategorySelectList(categories.data.map((category) => {
-                return <option value={category.budget_id}>{category.category_name}</option>
+                return <option value={category.budget_ID}>{category.category_name}</option>
             }))
 
             //setting category list **Push is not the correct method for adding to useState array
@@ -81,9 +81,8 @@ const Expenses = () => {
                 //return setAccountList(accountList => [...accountList, {id: account.account_id, name: account.account_name}]);
                 return categoryList.push([category.budget_ID, category.category_name])
             })
-        })
+        }).then(fetchExpenses()))
 
-        fetchExpenses();
     },[])
 
     const fetchExpenses = () => {
@@ -95,6 +94,7 @@ const Expenses = () => {
                 let dateString = theDate.getMonth()+1 + " / " + theDate.getDate() + " / " + (theDate.getYear()+1900);
                 let accountName;
                 let categoryName;
+
                 //grabbing bank account name for display
                 for(let i = 0; i < accountList.length; i++) {
                     if(accountList[i][0] === expenditure.account_id) {
@@ -135,7 +135,7 @@ const Expenses = () => {
                 if(expenditure.expenditure_id === id){
                     document.getElementById("forEdit").value = expenditure.recipient;
                     document.getElementById("totalSpentEdit").value = expenditure.total_amount;
-                    document.getElementById("dateEdit").value = expenditure.date;
+                    document.getElementById("dateEdit").value = expenditure.date.toString().substring(0, 10);
                     document.getElementById("categoryEdit").value = expenditure.budget_id;
                     document.getElementById("accountEdit").value = expenditure.account_id;
                 }
@@ -215,11 +215,12 @@ const Expenses = () => {
     }
 
     const editExpense = () => {
-        if(forEdit && dateEdit && totalSpentEdit && accountEdit && categoryEdit) {
-            editExpenditure(forEdit, dateEdit, totalSpentEdit, accountEdit, categoryEdit);
-            handleCloseAdd();
-            fetchExpenses();
-        }
+        console.log(forEdit, dateEdit, totalSpentEdit, accountEdit, categoryEdit)
+        //if(forEdit.length !== null && dateEdit !== null && totalSpentEdit !== null && accountEdit !== null && categoryEdit !== null) {
+        editExpenditure(localStorage.getItem("editing"), accountEdit, forEdit, dateEdit, totalSpentEdit, categoryEdit);
+        handleCloseEdit();
+        fetchExpenses();
+        //}
     }
 
     // post delete
@@ -298,7 +299,7 @@ const Expenses = () => {
                         fields={['For', 'Date', 'Total Spent', 'Category', 'Account']}
                         fieldIDs={['forAdd', 'dateAdd', 'totalSpentAdd', 'categoryAdd', 'accountAdd']}
                         fieldTypes={['text', 'date', 'number', 'select', 'select']}
-                        selectFields={selectAccountList}
+                        selectFields={[selectAccountList, categorySelectList]}
                         warning={[forAddWarning, addDateWarning, totalSpentAddWarning, categoryAddWarning, accountAddWarning]}
                         warningIDs={['forAddWarning', 'addDateWarning', 'totalSpentAddWarning', 'categoryAddWarning', 'accountAddWarning']}
                         onChange={addExpenseInputHandler}
@@ -312,7 +313,7 @@ const Expenses = () => {
                         fields={['For', 'Date', 'Total Spent', 'Category', 'Account']}
                         fieldIDs={['forEdit', 'dateEdit', 'totalSpentEdit', 'categoryEdit', 'accountEdit']}
                         fieldTypes={['text', 'date', 'number', 'select', 'select']}
-                        selectFields={selectAccountList}
+                        selectFields={[selectAccountList, categorySelectList]}
                         warning={[forAddWarning, addDateWarning, totalSpentAddWarning, categoryAddWarning, accountAddWarning]}
                         warningIDs={['forAddWarning', 'addDateWarning', 'totalSpentAddWarning', 'categoryAddWarning', 'accountAddWarning']}
                         onChange={editExpenseInputHandler}
