@@ -14,27 +14,121 @@ import InformationDisplay from '../../components/InformationDisplay/InformationD
 import useBudget from '../../hooks/useBudget.tsx';
 
 const Budget = () => {
+    // instance of budget hook
+    const {postBudget, getCategories, editCategory, deleteCategory} = useBudget("Budget");
+
     const cookies = new Cookies();
     const navigate = useNavigate();
 
     // state for list of budget categories
     const [categories, setCategories] = useState(null);
 
+    // form states
+    const [nameAdd, setNameAdd] = useState('');
+    const [isCalculatedAdd, setIsCalculatedAdd] = useState(false);
+    const [monthlyBudgetAdd, setMonthlyBudgetAdd] = useState(0);
+    const [percentageAdd, setPercentageAdd] = useState(0);
+
+    const [nameEdit, setNameEdit] = useState('');
+    const [isCalculatedEdit, setIsCalculatedEdit] = useState('');
+    const [monthlyBudgetEdit, setMonthlyBudgetEdit] = useState(0);
+    const [percentageEdit, setPercentageEdit] = useState(0);
+
+    // form warning states
+    const [nameAddWarning, setNameAddWarning] = useState('');
+    const [isCalculatedAddWarning, setIsCalculatedAddWarning] = useState('');
+    const [monthlyBudgetAddWarning, setMonthlyBudgetAddWarning] = useState('');
+    const [percentageAddWarning, setPercentageAddWarning] = useState('');
+
+    const [nameEditWarning, setNameEditWarning] = useState('');
+    const [isCalculatedEditWarning, setIsCalculatedEditWarning] = useState('');
+    const [monthlyBudgetEditWarning, setMonthlyBudgetEditWarning] = useState('');
+    const [percentageEditWarning, setPercentageEditWarning] = useState(''); 
+
+    // input handlers
+    const addInputHandler = () => {
+        setNameAdd(document.getElementById("nameAdd").value);
+        setIsCalculatedAdd(document.getElementById("calculatedAdd").value);
+        setMonthlyBudgetAdd(document.getElementById("monthlyBudgetAdd").value);
+        setPercentageAdd(document.getElementById("percentageAdd").value);
+    }
+
+    const editInputHandler = () => {
+        setNameEdit(document.getElementById("nameEdit").value);
+        setIsCalculatedEdit(document.getElementById("calculatedEdit").value);
+        setMonthlyBudgetEdit(document.getElementById("monthlyBudgetEdit").value);
+        setPercentageEdit(document.getElementById("percentageEdit").value);
+    }
+
     // modal visibility states and functions
     const [showEdit, setShowEdit] = useState(false);
-    const handleCloseEdit = () => setShowEdit(false);
-    const handleShowEdit = () => setShowEdit(true);
+    const handleCloseEdit = () => {
+        setShowEdit(false);
+        fetchIncomeList();
+    }
+    const handleShowEdit = (id) => {
+        setShowEdit(true);
+        localStorage.setItem("editing", id);
+    }
 
     const [showDelete, setShowDelete] = useState(false);
-    const handleCloseDelete = () => setShowDelete(false);
-    const handleShowDelete = () => setShowDelete(true);
+    const handleCloseDelete = () => {
+        setShowDelete(false);
+        fetchIncomeList();
+    }
+    const handleShowDelete = (id) => {
+        setShowDelete(true);
+        localStorage.setItem("deleting", id);
+    }
 
     const [showAdd, setShowAdd] = useState(false);
-    const handleCloseAdd = () => setShowAdd(false);
-    const handleShowAdd = () => setShowAdd(true);
+    const handleCloseAdd = () => {
+        setShowAdd(false);
+        fetchIncomeList();
+    }
+    const handleShowAdd = () => {
+        setShowAdd(true);
+    }
 
-    // instance of budget hook
-    const {postBudget, getCategories, editCategory, deleteCategory} = useBudget("Budget");
+    // submission functions
+    const addBudget = () => {
+        // if everything is filled and no error messages are present
+        if(nameAdd && ((isCalculatedAdd && percentageAdd) || monthlyBudgetAdd)
+        && !nameAddWarning && !isCalculatedAddWarning && !percentageAddWarning && !monthlyBudgetAddWarning){
+            postBudget(nameAdd, isCalculatedAdd, monthlyBudgetAdd, percentageAdd);
+            handleCloseAdd();
+
+            // clear state
+            setNameAdd(null);
+            setIsCalculatedAdd(false);
+            setPercentageAdd(null);
+            setMonthlyBudgetAdd(null);
+        }
+    }
+
+    const updateBudget = () => {
+        console.log(nameEdit);
+        console.log(isCalculatedEdit);
+        console.log(percentageEdit);
+        console.log(monthlyBudgetEdit);
+
+        if(nameEdit && ((isCalculatedEdit && percentageEdit) || monthlyBudgetEdit)
+        && !nameEditWarning && !isCalculatedEditWarning && !percentageEditWarning && !monthlyBudgetEditWarning){
+            editCategory(localStorage.getItem('editing'), nameEdit, isCalculatedEdit, monthlyBudgetEdit, percentageEdit);
+            handleCloseEdit();
+
+            // clear state
+            setNameEdit(null);
+            setIsCalculatedEdit(false);
+            setPercentageEdit(null);
+            setMonthlyBudgetEdit(null);
+        }
+    }
+
+    const removeBudget = (id) => {
+        deleteCategory(id);
+        handleCloseDelete();
+    }
 
     // redirect if not logged in
     useEffect(() => {
@@ -77,12 +171,12 @@ const Budget = () => {
                     <CustomForm
                         title="Add Budget Category"
                         fields={['Name', 'Calculated Budget', 'Monthly Budget', '% Of Net Income']}
-                        fieldIDs={['nameAdd', 'calculatedAdd', 'monthlyValueAdd', 'percentageAdd']}
+                        fieldIDs={['nameAdd', 'calculatedAdd', 'monthlyBudgetAdd', 'percentageAdd']}
                         fieldTypes={['text', 'checkbox', 'number', 'number']}
                         warning={['', '', '', '']}
                         warningIDs={['nameAddWarning', 'calculatedAddWarning','monthlyValueAddWarning', 'percentageAddWarning']}
-                        onChange={() => {}}
-                        submitAction={handleCloseAdd}
+                        onChange={addInputHandler}
+                        submitAction={addBudget}
                     />
                 </Modal>
 
@@ -90,12 +184,12 @@ const Budget = () => {
                     <CustomForm
                         title="Edit Budget Category"
                         fields={['Name', 'Calculated Budget', 'Monthly Budget', '% Of Net Income']}
-                        fieldIDs={['nameEdit', 'calculatedEdit', 'monthlyValueEdit', 'percentageEdit']}
+                        fieldIDs={['nameEdit', 'calculatedEdit', 'monthlyBudgetEdit', 'percentageEdit']}
                         fieldTypes={['text', 'checkbox', 'number', 'number']}
                         warning={['', '', '', '']}
                         warningIDs={['nameEditWarning', 'calculatedEditWarning','monthlyValueEditWarning', 'percentageEditWarning']}
-                        onChange={() => {}}
-                        submitAction={handleCloseEdit}
+                        onChange={editInputHandler}
+                        submitAction={updateBudget}
                     />
                 </Modal>
 
@@ -108,7 +202,7 @@ const Budget = () => {
                         warning={['']}
                         warningIDs={['']}
                         onChange={() => {}}
-                        submitAction={handleCloseDelete}
+                        submitAction={() => {removeBudget(localStorage.getItem("deleting"))}}
                     />
                 </Modal>
 
