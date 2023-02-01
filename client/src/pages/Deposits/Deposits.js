@@ -24,7 +24,7 @@ const Deposit = () => {
     const [deposits, setDeposits] = useState(null);
 
     // account hook instance
-    const {getAccounts} = useAccount("BankAccounts")
+    const {getAccounts} = useAccount("BankAccount")
     // list of accounts for form
     const [accountSelectList, setSelectAccountList] = useState(null);
 
