@@ -13,14 +13,12 @@ const usePost = (urlSegment : string) => {
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<boolean>(false);
     
-    const [tokenHeader, setTokenHeader] = useState<any>('');
-    useEffect(() => {
-        setTokenHeader({
-            headers: {
-                Authorization: `${cookies.get("TOKEN")}`
-            }
+    const tokenHeader =
+    {
+        headers: {
+            authorization: `${cookies.get("TOKEN")}`
         }
-    )},[])
+    }
 
     //hook to register user account
     const postRegister = async(first_Name: string, last_Name: string, email: string, password: string, phone: string) => {
@@ -54,12 +52,12 @@ const usePost = (urlSegment : string) => {
     };
 
     //hook to edit user account
-    const postEditUser = async(first_Name: string, last_Name: string, email: string, password: string, phone: string, user_id: number) => {
+    const editUser = async(first_Name: string, last_Name: string, email: string, password: string, phone: string, user_id: number) => {
 
         try {
             setLoading(true);
             setError(false);
-            const response = await axios.post(`${baseURL}${urlSegment}`, {
+            const response = await axios.put(`${baseURL}${urlSegment}/${user_id}`, {
             first_Name: `${first_Name}`,
             last_Name: `${last_Name}`,
             email: `${email}`,
@@ -83,14 +81,11 @@ const usePost = (urlSegment : string) => {
     };
 
     //hook to delete user account
-    const postDeleteUser = async( user_id: number, pw_attempt: string) => {
+    const deleteUser = async(user_id: number) => {
         try {
             setLoading(true);
             setError(false);
-            const response = await axios.post(`${baseURL}DeleteUser`, {
-                user_id: user_id,
-                pw_attempt: pw_attempt
-            },tokenHeader)
+            const response = await axios.delete(`${baseURL}${urlSegment}/${user_id}`,tokenHeader)
             setData(response);
             
         }catch(error) {
@@ -132,40 +127,13 @@ const usePost = (urlSegment : string) => {
         }
         
     };
-
-    //add user session
-    const postAddUserSession = async(token: string, email: string) => {
-
-        try {
-            setLoading(true);
-            setError(false);
-            const response = await axios.post(`${baseURL}${urlSegment}`, {
-            email: `${email}`,
-            token: `${token}`
-
-            }, tokenHeader).then((response) => {
-                return response;
-            })
-            setData(response);
-            return 
-        }catch(error) {
-            setError(true);
-            console.log(error);
-
-        } finally {
-
-            setLoading(false);
-
-        }
-        
-    };
     
     // get account details
-    const getAccountDetails = async (user_id: number) => {
+    const getAccountDetails = async () => {
         try {
             setLoading(true);
             setError(false);
-            const response = await axios.get(`${baseURL}User/${user_id}`, tokenHeader)
+            const response = await axios.get(`${baseURL}${urlSegment}`, tokenHeader)
             setData(response);
             return response;
         }catch(error) {
@@ -179,7 +147,7 @@ const usePost = (urlSegment : string) => {
         }
     }
     
-    return {postRegister, postLogin, postEditUser, postDeleteUser, getAccountDetails, postAddUserSession, data, loading, error}
+    return {postRegister, postLogin, editUser, deleteUser, getAccountDetails, data, loading, error}
 
 }
 

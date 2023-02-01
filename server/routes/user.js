@@ -10,7 +10,7 @@ const connection = mysql.createConnection({
 })
 
 const functions = require('../helper-functions/functions')
-
+const {hashPassword, isPasswordCorrect, getEmail} = require('../helper-functions/functions')
 //---------------User Posts------------------------------------------------
 
 //register user
@@ -22,12 +22,7 @@ module.exports.registerUser = (req,res) => {
     salt = returnData[0];
     hash = returnData[1];
     
-    /*if(!firstName) return res.status(400).json('First Name can not be blank');
-    if(!lastName) return res.status(400).json('Last Name cant be blank');
-    if(!email) return res.status(400).json('Email cant be blank');
-    if(!password) return res.status(400).json('Password cant be blank');*/
-    
-      //var sql = "INSERT INTO Users (first_name, last_name, email, password, password_salt, phone, profile_image, is_admin) Values ('firstName', 'lastName', 'testingg@testing.com', 'password', 'password_salt', 'phone', 'profile_image', 'is_admin')";
+    //var sql = "INSERT INTO Users (first_name, last_name, email, password, password_salt, phone, profile_image, is_admin) Values ('firstName', 'lastName', 'testingg@testing.com', 'password', 'password_salt', 'phone', 'profile_image', 'is_admin')";
      var sql = `INSERT INTO Users (first_name, last_name, email, password, password_salt, phone, profile_image, is_admin) Values ('${first_Name}', '${last_Name}', '${email}', '${hash}', '${salt}','${phone}', ${profile_image}, ${is_admin})`;
   
      connection.query(sql, function(err, rows)
@@ -52,17 +47,17 @@ module.exports.registerUser = (req,res) => {
 module.exports.editUser = (req,res) => {
   
     let {first_Name, last_Name, email, password, phone, profile_image, user_id} = req.body;
-  
+    let userEmail = getEmail(req.headers.authorization).then((email) => {return email;});
     if(password === "") {
   
-        var sql = `Update Users SET first_name = '${first_Name}', last_name = '${last_Name}', email = '${email}', phone = '${phone}', profile_image = ${profile_image} WHERE user_id = ${user_id}`;
+        var sql = `Update Users SET first_name = '${first_Name}', last_name = '${last_Name}', email = '${email}', phone = '${phone}', profile_image = ${profile_image} WHERE email = ${userEmail}`;
     } 
     else {
         let returnData = functions.hashPassword(password)
         salt = returnData[0];
         hash = returnData[1];
         //var sql = "INSERT INTO Users (first_name, last_name, email, password, password_salt, phone, profile_image, is_admin) Values ('firstName', 'lastName', 'testingg@testing.com', 'password', 'password_salt', 'phone', 'profile_image', 'is_admin')";
-        var sql = `Update Users SET first_name = '${first_Name}', last_name = '${last_Name}', email = '${email}', password = '${hash}', password_salt = '${salt}', phone = '${phone}', profile_image = ${profile_image} WHERE user_id = ${userID}`;
+        var sql = `Update Users SET first_name = '${first_Name}', last_name = '${last_Name}', email = '${email}', password = '${hash}', password_salt = '${salt}', phone = '${phone}', profile_image = ${profile_image} WHERE email = ${userEmail}`;
     }
     /*if(!firstName) return res.status(400).json('First Name can not be blank');
     if(!lastName) return res.status(400).json('Last Name cant be blank');
@@ -89,8 +84,9 @@ module.exports.editUser = (req,res) => {
 module.exports.deleteUser = (req,res) => {
   
     let {user_id, pw_attempt} = req.body;
-
-    var sql = `SELECT password, password_salt FROM Users WHERE user_id = '${user_id}';`;
+    const {getEmail} = require('../helper-functions/functions');
+    let email = getEmail(req.headers.authorization).then((email) => {return email;});
+    var sql = `SELECT password, password_salt FROM Users WHERE email = '${email}';`;
 
     connection.query(sql, function(err, rows)
     {
@@ -154,7 +150,7 @@ module.exports.userLogin = (req,res) => {
             userEmail: email,
           },
           "RANDOM-TOKEN",
-          { expiresIn: "24h" }
+          { expiresIn: "1h" }
         );
 
           //   return success response
@@ -173,9 +169,8 @@ module.exports.userLogin = (req,res) => {
 };
 
 module.exports.getAccountDetails = (req, res) => {
-  user_id = req.params.user_id;
-
-  var sql = `SELECT email, first_name, last_name, phone, profile_image FROM Users WHERE user_id = '${user_id}';`;
+  let email = getEmail(req.headers.authorization).then((email) => {return email;});
+  var sql = `SELECT email, first_name, last_name, phone, profile_image FROM Users WHERE email = '${email}';`;
 
   connection.query(sql, function(err, rows)
     {

@@ -40,17 +40,18 @@ const {insertBudget, getBudget, updateBudget, deleteBudget} = require("./routes/
 //---------------User Posts------------------------------------------------
 
 //register user account
-app.post('/Register', auth,  registerUser);
+app.post('/User', auth,  registerUser);
 
 //edit user account
-app.post('/EditUser',  auth, editUser);
+app.put('/User',  auth, editUser);
 
 //delete user account
-app.post('/DeleteUser',  auth, deleteUser);
+app.delete('/User/:user_id',  auth, deleteUser);
 
 app.post('/Login', userLogin);
 
-app.get('/User/:user_id',  auth, getAccountDetails);
+//get user
+app.get('/User',  auth, getAccountDetails);
 
 // BANK ACCOUNT ********************************************************************************************
 
