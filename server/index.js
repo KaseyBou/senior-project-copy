@@ -58,14 +58,14 @@ app.get('/User',  auth, getAccountDetails);
 //add bank account
 app.post('/BankAccount',  auth, addAccount);
 
-//edit bank account
-app.post('/EditAccount',  auth, editAccount);
-
-//edit bank account
-app.post('/DeleteAccount',  auth, deleteAccount);
-
 // get list of bank accounts
-app.get('/BankAccounts', auth, getAccounts);
+app.get('/BankAccount', auth, getAccounts);
+
+//edit bank account
+app.put('/BankAccount/:account_id',  auth, editAccount);
+
+//delete bank account
+app.delete('/BankAccount/:account_id',  auth, deleteAccount);
 
 // BUDGET ********************************************************************************************
 

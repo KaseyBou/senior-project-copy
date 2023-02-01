@@ -24,7 +24,7 @@ const Deposit = () => {
     const [deposits, setDeposits] = useState(null);
 
     // account hook instance
-    const {getAccounts} = useAccount("BankAccounts")
+    const {getAccounts} = useAccount("BankAccount")
     // list of accounts for form
     const [accountSelectList, setSelectAccountList] = useState(null);
 
@@ -230,7 +230,7 @@ const Deposit = () => {
                         fieldTypes={['text', 'select', 'date', 'number', 'number']}
                         warning={[addSourceWarning, addAccountWarning, addDepositDateWarning, addAmountWarning, confirmAddAmountWarning]}
                         warningIDs={['addSourceWarning', 'addDepositAccountWarning', 'addDepositDateWarning', 'addAmountWarning', 'confirmAddAmountWarning']}
-                        selectFields={accountSelectList}
+                        selectFields={[accountSelectList]}
                         onChange={addInputHandler}
                         submitAction={addDeposit}
                     />
@@ -245,7 +245,7 @@ const Deposit = () => {
                         fieldTypes={['text', 'select', 'date', 'number', 'number']}
                         warning={[editSourceWarning, editAccountWarning, editDepositDateWarning, editAmountWarning, confirmEditAmountWarning]}
                         warningIDs={['editSourceWarning', 'editDepositAccountWarning', 'editDepositDateWarning', 'editAmountWarning', 'confirmEditAmountWarning']}
-                        selectFields={accountSelectList}
+                        selectFields={[accountSelectList]}
                         onChange={editInputHandler}
                         submitAction={changeDeposit}
                     />

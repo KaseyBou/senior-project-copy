@@ -25,7 +25,7 @@ const Expenses = () => {
      
      const { postExpenditure, getExpenditure, editExpenditure, deleteExpenditure} = useExpenditures("Expenditures")
     // account hook instance
-    const {postAccount, postDeleteAccount, getAccounts} = useAccount("BankAccounts")
+    const {getAccounts} = useAccount("BankAccount")
     const { getCategories } = useBudget("Budget");
 
     // list of accounts
@@ -299,7 +299,7 @@ const Expenses = () => {
                         fields={['For', 'Date', 'Total Spent', 'Category', 'Account']}
                         fieldIDs={['forAdd', 'dateAdd', 'totalSpentAdd', 'categoryAdd', 'accountAdd']}
                         fieldTypes={['text', 'date', 'number', 'select', 'select']}
-                        selectFields={[selectAccountList, categorySelectList]}
+                        selectFields={[categorySelectList, selectAccountList]}
                         warning={[forAddWarning, addDateWarning, totalSpentAddWarning, categoryAddWarning, accountAddWarning]}
                         warningIDs={['forAddWarning', 'addDateWarning', 'totalSpentAddWarning', 'categoryAddWarning', 'accountAddWarning']}
                         onChange={addExpenseInputHandler}
@@ -313,7 +313,7 @@ const Expenses = () => {
                         fields={['For', 'Date', 'Total Spent', 'Category', 'Account']}
                         fieldIDs={['forEdit', 'dateEdit', 'totalSpentEdit', 'categoryEdit', 'accountEdit']}
                         fieldTypes={['text', 'date', 'number', 'select', 'select']}
-                        selectFields={[selectAccountList, categorySelectList]}
+                        selectFields={[categorySelectList, selectAccountList]}
                         warning={[forAddWarning, addDateWarning, totalSpentAddWarning, categoryAddWarning, accountAddWarning]}
                         warningIDs={['forAddWarning', 'addDateWarning', 'totalSpentAddWarning', 'categoryAddWarning', 'accountAddWarning']}
                         onChange={editExpenseInputHandler}
