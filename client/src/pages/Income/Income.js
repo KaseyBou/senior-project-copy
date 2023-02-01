@@ -66,6 +66,15 @@ const Income = () => {
         })
     }, [])
 
+    //generate dropdown list of accounts, add it to add and edit forms
+    useEffect(() => {
+        getAccounts().then((accounts) => {
+            setAccountList(accounts.data.map((account) => {
+                return <option value={account.account_id}>{account.account_name}</option>
+            }))
+        })
+    }, [])
+
     // modal visibility states and functions
     const [showEdit, setShowEdit] = useState(false);
     const handleCloseEdit = () => {

@@ -112,7 +112,7 @@ const Register = () => {
                 title='Register'
                 fields={["First Name", "Last Name", "E-Mail Address", "Phone Number", "Password", "Confirm Password"]}
                 fieldIDs={['firstName', 'lastName', 'email', 'phone', 'password', 'confirmPassword']}
-                warning={[`${firstNameWarning}`, `${lastNameWarning}`, `${emailWarning}`, `${phoneWarning}`, `${passwordWarning}`,`${confirmPasswordWarning}`]}
+                warning={[firstNameWarning, lastNameWarning, emailWarning, phoneWarning, passwordWarning, confirmPasswordWarning]}
                 warningIDs={['firstNameWarning', 'lastNameWarning', 'emailWarning', 'phoneWarning', 'passwordWarning', 'confirmPasswordWarning']}
                 fieldTypes={['text', 'text', 'text', 'text', 'password','password']}
                 onChange={inputHandler}
