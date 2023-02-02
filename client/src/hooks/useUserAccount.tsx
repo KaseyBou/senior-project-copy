@@ -52,7 +52,7 @@ const usePost = (urlSegment : string) => {
     };
 
     //hook to edit user account
-    const editUser = async(first_Name: string, last_Name: string, email: string, password: string, phone: string, user_id: number) => {
+    const editUser = async(user_id: number, first_Name: string, last_Name: string, email: string, password: string, phone: string) => {
 
         try {
             setLoading(true);
@@ -81,11 +81,14 @@ const usePost = (urlSegment : string) => {
     };
 
     //hook to delete user account
-    const deleteUser = async(user_id: number) => {
+    const deleteUser = async( user_id: number, pw_attempt: string) => {
         try {
             setLoading(true);
             setError(false);
-            const response = await axios.delete(`${baseURL}${urlSegment}/${user_id}`,tokenHeader)
+            const response = await axios.post(`${baseURL}DeleteUser`, {
+                user_id: user_id,
+                pw_attempt: pw_attempt
+            },tokenHeader)
             setData(response);
             
         }catch(error) {

@@ -14,7 +14,9 @@ const Account = () => {
     //intializing
     const cookies = new Cookies();
     const navigate = useNavigate();
-    
+    const home = () => {
+        navigate('/');
+    }
     // on render, get list of Deposits
     useEffect(() => {
 
@@ -37,18 +39,19 @@ const Account = () => {
     const [confirmPassword, setConfirmPassword] = useState('');
 
       
-    // load existing data into form
-    getAccountDetails().then((data) => {
-        console.log(data);
-        /*document.getElementById("firstName").value = data.first_name;
-        document.getElementById("lastName").value = data.last_name;
-        document.getElementById("email").value = data.email;
-        document.getElementById("phone").value = data.phone;
-        */    
-        
+    useEffect(() => {
+        // load existing data into form
+        getAccountDetails().then((data) => {
+            let account = data.data[0];
+            localStorage.setItem("editing", account.user_id)
+            document.getElementById("firstName").value = account.first_name;
+            document.getElementById("lastName").value = account.last_name;
+            document.getElementById("email").value = account.email;
+            document.getElementById("phone").value = account.phone;
 
-        inputHandler();
-    })
+            inputHandler();
+        })
+    },[])
 
       // state variable for visibility of delete confirmation
       const [showDelete, setShowDelete] = useState(false);
@@ -61,18 +64,19 @@ const Account = () => {
       //handles updates to input's
       const inputHandler = () =>{
         
-          /*setFirstName(document.getElementById("firstName").value);
+          setFirstName(document.getElementById("firstName").value);
           setLastName(document.getElementById("lastName").value);
           setPhone(document.getElementById("phone").value);
           setEmail(document.getElementById("email").value);
           setPassword(document.getElementById("password").value);
-          setConfirmPassword(document.getElementById("confirmPassword").value);*/
+          setConfirmPassword(document.getElementById("confirmPassword").value);
 
       }
 
       const editAccount = () => {
         // get user_ID from how it is stored
         if(password === confirmPassword) {
+            //console.log(localStorage.getItem("editing"))
             editUser(localStorage.getItem("editing"), firstName, lastName, email, password, phone)
         } else {
         }
@@ -80,9 +84,12 @@ const Account = () => {
 
       const delAccount = () => {
         // TODO: you know the drill by this point
-        deleteUser( document.getElementById('passwordDelete').value)
-        // TODO: redirect to homepage
-        handleCloseDelete();
+        deleteUser(localStorage.getItem("editing"), password)
+        
+        cookies.remove("TOKEN");
+        home();
+          
+
       }
 
     //returning JSX
