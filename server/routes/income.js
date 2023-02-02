@@ -16,7 +16,7 @@ module.exports.insertIncome = async(req,res) => {
     let email = getEmail(req.headers.authorization).then((email) => {return email;});
     
     var sql = `INSERT INTO Incomes (account_id, gross_pay, pay_day, pay_frequency, user_id) 
-      Values ('${account_id}', '${gross_pay}', '${pay_day}', '${pay_frequency}'
+      Values ('${account_id}', '${gross_pay}', '${pay_day}', '${pay_frequency}',
       (SELECT user_id FROM Users WHERE email = '${await email}'))`;
   
     connection.query(sql, function(err, rows)
