@@ -9,28 +9,26 @@ const useBills = (urlSegment : string) => {
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<boolean>(false);
 
-    const [tokenHeader, setTokenHeader] = useState<any>('');
-    useEffect(() => {
-        setTokenHeader({
-            headers: {
-                Authorization: `${cookies.get("TOKEN")}`
-            }
+    const tokenHeader =
+    {
+        headers: {
+            authorization: `${cookies.get("TOKEN")}`
         }
-    )},[])
+    }
 
-    const postBill = async(user_id: number, bill_name: string, bill_source: string, pay_frequency: number, next_due: Date, amount: number, account_id: number, budget_id: number) => {
+    const postBill = async(bill_name: string, bill_source: string, pay_frequency: number, next_due: Date, amount: number, account_id: number, budget_id: number) => {
         try {
             setLoading(true);
             setError(false);
             const response = await axios.post(`${baseURL}${urlSegment}`, {
-                account_id: `${account_id}`,
                 bill_name: `${bill_name}`,
                 bill_source: `${bill_source}`,
-                amount: `${amount}`,
-                next_due: `${next_due}`,
                 pay_frequency: `${pay_frequency}`,
-                user_id: `${user_id}`,
+                next_due: `${next_due}`,
+                amount: `${amount}`,
+                account_id: `${account_id}`,
                 budget_id: `${budget_id}`
+                
                 }, tokenHeader)
             setData(response);
         }catch(error) {
@@ -41,11 +39,11 @@ const useBills = (urlSegment : string) => {
         }
     };
 
-    const getBills = async(user_id: number) => {
+    const getBills = async () => {
         try {
             setLoading(true);
             setError(false);
-            const response = await axios.get(`${baseURL}${urlSegment}/${user_id}`, tokenHeader)
+            const response = await axios.get(`${baseURL}${urlSegment}`, tokenHeader)
             setData(response);
             return response;
         }catch(error) {

@@ -97,7 +97,7 @@ app.delete('/Income/:income_id',  auth, deleteIncome);
   
 app.post('/Bills',  auth, addBill);
 
-app.get('/Bills/:user_id',  auth, getBills);
+app.get('/Bills',  auth, getBills);
 
 app.put('/Bills/:bill_id',  auth, updateBill);
 

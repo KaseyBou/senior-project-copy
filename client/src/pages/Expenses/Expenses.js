@@ -35,17 +35,8 @@ const Expenses = () => {
     const [categoryList, setCategoryList] = useState([]);
     const [categorySelectList, setCategorySelectList] = useState([]);
      // income state
-     const [bills, setBills] = useState(null);
+
      const [expenditures, setExpenditures] = useState(null);
- 
-     // on render, get list of bills
-     // TODO: use user ID from session data
-     useEffect(() => {
-         getBills(7).then((data) => {
-             setBills(data);
-             //console.log(data.data);
-         });
-     }, [])
 
     //support functionality
     useEffect(() => {
@@ -229,59 +220,6 @@ const Expenses = () => {
         handleCloseDelete();
         fetchExpenses();
     }
-
-    //Add Bill Modal Information
-    const [showBillAdd, setShowBillAdd] = useState(false);
-    const handleCloseBillAdd = () => setShowBillAdd(false);
-    const handleShowBillAdd = () => setShowBillAdd(true);
-    const [billNameAdd, setBillNameAdd] = useState('')
-    const [billCompanyAdd, setBillCompanyAdd] = useState('');
-    const [billAmountAdd, setBillAmountAdd] = useState('');
-    const [billFrequencyAdd, setBillFrequencyAdd] = useState('')
-    const [billPaymentDateAdd, setBillPaymentDateAdd] = useState('');
-    const [billAccountAdd, setBillAccountAdd] = useState('');
-    const [billBudgetAdd, setBillBudgetAdd] = useState('');
-
-    //handles updates to input's
-    const addBillInputHandler = () =>{
-        setBillNameAdd(document.getElementById("billNameAdd").value);
-        setBillCompanyAdd(document.getElementById("billCompanyAdd").value);
-        setBillAmountAdd(document.getElementById("billAmountAdd").value);
-        setBillPaymentDateAdd(document.getElementById("billPaymentDateAdd").value);
-        setBillFrequencyAdd(document.getElementById("billFrequencyAdd").value);
-        setBillAccountAdd(document.getElementById("billAccountAdd").value);
-        setBillBudgetAdd(document.getElementById("billBudgetAdd").value);
-    }
-
-    //Edit Bill Modal
-    const [showBillEdit, setShowBillEdit] = useState(false);
-    const handleCloseBillEdit = () => setShowBillEdit(false);
-    const handleShowBillEdit = () => setShowBillEdit(true);
-    const [billNameEdit, setBillNameEdit] = useState('')
-    const [billCompanyEdit, setBillCompanyEdit] = useState('');
-    const [billInterestEdit, setBillInterestEdit] = useState('');
-    const [billAmountEdit, setBillAmountEdit] = useState('');
-    const [billPaymentEdit, setBillPaymentEdit] = useState('')
-    const [billPaymentDateEdit, setBillPaymentDateEdit] = useState('');
-
-    //handles updates to input's
-    const editBillInputHandler = () =>{
-        // setBillNameEdit(document.getElementById("billNameEdit").value);
-        // setBillCompanyEdit(document.getElementById("billCompanyEdit").value);
-        // setBillInterestEdit(document.getElementById("billInterestEdit").value);
-        // setBillAmountEdit(document.getElementById("billAmountEdit").value);
-        // setBillPaymentEdit(document.getElementById("billPaymentEdit").value);
-        // setBillPaymentDateEdit(document.getElementById("billPaymentDateEdit").value);        
-    }
-    //Initialization
-    //const navigate = useNavigate();
-
-    // Post bill to server
-    const addBill = () => {
-        // TODO: get user ID from session var
-        postBill(7, billNameAdd, billCompanyAdd, billFrequencyAdd, billPaymentDateAdd, billAmountAdd, billAccountAdd, billBudgetAdd);
-        handleCloseBillAdd();
-    }
     
     //returning JSX
     return (
@@ -334,30 +272,6 @@ const Expenses = () => {
                     />
                 </Modal>
 
-                <Button onClick={handleShowBillAdd}>Add Bill</Button>
-                <Modal buttonText="Add Bill" show={showBillAdd} handleShow={handleShowBillAdd} handleClose={handleCloseBillAdd}>
-                    <CustomForm
-                        title="Add Bill"
-                        fields={['Bill Title', 'Bill Source', 'Amount', 'Next Due Date', 'Pay Frequency', 'Account', 'Budget', ]}
-                        fieldIDs={['billNameAdd', 'billCompanyAdd', 'billAmountAdd', 'billPaymentDateAdd', 'billFrequencyAdd', 'billAccountAdd', 'billBudgetAdd']}
-                        fieldTypes={['text', 'text', 'number', 'date', 'number', 'text', 'text']}
-                        warning={['','','','','','','']}
-                        warningIDs={['', '','', '','','','']}
-                        onChange={addBillInputHandler}
-                        submitAction={addBill}
-                    />
-                </Modal>
-
-                <Modal buttonText="Edit Bill" show={showBillEdit} handleShow={handleShowBillEdit} handleClose={handleCloseBillEdit}>
-                    <CustomForm
-                        title="Edit Bill"
-                        fields={['Bill Name', 'Company', 'Bill Type', 'Due Date', 'Reoccuring Bill', 'Interest', 'Amount', 'Payment', 'Payment Date', 'Reocurring Payment']}
-                        fieldIDs={['billNameEdit', 'billCompanyEdit', 'billTypeEdit', 'billReoccuringEdit', 'billInterestEdit', 'billAmountEdit', 'billPaymentEdit', 'billPaymentDateEdit', 'billReocurringPaymentEdit']}
-                        fieldTypes={['text', 'text', 'text', 'date', 'checkbox', 'number', 'number', 'number', 'date', 'checkbox']}
-                        onChange={editBillInputHandler}
-                        submitAction={handleCloseBillEdit}
-                    />
-                </Modal>
             </div>
         </>
     );

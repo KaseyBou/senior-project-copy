@@ -8,10 +8,15 @@ const connection = mysql.createConnection({
   
 })
 
-module.exports.addBill = (req, res) => {
-    let {user_id, bill_name, bill_source, pay_frequency, next_due, amount, account_id, budget_id} = req.body;
+const {getEmail} = require('../helper-functions/functions')
 
-    var sql = `INSERT INTO Bills(user_id, bill_name, bill_source, pay_frequency, next_due, amount, account_id, budget_id) VALUES ('${user_id}', '${bill_name}', '${bill_source}', '${pay_frequency}', '${next_due}', '${amount}', '${account_id}', '${budget_id}')`;
+module.exports.addBill = async(req, res) => {
+    let {bill_name, bill_source, pay_frequency, next_due, amount, account_id, budget_id} = req.body;
+    console.log(req.body)
+    let email = getEmail(req.headers.authorization).then((email) => {return email;});
+    var sql = `INSERT INTO Bills(bill_name, bill_source, pay_frequency, next_due, amount, account_id, budget_id, user_id) 
+    VALUES ('${bill_name}', '${bill_source}', '${pay_frequency}', '${next_due}', '${amount}', '${account_id}', '${budget_id}',
+    (SELECT user_id FROM Users WHERE email = '${await email}'))`;
 
     connection.query(sql, function(err, rows)
     {
@@ -29,10 +34,10 @@ module.exports.addBill = (req, res) => {
     });
   }
 
-module.exports.getBills = (req, res) => {
+module.exports.getBills = async(req, res) => {
     user_id = req.params.user_id;
-
-    var sql = `SELECT * FROM Bills WHERE user_id = ${user_id}`;
+    let email = getEmail(req.headers.authorization).then((email) => {return email;});
+    var sql = `SELECT * FROM Bills INNER JOIN Users ON Users.user_id = Bills.user_id WHERE email = '${await email}'`;
   
     connection.query(sql, function(err, rows)
       {
@@ -48,12 +53,15 @@ module.exports.getBills = (req, res) => {
       });
   }
 
-module.exports.updateBill = (req, res) => {
+module.exports.updateBill = async(req, res) => {
     bill_id = req.params.bill_id;
 
     let {account_id, bill_name, bill_source, amount, next_due, pay_frequency, budget_id} = req.body;
+    console.log(req.body)
+    let email = getEmail(req.headers.authorization).then((email) => {return email;});
   
-    var sql = `UPDATE Bills SET account_id = '${account_id}', bill_name = '${bill_name}', bill_source = '${bill_source}', amount = '${amount}', next_due = '${next_due}', pay_frequency = '${pay_frequency}', budget_id = '${budget_id}'`;
+    var sql = `UPDATE Bills SET account_id = '${account_id}', bill_name = '${bill_name}', bill_source = '${bill_source}', amount = '${amount}', next_due = '${next_due}', pay_frequency = '${pay_frequency}' 
+    WHERE budget_id = '${budget_id}' AND user_id=(SELECT user_id FROM Users WHERE email = '${await email}')`;
 
     connection.query(sql, function(err, rows)
     {
@@ -68,10 +76,12 @@ module.exports.updateBill = (req, res) => {
     });
 }
 
-module.exports.deleteBill = (req, res) => {
+module.exports.deleteBill = async(req, res) => {
     bill_id = req.params.bill_id;
+    let email = getEmail(req.headers.authorization).then((email) => {return email;});
 
-    var sql = `DELETE FROM Bills WHERE bill_id = '${bill_id}'`
+    var sql = `DELETE FROM Bills WHERE bill_id = '${bill_id}'
+    AND user_id=(SELECT user_id FROM Users WHERE email = '${await email}')`;
 
     connection.query(sql, function(err, rows)
     {
