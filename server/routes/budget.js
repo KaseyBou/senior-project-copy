@@ -14,9 +14,11 @@ module.exports.insertBudget = async(req,res) => {
 
     let {category_name, is_calculated, monthly_budget, percentage} = req.body;
     let email = getEmail(req.headers.authorization).then((email) => {return email;});
+
+    console.log(is_calculated);
     
     var sql = `INSERT INTO Budgets (category_name, is_calculated, monthly_budget, percentage, user_id) 
-      Values ('${category_name}', '${is_calculated}', '${monthly_budget}', '${percentage}',
+      Values ('${category_name}', ${is_calculated}, '${monthly_budget}', '${percentage}',
       (SELECT user_id FROM Users WHERE email = '${await email}'))`;
   
     connection.query(sql, function(err, rows)
@@ -62,7 +64,7 @@ module.exports.updateBudget = async(req, res) => {
   let {category_name, is_calculated, monthly_budget, percentage} = req.body;
   let email = getEmail(req.headers.authorization).then((email) => {return email;});
 
-  var sql = `UPDATE Budgets SET category_name = '${category_name}', is_calculated = '${is_calculated}', monthly_budget = '${monthly_budget}',
+  var sql = `UPDATE Budgets SET category_name = '${category_name}', is_calculated = ${is_calculated}, monthly_budget = '${monthly_budget}',
     percentage = '${percentage}' WHERE budget_id = '${budget_id}'
     AND user_id=(SELECT user_id FROM Users WHERE email = '${await email}')`;
 

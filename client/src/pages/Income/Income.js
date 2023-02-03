@@ -12,6 +12,7 @@ import CustomForm from '../../components/CustomForm/CustomForm';
 import SearchBar from '../../components/SearchBar/SearchBar';
 import useIncome from '../../hooks/useIncome.tsx';
 import useAccount from '../../hooks/useAccount.tsx';
+import useBudget from '../../hooks/useBudget.tsx';
 
 const Income = () => {
 
@@ -24,10 +25,16 @@ const Income = () => {
     // account hook instance
     const {postAccount, postDeleteAccount, getAccounts} = useAccount("BankAccount")
 
+    // budget hook instance
+    const {postBudget, getCategories, editCategory, deleteCategory} = useBudget("Budget");
+
     // income state
     const [incomes, setIncomes] = useState(null);
     // list of accounts
     const [accountList, setAccountList] = useState(null);
+
+    // list of budget categories
+    const [budgetList, setBudgetList] = useState(null);
 
     // redirect if not logged in
     useEffect(() => {
@@ -57,11 +64,31 @@ const Income = () => {
     }
     useEffect(fetchIncomeList, [])
 
-    //generate dropdown list of accounts, add it to add and edit forms
+    //generate dropdown list of accounts and checkboxes for budgets, add it to add and edit forms
     useEffect(() => {
         getAccounts().then((accounts) => {
             setAccountList(accounts.data.map((account) => {
                 return <option value={account.account_id}>{account.account_name}</option>
+            }))
+        })
+
+        getCategories().then((budgets) => {
+            setBudgetList(budgets.data.map((budget) => {
+                if(budget.is_calculated){
+                    return <tr>
+                        <td>
+                            <label htmlFor={"budget_" + budget.budget_ID}>{budget.category_name}</label>
+                        </td>
+                        <td>
+                            <input type="checkbox" text={budget.category_name} value={budget.budget_ID} id={"budget_" + budget.budget_ID} name={"budget_" + budget.budget_ID} className="budgetCheckbox"/>
+                        </td>
+                        <td>
+                            <input type="text" id={"percentage_" + budget.budget_ID} className="budgetPercentage"/>%
+                        </td>
+                    </tr>
+                } else {
+                    return null;
+                }
             }))
         })
     }, [])
@@ -221,7 +248,16 @@ const Income = () => {
         // make sure no syntax errors are present and nothing is blank
         if(accountAdd && grossPayAdd && payDateAdd && payFrequencyAdd
         && !accountAddWarning && !grossPayAddWarning && !payFrequencyAddWarning && !payDateAddWarning){
-            postIncome(accountAdd, grossPayAdd, payDateAdd, payFrequencyAdd);
+            // get list of checked budgets
+            let budgetDict = {};
+            let budgetCheckboxes = document.getElementsByClassName("budgetCheckbox");
+            for(let box of budgetCheckboxes){
+                if(box.checked){
+                    budgetDict[box.id] = box.value
+                }
+            }
+
+            postIncome(accountAdd, grossPayAdd, payDateAdd, payFrequencyAdd, budgetDict);
             handleCloseAdd();
 
             // clear form data from state
@@ -275,7 +311,11 @@ const Income = () => {
                         selectFields={[accountList]}
                         onChange={addInputHandler}
                         submitAction={addIncome}
-                    />
+                    >
+                        <table>
+                            {budgetList}
+                        </table>
+                    </CustomForm>
                 </Modal>
 
                 <Modal buttonText="Confirm Changes" show={showEdit} handleShow={handleShowEdit} handleClose={handleCloseEdit}>
