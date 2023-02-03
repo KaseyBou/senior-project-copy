@@ -27,38 +27,75 @@ const Budget = () => {
     const [nameAdd, setNameAdd] = useState('');
     const [isCalculatedAdd, setIsCalculatedAdd] = useState(false);
     const [monthlyBudgetAdd, setMonthlyBudgetAdd] = useState(0);
-    const [percentageAdd, setPercentageAdd] = useState(0);
 
     const [nameEdit, setNameEdit] = useState('');
-    const [isCalculatedEdit, setIsCalculatedEdit] = useState('');
+    const [isCalculatedEdit, setIsCalculatedEdit] = useState(false);
     const [monthlyBudgetEdit, setMonthlyBudgetEdit] = useState(0);
-    const [percentageEdit, setPercentageEdit] = useState(0);
 
     // form warning states
     const [nameAddWarning, setNameAddWarning] = useState('');
     const [isCalculatedAddWarning, setIsCalculatedAddWarning] = useState('');
     const [monthlyBudgetAddWarning, setMonthlyBudgetAddWarning] = useState('');
-    const [percentageAddWarning, setPercentageAddWarning] = useState('');
 
     const [nameEditWarning, setNameEditWarning] = useState('');
     const [isCalculatedEditWarning, setIsCalculatedEditWarning] = useState('');
     const [monthlyBudgetEditWarning, setMonthlyBudgetEditWarning] = useState('');
-    const [percentageEditWarning, setPercentageEditWarning] = useState(''); 
 
     // input handlers
     const addInputHandler = () => {
         setNameAdd(document.getElementById("nameAdd").value);
-        setIsCalculatedAdd(document.getElementById("calculatedAdd").value);
+        setIsCalculatedAdd(document.getElementById("calculatedAdd").checked);
         setMonthlyBudgetAdd(document.getElementById("monthlyBudgetAdd").value);
-        setPercentageAdd(document.getElementById("percentageAdd").value);
+
+        // if calculated box is checked, grey out manual entry
+        if(document.getElementById("calculatedAdd").checked){
+            document.getElementById("monthlyBudgetAdd").disabled = true;
+
+            // clear conflicting textbox
+            document.getElementById("monthlyBudgetAdd").value = "";
+        } else {
+            document.getElementById("monthlyBudgetAdd").disabled = false;
+        }
     }
 
     const editInputHandler = () => {
         setNameEdit(document.getElementById("nameEdit").value);
-        setIsCalculatedEdit(document.getElementById("calculatedEdit").value);
+        setIsCalculatedEdit(document.getElementById("calculatedEdit").checked);
         setMonthlyBudgetEdit(document.getElementById("monthlyBudgetEdit").value);
-        setPercentageEdit(document.getElementById("percentageEdit").value);
+
+        // if calculated box is checked, grey out manual entry
+        if(document.getElementById("calculatedEdit").checked){
+            document.getElementById("monthlyBudgetEdit").disabled = true;
+            document.getElementById("percentageEdit").disabled = false;
+
+            // clear conflicting textbox
+            document.getElementById("monthlyBudgetEdit").value = "";
+        } else {
+            // otherwise, grey out percentage entry
+            document.getElementById("monthlyBudgetEdit").disabled = false;
+            document.getElementById("percentageEdit").disabled = true;
+
+            // clear conflicting textbox
+            document.getElementById("percentageEdit").value = "";
+        }
     }
+
+    // validation effect hooks
+    // ADD VALIDATION
+    useEffect(() => {
+        if((!nameAdd || nameAdd.length > 45) && document.getElementById("nameAdd") && !document.getElementById("nameAdd").value){
+            setNameAddWarning('Name must be between 1 and 45 characters long');
+        } else {
+            setNameAddWarning('');
+        }
+
+        if(monthlyBudgetAdd < 1 && document.getElementById("monthlyBudgetAdd") && document.getElementById("monthlyBudgetAdd").value && !isCalculatedAdd){
+            setMonthlyBudgetAddWarning('Budget value cannot be less than 1');
+        } else {
+            setMonthlyBudgetAddWarning('');
+        }
+    
+    }, [nameAdd, monthlyBudgetAdd, isCalculatedAdd])
 
     // modal visibility states and functions
     const [showEdit, setShowEdit] = useState(false);
@@ -93,34 +130,27 @@ const Budget = () => {
     // submission functions
     const addBudget = () => {
         // if everything is filled and no error messages are present
-        if(nameAdd && ((isCalculatedAdd && percentageAdd) || monthlyBudgetAdd)
-        && !nameAddWarning && !isCalculatedAddWarning && !percentageAddWarning && !monthlyBudgetAddWarning){
-            postBudget(nameAdd, isCalculatedAdd, monthlyBudgetAdd, percentageAdd);
+        if(nameAdd && (isCalculatedAdd || monthlyBudgetAdd)
+        && !nameAddWarning && !isCalculatedAddWarning && !monthlyBudgetAddWarning){
+            postBudget(nameAdd, isCalculatedAdd, monthlyBudgetAdd, 0);
             handleCloseAdd();
 
             // clear state
             setNameAdd(null);
             setIsCalculatedAdd(false);
-            setPercentageAdd(null);
             setMonthlyBudgetAdd(null);
         }
     }
 
     const updateBudget = () => {
-        console.log(nameEdit);
-        console.log(isCalculatedEdit);
-        console.log(percentageEdit);
-        console.log(monthlyBudgetEdit);
-
-        if(nameEdit && ((isCalculatedEdit && percentageEdit) || monthlyBudgetEdit)
-        && !nameEditWarning && !isCalculatedEditWarning && !percentageEditWarning && !monthlyBudgetEditWarning){
-            editCategory(localStorage.getItem('editing'), nameEdit, isCalculatedEdit, monthlyBudgetEdit, percentageEdit);
+        if(nameEdit && (isCalculatedEdit || monthlyBudgetEdit)
+        && !nameEditWarning && !isCalculatedEditWarning && !monthlyBudgetEditWarning){
+            editCategory(localStorage.getItem('editing'), nameEdit, isCalculatedEdit, monthlyBudgetEdit, 0);
             handleCloseEdit();
 
             // clear state
             setNameEdit(null);
             setIsCalculatedEdit(false);
-            setPercentageEdit(null);
             setMonthlyBudgetEdit(null);
         }
     }
@@ -147,8 +177,8 @@ const Budget = () => {
                 return(
                     <DataRow
                     title={"Name: " + category.category_name}
-                    labels={["Calculated: ", "Monthly Budget: ", "Percentage: "]}
-                    rows={[is_calculated, category.monthly_budget, category.percentage]}
+                    labels={["Calculated: ", "Monthly Budget: "]}
+                    rows={[is_calculated, category.monthly_budget]}
                     HandleEdit={() => handleShowEdit(category.budget_ID)}
                     HandleDelete={() => handleShowDelete(category.budget_ID)}
                 />
@@ -170,11 +200,11 @@ const Budget = () => {
                 <Modal buttonText="Add Category" show={showAdd} handleShow={handleShowAdd} handleClose={handleCloseAdd}>
                     <CustomForm
                         title="Add Budget Category"
-                        fields={['Name', 'Calculated Budget', 'Monthly Budget', '% Of Net Income']}
-                        fieldIDs={['nameAdd', 'calculatedAdd', 'monthlyBudgetAdd', 'percentageAdd']}
-                        fieldTypes={['text', 'checkbox', 'number', 'number']}
-                        warning={['', '', '', '']}
-                        warningIDs={['nameAddWarning', 'calculatedAddWarning','monthlyValueAddWarning', 'percentageAddWarning']}
+                        fields={['Name', 'Calculated Budget', 'Monthly Budget']}
+                        fieldIDs={['nameAdd', 'calculatedAdd', 'monthlyBudgetAdd']}
+                        fieldTypes={['text', 'checkbox', 'number']}
+                        warning={[nameAddWarning, isCalculatedAddWarning, monthlyBudgetAddWarning]}
+                        warningIDs={['nameAddWarning', 'calculatedAddWarning','monthlyValueAddWarning']}
                         onChange={addInputHandler}
                         submitAction={addBudget}
                     />
@@ -183,11 +213,11 @@ const Budget = () => {
                 <Modal buttonText="Confirm Changes" show={showEdit} handleShow={handleShowEdit} handleClose={handleCloseEdit}>
                     <CustomForm
                         title="Edit Budget Category"
-                        fields={['Name', 'Calculated Budget', 'Monthly Budget', '% Of Net Income']}
-                        fieldIDs={['nameEdit', 'calculatedEdit', 'monthlyBudgetEdit', 'percentageEdit']}
+                        fields={['Name', 'Calculated Budget', 'Monthly Budget']}
+                        fieldIDs={['nameEdit', 'calculatedEdit', 'monthlyBudgetEdit']}
                         fieldTypes={['text', 'checkbox', 'number', 'number']}
                         warning={['', '', '', '']}
-                        warningIDs={['nameEditWarning', 'calculatedEditWarning','monthlyValueEditWarning', 'percentageEditWarning']}
+                        warningIDs={['nameEditWarning', 'calculatedEditWarning','monthlyValueEditWarning']}
                         onChange={editInputHandler}
                         submitAction={updateBudget}
                     />

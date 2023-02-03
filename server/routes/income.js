@@ -12,7 +12,7 @@ const {hashPassword, isPasswordCorrect, getEmail} = require('../helper-functions
 
 module.exports.insertIncome = async(req,res) => {
 
-    let {account_id, gross_pay, pay_day, pay_frequency} = req.body;
+    let {account_id, gross_pay, pay_day, pay_frequency, budgets} = req.body;
     let email = getEmail(req.headers.authorization).then((email) => {return email;});
     
     var sql = `INSERT INTO Incomes (account_id, gross_pay, pay_day, pay_frequency, user_id) 
@@ -26,11 +26,34 @@ module.exports.insertIncome = async(req,res) => {
           //If error
           res.status(400).json('Sorry!!Unable To Add');
            console.log("Error inserting : %s ",err );
-        }
-      else
-        //If success
-        res.status(200).json('Income Added Successfully!!')
-  
+        }else
+        //get ID of income that was just inserted
+        sql = `SELECT income_id FROM Incomes WHERE income_id = LAST_INSERT_ID()`
+        connection.query(sql, function(err, rows)
+        {
+          if(err){
+            res.status(400).json('internal error');
+            console.log("Error retrieving inserted ID: %s", err)
+          }else{
+            source_id = rows[0].income_id;
+
+            // generate string from list of IDs to be connected
+            var idList = "";
+            console.log(Object.keys(budgets.budgets))
+            for(key of Object.keys(budgets.budgets)){
+              console.log(key);
+              idList += key.substring(7) + ", ";
+            }
+            console.log("list: " + idList);
+            sql = 'CALL `financial_planner`.`Create_Budget_Connections`(' + source_id + ', "income", "' + idList + '")';
+            connection.query(sql, function(err, rows){
+              if(err){
+                res.status(400).json('internal error');
+                console.log('Error in creating connections: %s', err);
+              }
+            })
+          }
+        })
       });
 }
 
