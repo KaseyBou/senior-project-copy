@@ -118,16 +118,19 @@ const usePost = (urlSegment : string) => {
                 return response;
             })
             setData(response);
-            return 
+            console.log(response)
+           // return true;
         }catch(error) {
             setError(true);
             console.log(error);
-
+            //return false;
         } finally {
 
             setLoading(false);
 
         }
+
+        return {data, loading, error}
         
     };
     

@@ -127,43 +127,50 @@ module.exports.userLogin = (req,res) => {
   
     var sql = `SELECT password, password_salt FROM Users WHERE email = '${email}'`;
   
-     connection.query(sql, function(err, rows)
-    {
-  
-      if (err){
-        //If error
-          res.status(400).json('Sorry!!Unable To Find');
-          console.log("Error inserting : %s ",err );
-          //console.log(res)
-      }
-     else {
-  
-      let correct = functions.isPasswordCorrect(rows[0]['password'], rows[0]['password_salt'], password)
-      //console.log(correct)
-      //If success
-      if(correct) {
+    try {
+        connection.query(sql, function(err, rows)
+        {
+          if (err){
+            //If error
+              res.status(400).json('Sorry!!Unable To Find');
+              console.log("Error Finding : %s ",err );
+          }
+          else {
+        
+              try {
+                  let correct = functions.isPasswordCorrect(rows[0]['password'], rows[0]['password_salt'], password)
+                  //console.log(correct)
+                  //If success
+                  if(correct) {
 
-        //   create JWT token
-        const token = jwt.sign(
-          {
-            userEmail: email,
-          },
-          "RANDOM-TOKEN",
-          { expiresIn: "1h" }
-        );
+                    //   create JWT token
+                    const token = jwt.sign(
+                      {
+                        userEmail: email,
+                      },
+                      "RANDOM-TOKEN",
+                      { expiresIn: "1h" }
+                    );
 
-          //   return success response
-          res.status(200).send({
-          message: "Login Successful",
-          email: email,
-          token,
-        });
-      } else {
-        res.status(400).json('Incorrect password');
+                      //   return success response
+                      res.status(200).send({
+                      message: "Login Successful",
+                      email: email,
+                      token,
+                    });
+                  } else {
+                    res.status(400).json('Incorrect password');
+                  }
+            } catch(e) {
+                return false;
+            }
+    
       }
-  
-     }
-    });
+      });
+
+    } catch(err) {
+      console.log(err);
+    }
   
 };
 

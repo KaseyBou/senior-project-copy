@@ -26,36 +26,29 @@ const Login = () => {
     const [passwordWarning, setPasswordWarning] = useState('');
 
     //calling postLogin function
-    const { postLogin } = usePost('Login');
+    const { postLogin, data } = usePost('Login');
 
     //handles updates to input's
     const inputHandler = (e) =>{
         setEmail(document.getElementById("email").value);
         setPassword(document.getElementById("password").value);
 
-        if(email.length > 6) {
-            setEmailWarning('Must Enter Valid Email');
-        }else {
-            setEmailWarning('');
-        }
-
-        if(password === "") {
-            setPasswordWarning('Enter Password')
-        }else {
-            setPasswordWarning('');
-        }
     }
 
     //Login
-    const Login = () =>{
+    const Login = () => {
+        postLogin(email, password);
         
-        postLogin(email, password)
+        if(data.status === 200) {
 
-        if(cookies.get("TOKEN").length !== 0) {
+            if(cookies.get("TOKEN").length !== 0) {
             
-            dashboard();
+                dashboard();
+                
+            }
+        } else {
+            setEmailWarning("Incorrect Email or Password");
         }
-
 
     }
 

@@ -219,7 +219,7 @@ const Expenses = () => {
     return (
         <>
             <SearchBar/>
-            <div id="ExpenseList">
+            <div id="BillsList">
                 {bills}
             </div>
 
