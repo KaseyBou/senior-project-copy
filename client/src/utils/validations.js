@@ -1,12 +1,6 @@
-//import Loading from '../Loading/Loading';
-import './Register.css';
-//import { useNavigate } from 'react-router-dom';
-import CustomForm from '../../components/CustomForm/CustomForm';
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import usePost from '../../hooks/useUserAccount.tsx';
 
-const Functions = () => {
+
+const Validations = () => {
 
     const passwordValidation = (password) =>{
         // Regex to check if a string contains uppercase, lowercase special character & number
@@ -41,4 +35,4 @@ const Functions = () => {
 }
 
 
-export default Functions
+export default Validations

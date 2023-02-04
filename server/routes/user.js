@@ -29,10 +29,24 @@ module.exports.registerUser = (req,res) => {
     {
   
       if (err){
+        if(err.errno === 1062) {
+
+          console.log(err.sqlMessage)
+          if(err.sqlMessage.includes('email_UNIQUE')) {
+              res.status(460).json('Sorry, Email already Taken');
+          }
+          if(err.sqlMessage.includes('phone_UNIQUE')) {
+            res.status(461).json('Sorry, Phone already Taken');
+          }
+
+          //console.log("Error inserting : %s ",err );
+        } else {
         //If error
-          res.status(400).json('Sorry!!Unable To Add');
-          console.log("Error inserting : %s ",err );
-          return err;
+          res.status(400).json('Sorry, Unable To Add');
+          console.log("Error inserting : %s ",err.errno );
+        }
+
+        return err;
       }
      else
       //If success
@@ -47,7 +61,7 @@ module.exports.registerUser = (req,res) => {
 module.exports.editUser = async(req,res) => {
   
     let {first_Name, last_Name, email, password, phone, profile_image, user_id} = req.body;
-    let userEmail = getEmail(req.headers.authorization).then((email) => {return email;});
+
     if(password === "") {
   
         var sql = `Update Users SET first_name = '${first_Name}', last_name = '${last_Name}', email = '${email}', phone = '${phone}', profile_image = ${profile_image} WHERE user_id = ${ user_id}`;
@@ -56,7 +70,6 @@ module.exports.editUser = async(req,res) => {
         let returnData = functions.hashPassword(password)
         salt = returnData[0];
         hash = returnData[1];
-        //var sql = "INSERT INTO Users (first_name, last_name, email, password, password_salt, phone, profile_image, is_admin) Values ('firstName', 'lastName', 'testingg@testing.com', 'password', 'password_salt', 'phone', 'profile_image', 'is_admin')";
         var sql = `Update Users SET first_name = '${first_Name}', last_name = '${last_Name}', email = '${email}', password = '${hash}', password_salt = '${salt}', phone = '${phone}', profile_image = ${profile_image} WHERE user_id = ${user_id}`;
     }
     /*if(!firstName) return res.status(400).json('First Name can not be blank');
@@ -70,7 +83,8 @@ module.exports.editUser = async(req,res) => {
       if (err){
         //If error
           res.status(400).json('Unable To Edit');
-          console.log("Error inserting : %s ",err );
+          //console.log("Error inserting : %s ",err );
+          console.log(err)
       }
      else
       //If success
@@ -87,37 +101,41 @@ module.exports.deleteUser = (req,res) => {
 
   var sql = `SELECT password, password_salt FROM Users WHERE user_id = '${user_id}';`;
 
-  connection.query(sql, function(err, rows)
-  {
-    if (err){
-      //If error
-      res.status(400).json('Unable to retrieve user information');
-      console.log("Error retrieving : %s ",err );
-    } else {
-      // If password details retrieved successfully, compare to attempt
-      if(functions.isPasswordCorrect(rows[0].password, rows[0].password_salt, pw_attempt)){
+  try {
+      connection.query(sql, function(err, rows)
+      {
+        if (err){
+          //If error
+          res.status(400).json('Unable to retrieve user information');
+          console.log("Error retrieving : %s ",err );
+        } else {
+          // If password details retrieved successfully, compare to attempt
+          if(functions.isPasswordCorrect(rows[0].password, rows[0].password_salt, pw_attempt)){
 
-        // run delete if password matches
-        var sql = `DELETE FROM Users WHERE user_id = ${user_id}`;
-        connection.query(sql, function(err, rows)
-        {
-      
-          if (err){
-            //If error
-              res.status(400).json('Unable To Edit');
-              console.log("Error inserting : %s ",err );
+            // run delete if password matches
+            var sql = `DELETE FROM Users WHERE user_id = ${user_id}`;
+            connection.query(sql, function(err, rows)
+            {
+          
+              if (err){
+                //If error
+                  res.status(400).json('Unable To Edit');
+                  console.log("Error inserting : %s ",err );
+              }
+            else
+              //If success
+              res.status(200).json('Account deleted Successfully!!')
+          
+            });
+
+          } else {
+            res.status(301).json('incorrect password');
           }
-        else
-          //If success
-          res.status(200).json('Account deleted Successfully!!')
+        }
+      });
+  } catch (err) {
       
-        });
-
-      } else {
-        res.status(301).json('incorrect password');
-      }
-    }
-  });
+  }
 };
   
 //login

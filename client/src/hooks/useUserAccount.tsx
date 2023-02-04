@@ -12,6 +12,8 @@ const usePost = (urlSegment : string) => {
     const [data, setData] = useState<any>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<boolean>(false);
+    const [success, setSuccess] = useState<boolean>(false);
+
     
     const tokenHeader =
     {
@@ -36,9 +38,13 @@ const usePost = (urlSegment : string) => {
             profile_image: null,
             is_admin: 0
             })
+            console.log(response)
             setData(response);
+            setSuccess(true);
+
         }catch(error) {
-            setError(true);
+            //setError(true);
+            setData(error)
             console.log(error);
 
         } finally {
@@ -47,7 +53,7 @@ const usePost = (urlSegment : string) => {
 
         }
 
-        return {data, loading, error}
+        return {data, loading, error, success}
         
     };
 
@@ -77,7 +83,8 @@ const usePost = (urlSegment : string) => {
             setLoading(false);
 
         }
-        
+
+        return {data}
     };
 
     //hook to delete user account
@@ -93,7 +100,7 @@ const usePost = (urlSegment : string) => {
             
         }catch(error) {
             setError(true);
-            console.log(error);
+            //console.log(error);
 
         } finally {
 
@@ -144,7 +151,7 @@ const usePost = (urlSegment : string) => {
             return response;
         }catch(error) {
             setError(true);
-            console.log(error);
+            //console.log(error);
 
         } finally {
 
@@ -153,7 +160,7 @@ const usePost = (urlSegment : string) => {
         }
     }
     
-    return {postRegister, postLogin, editUser, deleteUser, getAccountDetails, data, loading, error}
+    return {postRegister, postLogin, editUser, deleteUser, getAccountDetails, data, loading, error, success}
 
 }
 

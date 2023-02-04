@@ -9,6 +9,8 @@ import usePost from '../../hooks/useUserAccount.tsx';
 import Button from '../../components/Button/Button';
 import Modal from '../../components/Modal/Modal';
 
+import validations from '../../utils/validations';
+
 const Account = () => {
 
     //intializing
@@ -28,8 +30,9 @@ const Account = () => {
     },[])
 
     //calling postRegister function
-    const {editUser, deleteUser, getAccountDetails, data, loading, error} = usePost('User')
-
+    const {editUser, deleteUser, getAccountDetails, data, loading, error, success} = usePost('User');
+    //validation functions
+    const {passwordValidation, validateEmail, validatePhone} = validations();
     //state variables
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('')
@@ -37,6 +40,15 @@ const Account = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+
+        //input warnings
+        const [firstNameWarning, setFirstNameWarning] = useState('');
+        const [lastNameWarning, setLastNameWarning] = useState('');
+        const [phoneWarning, setPhoneWarning] = useState('');
+        const [emailWarning, setEmailWarning] = useState('');
+        const [passwordWarning, setPasswordWarning] = useState('')
+        const [confirmPasswordWarning, setConfirmPasswordWarning] = useState('');
+        const [passwordDeleteWarning, setPasswordDeleteWarning] = useState('');
 
       
     useEffect(() => {
@@ -74,12 +86,56 @@ const Account = () => {
       }
 
       const editAccount = () => {
-        // get user_ID from how it is stored
-        if(password === confirmPassword) {
-            //console.log(localStorage.getItem("editing"))
-            editUser(localStorage.getItem("editing"), firstName, lastName, email, password, phone)
+
+        if(firstName.length < 2 ) {
+            setFirstNameWarning('Please Enter First Name')
         } else {
+            setFirstNameWarning('')
         }
+
+        if(lastName.length < 2 ) {
+            setLastNameWarning('First Name Required')
+        } else {
+            setLastNameWarning('')
+        }
+
+        if(!validateEmail(email)) { //emailValidator.validate(email)
+            setEmailWarning('Please Enter Valid Email')
+        } else {
+            setEmailWarning('')
+        }
+
+        if(!validatePhone(phone)) {
+            setPhoneWarning('Please Enter Valid Phone')
+        } else {
+            setPhoneWarning('')
+        }
+
+        if(password !== confirmPassword) {
+            setConfirmPasswordWarning('Passwords do not match')
+        }
+
+        if(validateEmail(email) && validatePhone(phone) && lastName.length > 2 && firstName.length > 2 && password === confirmPassword) {
+
+            //console.log(localStorage.getItem("editing"))
+            editUser(localStorage.getItem("editing"), firstName, lastName, email, password, phone);
+
+            if(success) {
+                home();
+            } 
+            if(data.response.status === 460){
+                setEmailWarning("Email already in use");
+            }  else {
+                setEmailWarning("");
+            }
+
+            if (data.response.status === 461) {
+                setPhoneWarning("Phone # already in use")
+            } else {
+                setPhoneWarning("")
+            }
+        }
+
       }
 
       const delAccount = () => {
@@ -104,7 +160,7 @@ const Account = () => {
                 onChange={inputHandler}
                 submitAction={editAccount}
                 fieldTypes={['text', 'text', 'email', 'tel', 'password', 'password', 'number']}
-                warning={['Please Enter First Name', 'Please Enter Last Name', 'Enter valid email', 'Enter Valid Phone #', 'Passwords Must Match']}
+                warning={[firstNameWarning, lastNameWarning, emailWarning, phoneWarning, passwordWarning, confirmPasswordWarning]}
                 warningIDs={['firstNameWarning', 'lastNameWarning', 'emailWarning', 'phoneWarning', 'passwordWarning', 'confirmPasswordWarning']}
             ></CustomForm>
             <Button text='Delete Account' function={handleShowDelete}/>
@@ -113,8 +169,8 @@ const Account = () => {
                     title = "Delete your account? (this cannot be undone)"
                     fields = {['password']}
                     fieldIDs = {['passwordDelete']}
-                    warning = {['']}
-                    warningIDs = {['']}
+                    warning = {[passwordDeleteWarning]}
+                    warningIDs = {['passwordDeleteWarning']}
                     fieldTypes = {['string']}
                     // onChange = {console.log("placeholder")}
                     submitAction = {delAccount}
