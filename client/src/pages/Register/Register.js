@@ -50,6 +50,14 @@ const Register = () => {
         setPassword(document.getElementById("password").value);
         setConfirmPassword(document.getElementById("confirmPassword").value);
 
+    }
+
+    useEffect(() => {     
+        inputHandler()
+    })
+    //Register
+    const Register = () =>{
+        
         if(firstName.length < 2 ) {
             setFirstNameWarning('Please Enter First Name')
         } else {
@@ -83,19 +91,12 @@ const Register = () => {
         if(password !== confirmPassword) {
             setConfirmPasswordWarning('Passwords do not match')
         }
-    }
-
-    useEffect(() => {     
-        inputHandler()
-    })
-    //Register
-    const Register = () =>{
-        
 
         if(passwordValidation(password) && validateEmail(email) && validatePhone(phone) && lastName.length > 2 && firstName.length > 2) {
 
+            console.log(1)
             if(password === confirmPassword) {
-
+                console.log(2)
                 postRegister(firstName, lastName, email, password, phone)
                 home();
             } else {

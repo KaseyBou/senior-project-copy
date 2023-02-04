@@ -84,7 +84,8 @@ const Account = () => {
 
       const delAccount = () => {
         // TODO: you know the drill by this point
-        deleteUser(localStorage.getItem("editing"), password)
+        let passwordDelete = document.getElementById("passwordDelete").value;
+        deleteUser(localStorage.getItem("editing"), passwordDelete);
         
         cookies.remove("TOKEN");
         home();

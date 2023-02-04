@@ -26,17 +26,18 @@ const Login = () => {
     const [passwordWarning, setPasswordWarning] = useState('');
 
     //calling postLogin function
-    const { postLogin, data } = usePost('Login');
+    const { postLogin, data, error, loading } = usePost('Login');
 
     //handles updates to input's
-    const inputHandler = (e) =>{
+    const inputHandler = () =>{
         setEmail(document.getElementById("email").value);
         setPassword(document.getElementById("password").value);
 
     }
 
     //Login
-    const Login = () => {
+    const Login = async() => {
+
         postLogin(email, password);
         
         if(data.status === 200) {
@@ -44,14 +45,13 @@ const Login = () => {
             if(cookies.get("TOKEN").length !== 0) {
             
                 dashboard();
-                
+
             }
         } else {
             setEmailWarning("Incorrect Email or Password");
         }
 
     }
-
 
     //returning JSX
     return (
@@ -67,7 +67,8 @@ const Login = () => {
                 submitAction={Login}
             ></CustomForm>
         </>
-        );
+    );
+    
 }
 
 export default Login

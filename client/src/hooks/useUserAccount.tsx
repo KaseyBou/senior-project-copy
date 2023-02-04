@@ -107,7 +107,7 @@ const usePost = (urlSegment : string) => {
     const postLogin = async(email: string, password: string) => {
 
         try {
-            setLoading(true);
+            //setLoading(true);
             setError(false);
             const response = await axios.post(`${baseURL}${urlSegment}`, {
             email: `${email}`,
@@ -122,11 +122,11 @@ const usePost = (urlSegment : string) => {
            // return true;
         }catch(error) {
             setError(true);
-            console.log(error);
+            //console.log(error);
             //return false;
         } finally {
 
-            setLoading(false);
+            //setLoading(false);
 
         }
 
