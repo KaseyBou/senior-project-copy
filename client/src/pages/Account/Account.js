@@ -40,21 +40,21 @@ const Account = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-
-        //input warnings
-        const [firstNameWarning, setFirstNameWarning] = useState('');
-        const [lastNameWarning, setLastNameWarning] = useState('');
-        const [phoneWarning, setPhoneWarning] = useState('');
-        const [emailWarning, setEmailWarning] = useState('');
-        const [passwordWarning, setPasswordWarning] = useState('')
-        const [confirmPasswordWarning, setConfirmPasswordWarning] = useState('');
-        const [passwordDeleteWarning, setPasswordDeleteWarning] = useState('');
+    const [formMessage, setFormMessage] = useState('');
+    //input warnings
+    const [firstNameWarning, setFirstNameWarning] = useState('');
+    const [lastNameWarning, setLastNameWarning] = useState('');
+    const [phoneWarning, setPhoneWarning] = useState('');
+    const [emailWarning, setEmailWarning] = useState('');
+    const [passwordWarning, setPasswordWarning] = useState('')
+    const [confirmPasswordWarning, setConfirmPasswordWarning] = useState('');
+    const [passwordDeleteWarning, setPasswordDeleteWarning] = useState('');
 
       
     useEffect(() => {
         // load existing data into form
-        getAccountDetails().then((data) => {
-            let account = data.data[0];
+        getAccountDetails().then((accountData) => {
+            let account = accountData.data[0];
             localStorage.setItem("editing", account.user_id)
             document.getElementById("firstName").value = account.first_name;
             document.getElementById("lastName").value = account.last_name;
@@ -120,9 +120,14 @@ const Account = () => {
             //console.log(localStorage.getItem("editing"))
             editUser(localStorage.getItem("editing"), firstName, lastName, email, password, phone);
 
-            if(success) {
-                home();
-            } 
+            console.log(data)
+            if(data.status === 200) {
+                setFormMessage("Successfully Edited Account")
+                
+            } else {
+                setFormMessage("")
+            }
+
             if(data.response.status === 460){
                 setEmailWarning("Email already in use");
             }  else {
@@ -162,6 +167,7 @@ const Account = () => {
                 fieldTypes={['text', 'text', 'email', 'tel', 'password', 'password', 'number']}
                 warning={[firstNameWarning, lastNameWarning, emailWarning, phoneWarning, passwordWarning, confirmPasswordWarning]}
                 warningIDs={['firstNameWarning', 'lastNameWarning', 'emailWarning', 'phoneWarning', 'passwordWarning', 'confirmPasswordWarning']}
+                formMessage={formMessage}
             ></CustomForm>
             <Button text='Delete Account' function={handleShowDelete}/>
             <Modal show={showDelete} handleShow={handleShowDelete} handleClose={handleCloseDelete}>
@@ -174,6 +180,7 @@ const Account = () => {
                     fieldTypes = {['string']}
                     // onChange = {console.log("placeholder")}
                     submitAction = {delAccount}
+                    formMessage={formMessage}
                 />
             </Modal>
         </>

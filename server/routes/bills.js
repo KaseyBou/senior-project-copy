@@ -61,7 +61,7 @@ module.exports.updateBill = async(req, res) => {
     let email = getEmail(req.headers.authorization).then((email) => {return email;});
   
     var sql = `UPDATE Bills SET account_id = '${account_id}', bill_name = '${bill_name}', bill_source = '${bill_source}', amount = '${amount}', next_due = '${next_due}', pay_frequency = '${pay_frequency}' 
-    WHERE budget_id = '${budget_id}' AND user_id=(SELECT user_id FROM Users WHERE email = '${await email}')`;
+    WHERE bill_id = '${bill_id}' AND user_id=(SELECT user_id FROM Users WHERE email = '${await email}')`;
 
     connection.query(sql, function(err, rows)
     {

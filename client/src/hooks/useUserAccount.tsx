@@ -72,10 +72,14 @@ const usePost = (urlSegment : string) => {
             profile_image: null,
             user_id: user_id
 
-            },tokenHeader)
-            setData(response);
+            },tokenHeader).then((response) => {
+                //console.log(response)
+                cookies.set("TOKEN", response.data, {path: "/",});
+            });
+            setData(response)
         }catch(error) {
-            setError(true);
+            //setError(true);
+            setData(error)
             console.log(error);
 
         } finally {
@@ -125,7 +129,7 @@ const usePost = (urlSegment : string) => {
                 return response;
             })
             setData(response);
-            console.log(response)
+            //console.log(response)
            // return true;
         }catch(error) {
             setError(true);
