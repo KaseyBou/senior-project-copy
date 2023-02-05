@@ -76,7 +76,7 @@ const Expenses = () => {
 
     },[])
 
-    const fetchExpenses = () => {
+    const fetchExpenses = async() => {
 
         getExpenditure().then((data) => {
             
@@ -216,7 +216,7 @@ const Expenses = () => {
 
     // post delete
     const removeExpenses = () => {
-        deleteExpenditure(localStorage.getItem("deleting"))
+        deleteExpenditure(localStorage.getItem("deleting"));
         handleCloseDelete();
         fetchExpenses();
     }
@@ -260,18 +260,11 @@ const Expenses = () => {
                 </Modal>
 
                 <Modal buttonText="Confirm Deletion" show={showDelete} handleShow={handleShowDelete} handleClose={handleCloseDelete}>
-                    <CustomForm
-                        title="Delete Expense"
-                        fields={['User Password']}
-                        fieldIDs={['passwordDelete']}
-                        fieldTypes={['password']}
-                        warning={['']}
-                        warningIDs={['passwordWarning']}
-                        onChange={deleteInputHandler}
-                        submitAction={removeExpenses}
-                    />
+                    <h2 className='text-center'>Confirm Deletion</h2>
+                    <div className='d-flex justify-content-center'>
+                        <Button onClick={removeExpenses}>Confirm</Button>
+                    </div>
                 </Modal>
-
             </div>
         </>
     );

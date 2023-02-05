@@ -26,39 +26,32 @@ const Login = () => {
     const [passwordWarning, setPasswordWarning] = useState('');
 
     //calling postLogin function
-    const { postLogin } = usePost('Login');
+    const { postLogin, data, error, loading } = usePost('Login');
 
     //handles updates to input's
-    const inputHandler = (e) =>{
+    const inputHandler = () =>{
         setEmail(document.getElementById("email").value);
         setPassword(document.getElementById("password").value);
 
-        if(email.length > 6) {
-            setEmailWarning('Must Enter Valid Email');
-        }else {
-            setEmailWarning('');
-        }
-
-        if(password === "") {
-            setPasswordWarning('Enter Password')
-        }else {
-            setPasswordWarning('');
-        }
     }
 
     //Login
-    const Login = () =>{
-        
-        postLogin(email, password)
+    const Login = async() => {
 
-        if(cookies.get("TOKEN").length !== 0) {
+        postLogin(email, password);
+        
+        if(data.status === 200) {
+
+            if(cookies.get("TOKEN").length !== 0) {
             
-            dashboard();
+                dashboard();
+
+            }
+        } else {
+            setEmailWarning("Incorrect Email or Password");
         }
 
-
     }
-
 
     //returning JSX
     return (
@@ -74,7 +67,8 @@ const Login = () => {
                 submitAction={Login}
             ></CustomForm>
         </>
-        );
+    );
+    
 }
 
 export default Login

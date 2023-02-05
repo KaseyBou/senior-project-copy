@@ -18,13 +18,15 @@ const CustomForm = (props) => {
         warningIDs:PropTypes.array,
         submitAction:PropTypes.func,
         onChange:PropTypes.func,
-        isCancellable:PropTypes.bool
+        isCancellable:PropTypes.bool,
+        formMessage:PropTypes.string
     }
 
     //default props
     CustomForm.defaultProp = {
         button: "",
-        fields: ""
+        fields: "",
+        formMessage:""
     }
 
     // generate fields from array of fields
@@ -94,6 +96,9 @@ const CustomForm = (props) => {
                         {fieldsJSX}
                     </tbody>
                 </table>
+                <div>
+                    <p id='formMessage'>{props.formMessage}</p>
+                </div>
                 <div className="formButtons">
                     <Button text="Submit" function={props.submitAction}/>
                     {props.isCancellable && <Button text="Cancel"/>} {/*TODO: add cancel functionality*/}

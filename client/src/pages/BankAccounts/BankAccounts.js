@@ -151,6 +151,30 @@ const BankAccounts = () => {
 
     const postAccount = () => {
 
+        if(addAccountName === '') {
+            setAddAccountNameWarning("Must Enter Account Name")
+        } else {
+            setAddAccountNameWarning("")
+        }
+
+        if(addInterest === '') {
+            setAddInterestWarning("Must Enter Interest Rate")
+        } else {
+            setAddInterestWarning("")
+        }
+
+        if(addMonthlyFees === '') {
+            setAddMonthlyFeesWarning("Must Enter Monthly Account Fees")
+        } else {
+            setAddMonthlyFeesWarning("")
+        }
+
+        if(addBalance === '') {
+            setAddBalanceWarning("Must Enter Account Balance")
+        } else {
+            setAddBalanceWarning("")
+        }
+
         if(addAccountName && addAccountType && addInterest && addMonthlyFees && addBalance && !addAccountNameWarning && !addAccountTypeWarning && !addInterestWarning && !addMonthlyFeesWarning && !addBalanceWarning) {
 
             addAccount(addAccountName, addAccountType, addInterest, addMonthlyFees, addBalance );
@@ -168,6 +192,30 @@ const BankAccounts = () => {
 
     // edit account
     const updateAccount = () => {
+
+        if(editAccountName === '') {
+            setEditAccountNameWarning("Must Enter Account Name")
+        } else {
+            setEditAccountNameWarning("")
+        }
+
+        if(editInterest === '') {
+            setEditInterestWarning("Must Enter Interest Rate")
+        } else {
+            setEditInterestWarning("")
+        }
+
+        if(editMonthlyFees === '') {
+            setEditMonthlyFeesWarning("Must Enter Monthly Account Fees")
+        } else {
+            setEditMonthlyFeesWarning("")
+        }
+
+        if(editBalance === '') {
+            setEditBalanceWarning("Must Enter Account Balance")
+        } else {
+            setEditBalanceWarning("")
+        }
 
         if(editAccountName && editAccountType && editInterest && editMonthlyFees && editBalance && !editAccountNameWarning && !editAccountTypeWarning && !editInterestWarning && !editMonthlyFeesWarning && !editBalanceWarning) {
             editAccount(localStorage.getItem("editing"),  editAccountName, editAccountType, editInterest, editMonthlyFees, editBalance );
@@ -196,10 +244,10 @@ const BankAccounts = () => {
                 <Modal buttonText="Add Account" show={showAdd} handleShow={handleShowAdd} handleClose={handleCloseAdd}>
                     <CustomForm
                         title="Add Account"
-                        fields={['Bank', 'Account Type', 'Interest Rate', 'Monthly Account Fees', 'Balance']}
+                        fields={['Bank', 'Account Type', 'Interest Rate %', 'Monthly Account Fees ', 'Balance']}
                         fieldIDs={['bankName', 'accountType', 'interestRate', 'monthlyFees', 'balance']}
-                        warning={['Please Enter Bank Name', 'Please Enter Account Type', '', 'Enter Monthly Fees', 'Must Enter Balance']}
-                        warningIDs={['bankNameWarning', 'accountTypeWarning', 'monthlyFeeWarning', 'balanceWarning']}
+                        warning={[addAccountNameWarning, addAccountTypeWarning, addInterestWarning, addMonthlyFeesWarning, addBalanceWarning]}
+                        warningIDs={['bankNameWarning', 'accountTypeWarning', 'interestRateWarning', 'monthlyFeeWarning', 'balanceWarning']}
                         fieldTypes={[ 'text', 'select', 'number', 'number', 'number']}
                         selectFields={[accountTypes]}
                         onChange={addInputHandler}
@@ -212,7 +260,7 @@ const BankAccounts = () => {
                         title="Edit Account"
                         fields={['Bank', 'Account Type', 'Interest Rate', 'Monthly Account Fees', 'Balance']}
                         fieldIDs={['bankNameEdit', 'accountTypeEdit', 'interestRateEdit', 'monthlyFeesEdit', 'balanceEdit']}
-                        warning={['Please Enter Bank Name', 'Please Enter Account Type', '', 'Enter Monthly Fees', 'Must Enter Balance']}
+                        warning={[editAccountNameWarning, editAccountTypeWarning, editInterestWarning, editMonthlyFeesWarning, editBalanceWarning]}
                         warningIDs={['bankNameWarningEdit', 'accountTypeWarningEdit', 'monthlyFeeWarningEdit', 'balanceWarningEdit']}
                         fieldTypes={[ 'text', 'select', 'number', 'number', 'number']}
                         selectFields={[accountTypes]}
@@ -222,16 +270,10 @@ const BankAccounts = () => {
                 </Modal>
 
                 <Modal buttonText="Confirm Deletion" show={showDelete} handleShow={handleShowDelete} handleClose={handleCloseDelete}>
-                    <CustomForm
-                        title="Delete Account"
-                        fields={[ 'User Password']}
-                        fieldIDs={['userPassword']}
-                        warning={['Must Enter Password']}
-                        warningIDs={['passwordDeleteWarning']}
-                        fieldTypes={[ 'password']}
-                        onChange={deleteInputHandler}
-                        submitAction={removeAccount}
-                    />
+                <h2 className='text-center'>Confirm Deletion</h2>
+                    <div className='d-flex justify-content-center'>
+                        <Button onClick={removeAccount}>Confirm</Button>
+                    </div>
                 </Modal>
             </div>
         </>

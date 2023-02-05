@@ -7,7 +7,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import usePost from '../../hooks/useUserAccount.tsx';
 
-import functions from './functions'
+import validations from '../../utils/validations';
 const Register = () => {
 
     //Initializing
@@ -19,10 +19,10 @@ const Register = () => {
     };
 
       //calling postRegister function
-    const { postRegister } = usePost('Register')
+    const { postRegister, data, success } = usePost('Register')
 
     //validation functions
-    const {passwordValidation, validateEmail, validatePhone} = functions();
+    const {passwordValidation, validateEmail, validatePhone} = validations();
 
     //state variables
     const [firstName, setFirstName] = useState('');
@@ -50,6 +50,14 @@ const Register = () => {
         setPassword(document.getElementById("password").value);
         setConfirmPassword(document.getElementById("confirmPassword").value);
 
+    }
+
+    useEffect(() => {     
+        inputHandler()
+    })
+    //Register
+    const Register = async() =>{
+        
         if(firstName.length < 2 ) {
             setFirstNameWarning('Please Enter First Name')
         } else {
@@ -83,23 +91,25 @@ const Register = () => {
         if(password !== confirmPassword) {
             setConfirmPasswordWarning('Passwords do not match')
         }
-    }
 
-    useEffect(() => {     
-        inputHandler()
-    })
-    //Register
-    const Register = () =>{
-        
+        if(passwordValidation(password) && validateEmail(email) && validatePhone(phone) && lastName.length > 2 && firstName.length > 2 && password === confirmPassword) {
 
-        if(passwordValidation(password) && validateEmail(email) && validatePhone(phone) && lastName.length > 2 && firstName.length > 2) {
+            
+            postRegister(firstName, lastName, email, password, phone)
 
-            if(password === confirmPassword) {
-
-                postRegister(firstName, lastName, email, password, phone)
+            if(success) {
                 home();
+            } 
+            if(data.response.status === 460){
+                setEmailWarning("Email already in use");
+            }  else {
+                setEmailWarning("");
+            }
+
+            if (data.response.status === 461) {
+                setPhoneWarning("Phone # already in use")
             } else {
-                
+                setPhoneWarning("")
             }
         }
     }
