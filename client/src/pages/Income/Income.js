@@ -242,9 +242,10 @@ const Income = () => {
             // get list of checked budgets
             let budgetDict = {};
             let budgetCheckboxes = document.getElementsByClassName("budgetCheckbox");
-            for(let box of budgetCheckboxes){
-                if(box.checked){
-                    budgetDict[box.id] = box.value
+            let budgetPercentages = document.getElementsByClassName("budgetPercentage");
+            for(var i = 0; i < budgetCheckboxes.length; i++){
+                if(budgetCheckboxes[i].checked){
+                    budgetDict[budgetCheckboxes[i].id] = budgetPercentages[i].value;
                 }
             }
 
