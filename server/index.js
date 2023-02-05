@@ -43,28 +43,29 @@ const {insertBudget, getBudget, updateBudget, deleteBudget} = require("./routes/
 app.post('/Register', auth,  registerUser);
 
 //edit user account
-app.post('/EditUser',  auth, editUser);
+app.put('/User/:user_id',  auth, editUser);
 
 //delete user account
 app.post('/DeleteUser',  auth, deleteUser);
 
 app.post('/Login', userLogin);
 
-app.get('/User/:user_id',  auth, getAccountDetails);
+//get user
+app.get('/User',  auth, getAccountDetails);
 
 // BANK ACCOUNT ********************************************************************************************
 
 //add bank account
 app.post('/BankAccount',  auth, addAccount);
 
-//edit bank account
-app.post('/EditAccount',  auth, editAccount);
-
-//edit bank account
-app.post('/DeleteAccount',  auth, deleteAccount);
-
 // get list of bank accounts
-app.get('/BankAccounts', auth, getAccounts);
+app.get('/BankAccount', auth, getAccounts);
+
+//edit bank account
+app.put('/BankAccount/:account_id',  auth, editAccount);
+
+//delete bank account
+app.delete('/BankAccount/:account_id',  auth, deleteAccount);
 
 // BUDGET ********************************************************************************************
 
@@ -96,7 +97,7 @@ app.delete('/Income/:income_id',  auth, deleteIncome);
   
 app.post('/Bills',  auth, addBill);
 
-app.get('/Bills/:user_id',  auth, getBills);
+app.get('/Bills',  auth, getBills);
 
 app.put('/Bills/:bill_id',  auth, updateBill);
 
@@ -106,7 +107,7 @@ app.delete('/Bills/:bill_id',  auth, deleteBill);
   
 app.post('/Deposits',  auth, addDeposit);
 
-app.get('/Deposits/',  auth, getDeposit);
+app.get('/Deposits',  auth, getDeposit);
 
 app.put('/Deposits/:deposit_id',  auth, updateDeposit);
 
@@ -116,7 +117,7 @@ app.delete('/Deposits/:deposit_id',  auth, deleteDeposit);
   
 app.post('/Expenditures',  auth, addExpenditure);
 
-app.get('/Expenditures/',  auth, getExpenditure);
+app.get('/Expenditures',  auth, getExpenditure);
 
 app.put('/Expenditures/:expenditure_id',  auth, updateExpenditure);
 

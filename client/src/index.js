@@ -20,6 +20,7 @@ import Report from './pages/Report/Report'
 import Account from './pages/Account/Account'
 import Deposits from './pages/Deposits/Deposits'
 import BankAccounts from './pages/BankAccounts/BankAccounts'
+import Bills from './pages/Bills/Bills';
 
 //Navigation Routing for Website
 ReactDOM.render(
@@ -30,6 +31,7 @@ ReactDOM.render(
             <Route index element={<Home />}/>
             <Route path="/Dashboard" element={<Dashboard/>}/>
             <Route path="/Budget" element={<Budget />}/>
+            <Route path="/Bills" element={<Bills />}/>
             <Route path="/Expenses" element={<Expenses />}/>
             <Route path="/Savings" element={<Savings />}/>
             <Route path="/Income" element={<Income />}/>

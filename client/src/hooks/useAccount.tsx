@@ -18,7 +18,7 @@ const useAccount = (urlSegment : string) => {
         }
 
     //add/edit bank account
-    const postAccount = async(user_id: number, bank: string, accountType: string, interestRate: number, accountFees: number, balance: number) => {
+    const addAccount = async(bank: string, accountType: string, interestRate: number, accountFees: number, balance: number) => {
         try {
             setLoading(true);
             setError(false);
@@ -28,7 +28,6 @@ const useAccount = (urlSegment : string) => {
                 balance: `${balance}`,
                 interest: `${interestRate}`,
                 monthlyFees: `${accountFees}`,
-                user_id: `${user_id}`
                 }, tokenHeader)
             setData(response);
         }catch(error) {
@@ -39,14 +38,34 @@ const useAccount = (urlSegment : string) => {
         }
     };
 
-    //delete bank account
-    const postDeleteAccount = async(account_id: number) => {
+    //add/edit bank account
+    const editAccount = async(account_id: number, bank: string, accountType: string, interestRate: number, accountFees: number, balance: number) => {
         try {
             setLoading(true);
             setError(false);
-            const response = await axios.post(`${baseURL}${urlSegment}`, {
-                account_id: `${account_id}`
+            const response = await axios.put(`${baseURL}${urlSegment}/${account_id}`, {
+                account_name: `${bank}`,
+                account_type: `${accountType}`,
+                balance: `${balance}`,
+                interest: `${interestRate}`,
+                monthlyFees: `${accountFees}`
                 }, tokenHeader)
+            setData(response);
+        }catch(error) {
+            setError(true);
+            console.log(error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+
+    //delete bank account
+    const deleteAccount = async(account_id: number) => {
+        try {
+            setLoading(true);
+            setError(false);
+            const response = await axios.delete(`${baseURL}${urlSegment}/${account_id}`, tokenHeader)
             setData(response);
         }catch(error) {
             setError(true);
@@ -61,7 +80,7 @@ const useAccount = (urlSegment : string) => {
         try {
             setLoading(true);
             setError(false);
-            const response = await axios.get(`${baseURL}BankAccounts`, tokenHeader)
+            const response = await axios.get(`${baseURL}${urlSegment}`, tokenHeader)
             setData(response);
             return response;
         }catch(error) {
@@ -73,7 +92,7 @@ const useAccount = (urlSegment : string) => {
         }
     };
 
-    return {postAccount, postDeleteAccount, getAccounts}
+    return {addAccount, deleteAccount, getAccounts, editAccount}
     
 };
 

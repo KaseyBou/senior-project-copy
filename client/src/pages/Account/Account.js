@@ -1,33 +1,64 @@
 //import Loading from '../Loading/Loading';
 import './Account.css';
 import { useState, useEffect } from 'react';
+import Cookies from "universal-cookie";
+import {useNavigate} from "react-router-dom";
 //import { useNavigate } from 'react-router-dom';
 import CustomForm from '../../components/CustomForm/CustomForm';
 import usePost from '../../hooks/useUserAccount.tsx';
 import Button from '../../components/Button/Button';
-import Modal from '../../components/Modal/Modal'
+import Modal from '../../components/Modal/Modal';
 
 const Account = () => {
 
     //intializing
-    //const navigate = useNavigate();
-    //handles updates to input's
+    const cookies = new Cookies();
+    const navigate = useNavigate();
+    const home = () => {
+        navigate('/');
+    }
+    // on render, get list of Deposits
+    useEffect(() => {
 
-      //calling postRegister function
-      const {postRegister, postLogin, postEditUser, postDeleteUser, getAccountDetails, data, loading, error} = usePost('EditUser')
+        //verifying user is logged in
+        if(cookies.get("TOKEN") === undefined) {
+            navigate("/");
+        }
+        
+    },[])
 
-      //state variables
-      const [firstName, setFirstName] = useState('');
-      const [lastName, setLastName] = useState('')
-      const [phone, setPhone] = useState('');
-      const [email, setEmail] = useState('');
-      const [password, setPassword] = useState('');
-      const [confirmPassword, setConfirmPassword] = useState('');
-      const [user_id, setUser_id] = useState('');
+    //calling postRegister function
+    const {editUser, deleteUser, getAccountDetails, data, loading, error} = usePost('User')
+
+    //state variables
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('')
+    const [phone, setPhone] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+
+      
+    useEffect(() => {
+        // load existing data into form
+        getAccountDetails().then((data) => {
+            let account = data.data[0];
+            localStorage.setItem("editing", account.user_id)
+            document.getElementById("firstName").value = account.first_name;
+            document.getElementById("lastName").value = account.last_name;
+            document.getElementById("email").value = account.email;
+            document.getElementById("phone").value = account.phone;
+
+            inputHandler();
+        })
+    },[])
 
       // state variable for visibility of delete confirmation
       const [showDelete, setShowDelete] = useState(false);
-      const handleShowDelete = () => setShowDelete(true);
+      const handleShowDelete = (id) => {
+        setShowDelete(true);
+        localStorage.setItem("deleting", id);
+    }
       const handleCloseDelete = () => setShowDelete(false);
   
       //handles updates to input's
@@ -39,38 +70,26 @@ const Account = () => {
           setEmail(document.getElementById("email").value);
           setPassword(document.getElementById("password").value);
           setConfirmPassword(document.getElementById("confirmPassword").value);
-          // TODO
-          setUser_id(document.getElementById("userID").value);
+
       }
-      
-      // on page load, get user info and prefill form
-      // TODO: get user ID from session var
-      useEffect(() => {
-        getAccountDetails(8).then((data) => {
-            data = data.data[0];
-            document.getElementById("firstName").value = data.first_name;
-            document.getElementById("lastName").value = data.last_name;
-            document.getElementById("email").value = data.email;
-            document.getElementById("phone").value = data.phone;
-            inputHandler();
-        })
-      }, [])
 
       const editAccount = () => {
         // get user_ID from how it is stored
         if(password === confirmPassword) {
-            postEditUser(firstName, lastName, email, password, phone, user_id)
-            console.log('hello')
+            //console.log(localStorage.getItem("editing"))
+            editUser(localStorage.getItem("editing"), firstName, lastName, email, password, phone)
         } else {
-            console.log('not good')
         }
       }
 
       const delAccount = () => {
         // TODO: you know the drill by this point
-        postDeleteUser(8, document.getElementById('passwordDelete').value)
-        // TODO: redirect to homepage
-        handleCloseDelete();
+        deleteUser(localStorage.getItem("editing"), password)
+        
+        cookies.remove("TOKEN");
+        home();
+          
+
       }
 
     //returning JSX
@@ -79,8 +98,8 @@ const Account = () => {
 
             <CustomForm
                 title='Edit Account'
-                fields={["First Name", "Last Name", "E-Mail Address", "Phone Number", "New Password", "Confirm Password", "user_ID"]}
-                fieldIDs={['firstName', 'lastName', 'email', 'phone', 'password', 'confirmPassword', 'userID']}
+                fields={["First Name", "Last Name", "E-Mail Address", "Phone Number", "New Password", "Confirm Password"]}
+                fieldIDs={['firstName', 'lastName', 'email', 'phone', 'password', 'confirmPassword']}
                 onChange={inputHandler}
                 submitAction={editAccount}
                 fieldTypes={['text', 'text', 'email', 'tel', 'password', 'password', 'number']}

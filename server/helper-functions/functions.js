@@ -47,7 +47,6 @@ const validateEmail = (email) => {
     return emailRegex.test(email);
 }
 
-module.exports = {hashPassword, isPasswordCorrect, passwordValidation, validateEmail, validatePhone}
 const getEmail = async(token) => {
     const decodedToken = await jwt.verify(token, "RANDOM-TOKEN", async(err, decodedToken) => {
         if(err){
@@ -58,4 +57,4 @@ const getEmail = async(token) => {
     return decodedToken.userEmail;
 }
 
-module.exports = {hashPassword, isPasswordCorrect, getEmail}
+module.exports = {hashPassword, isPasswordCorrect, passwordValidation, validateEmail, validatePhone, getEmail}

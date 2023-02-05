@@ -6,6 +6,8 @@ import PropTypes from 'prop-types';
 import Button from '../Button/Button';
 
 const CustomForm = (props) => {
+
+    let selectCount = 0;
     //defining proptypes
     CustomForm.propTypes = {
         title:PropTypes.string,
@@ -65,7 +67,7 @@ const CustomForm = (props) => {
                     </td>
                     <td>
                         <select className="formInput" name={props.fieldIDs[i]} id={props.fieldIDs[i]} onChange={props.onChange} colSpan="2">
-                            {props.selectFields}
+                            {props.selectFields[selectCount]}
                         </select>
                     </td>
                 </tr>
@@ -76,6 +78,8 @@ const CustomForm = (props) => {
                 </tr>
             </>
             )
+
+            selectCount++;
         }
     }
 

@@ -23,7 +23,7 @@ const Income = () => {
     const { postIncome, getIncomes, editIncome, deleteIncome } = useIncome("Income");
 
     // account hook instance
-    const {postAccount, postDeleteAccount, getAccounts} = useAccount("BankAccounts")
+    const {postAccount, postDeleteAccount, getAccounts} = useAccount("BankAccount")
 
     // budget hook instance
     const {postBudget, getCategories, editCategory, deleteCategory} = useBudget("Budget");
@@ -89,6 +89,15 @@ const Income = () => {
                 } else {
                     return null;
                 }
+            }))
+        })
+    }, [])
+
+    //generate dropdown list of accounts, add it to add and edit forms
+    useEffect(() => {
+        getAccounts().then((accounts) => {
+            setAccountList(accounts.data.map((account) => {
+                return <option value={account.account_id}>{account.account_name}</option>
             }))
         })
     }, [])
@@ -300,7 +309,7 @@ const Income = () => {
                         warning={[grossPayAddWarning, payFrequencyAddWarning, payDateAddWarning, accountAddWarning]}
                         warningIDs={['grossPayAddWarning', 'payFrequencyAddWarning','payDateAddWarning', 'accountAddWarning']}
                         fieldTypes={['number', 'number', 'date', 'select']}
-                        selectFields={accountList}
+                        selectFields={[accountList]}
                         onChange={addInputHandler}
                         submitAction={addIncome}
                     >
@@ -318,7 +327,7 @@ const Income = () => {
                         warning={[grossPayEditWarning, payFrequencyEditWarning, payDateEditWarning, accountEditWarning]}
                         warningIDs={['grossPayEditWarning', 'payFrequencyEditWarning','payDateEditWarning', 'accountEditWarning']}
                         fieldTypes={['number', 'number', 'date', 'select']}
-                        selectFields={accountList}
+                        selectFields={[accountList]}
                         onChange={editInputHandler}
                         submitAction={changeIncome}
                     />
