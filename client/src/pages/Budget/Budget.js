@@ -12,10 +12,16 @@ import CustomForm from '../../components/CustomForm/CustomForm';
 import ColumnBox from '../../components/ColumnBox/ColumnBox'
 import InformationDisplay from '../../components/InformationDisplay/InformationDisplay';
 import useBudget from '../../hooks/useBudget.tsx';
+import useIncome from '../../hooks/useIncome.tsx';
+import useBills from '../../hooks/useBills.tsx';
 
 const Budget = () => {
     // instance of budget hook
     const {postBudget, getCategories, editCategory, deleteCategory} = useBudget("Budget");
+    // instance of income hook
+    const {postIncome, getIncomes, editIncome, deleteIncome} = useIncome("Income");
+    // instance of bill hook
+    const {postBill, getBills, editBill, deleteBill} = useBills('Bills')
 
     const cookies = new Cookies();
     const navigate = useNavigate();
@@ -187,6 +193,12 @@ const Budget = () => {
         })
     }
     useEffect(fetchIncomeList, [])
+
+    // on render, load list of incomes and bills just to check for updates
+    useEffect(() => {
+        getBills();
+        getIncomes();
+    }, [])
 
     //returning JSX
     return (
