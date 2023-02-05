@@ -19,7 +19,6 @@ const useIncome = (urlSegment : string) => {
         }
 
     const postIncome = async(account_id: number, gross_pay: number, pay_day: Date, pay_frequency: number, budgets: Object) => {
-        console.log(budgets);
         try {
             setLoading(true);
             setError(false);

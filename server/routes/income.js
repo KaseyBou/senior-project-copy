@@ -60,7 +60,7 @@ module.exports.getIncomes = async(req,res)=>{
         //If success
         // check if any incomes should have been deposited, and add them as appropriate
         for(income of rows){
-          if(income.pay_day < Date.now()){
+          while(income.pay_day < Date.now()){
             // add pay frequency length to find next pay day
             income.pay_day.setDate(income.pay_day.getDate() + income.pay_frequency);
 

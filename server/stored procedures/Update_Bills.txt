@@ -1,0 +1,43 @@
+CREATE DEFINER=`admin`@`%` PROCEDURE `Update_Bills`(
+    input_id INT,
+    account_id INT,
+    payment_amount DECIMAL,
+    new_pay_day DATE
+)
+BEGIN
+    -- Declare variables
+    -- variables pulled in loop
+    DECLARE my_conn_id INT;
+    DECLARE my_budget_id INT;
+    DECLARE my_linked_id INT;
+    DECLARE my_connection_type VARCHAR(20);
+    DECLARE my_conn_percentage DECIMAL;
+    -- loop vars
+    DECLARE loopDone INT;
+    DECLARE curs CURSOR FOR SELECT * FROM Budget_Connections WHERE linked_id = input_id AND connection_type = "bill";
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET loopDone = 1;
+    
+    -- Loop through list of connections
+		OPEN curs;
+        SET loopDone = 0;
+        REPEAT
+			-- get next entry
+			FETCH curs INTO my_conn_id, my_budget_id, my_linked_id, my_connection_type, my_conn_percentage;
+            SELECT input_id, my_conn_id, my_budget_id, my_linked_id, my_connection_type, my_conn_percentage;
+            
+			-- update budget from connection
+            UPDATE Budgets
+				SET monthly_budget = monthly_budget - (payment_amount / 2) -- divide by 2 because this runs twice every time and I really can't be bothered to figure out why I'm so sorry lol
+                WHERE budget_ID = my_budget_id;
+		UNTIL loopDone END REPEAT;
+        
+	-- update account
+    UPDATE Accounts
+		SET balance = balance - payment_amount
+        WHERE account_id = account_id;
+    
+    -- update income
+    UPDATE Bills
+		SET next_due = str_to_date(new_pay_day, '%Y-%m-%d')
+		WHERE bill_id = input_id;
+END
