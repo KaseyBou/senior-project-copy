@@ -14,7 +14,7 @@ import useBills from '../../hooks/useBills.tsx';
 import useAccount from '../../hooks/useAccount.tsx';
 import useBudget from '../../hooks/useBudget.tsx';
 
-const Expenses = () => {
+const Bills = () => {
 
     const cookies = new Cookies();
     const navigate = useNavigate();
@@ -151,21 +151,90 @@ const Expenses = () => {
 
     //Post expense to server
     const addBill = () => {
-        console.log(billNameAdd, billCompanyAdd, billAmountAdd, billFrequencyAdd, billPaymentDateAdd, billAccountAdd, billBudgetAdd)
+
+        if(billNameAdd.length === 0) {
+            setBillNameAddWarning("Must Enter Bill Name")
+        } else {
+            setBillNameAddWarning("")
+        }
+
+        if(billCompanyAdd.length === 0) {
+            setBillCompanyAddWarning("Must Enter Company Name")
+        } else {
+            setBillCompanyAddWarning("")
+        }
+
+        if(billAmountAdd <= 0) {
+            setBillAmountAddWarning("Must Enter Amount")
+        } else {
+            setBillAmountAddWarning("")
+        }
+
+        if(billFrequencyAdd <= 0) {
+            setBillFrequencyAddWarning("Must Enter Frequency of Bill (Days)")
+        } else {
+            setBillFrequencyAddWarning("")
+        }
+
+        if(billPaymentDateAdd === '') {
+            setBillPaymentDateAddWarning("Must Enter Payment Date")
+        } else {
+            setBillPaymentDateAddWarning("")
+        }
+
         if(billNameAdd && billCompanyAdd && billAmountAdd && billFrequencyAdd && billPaymentDateAdd && billAccountAdd && billBudgetAdd) {
             postBill(billNameAdd, billCompanyAdd, billFrequencyAdd, billPaymentDateAdd, billAmountAdd, billAccountAdd, billBudgetAdd);
             handleCloseAdd();
-            fetchBills();
 
+            setBillNameAdd(null);
+            setBillCompanyAdd(null);
+            setBillFrequencyAdd(null);
+            setBillPaymentDateAdd(null);
+            setBillAmountAdd(null);
+            setBillAccountAdd(null);
+            setBillBudgetAdd(null);
+            fetchBills();
         }
     }
 
     const updateBill = () => {
-        //if(forEdit.length !== null && dateEdit !== null && totalSpentEdit !== null && accountEdit !== null && categoryEdit !== null) {
-        editBill(localStorage.getItem("editing"), billNameEdit, billCompanyEdit,  billFrequencyEdit, billPaymentDateEdit, billAmountEdit, billAccountEdit, billBudgetEdit);
-        handleCloseEdit();
-        fetchBills();
-        //}
+
+        if(billNameEdit.length === 0) {
+            setBillNameEditWarning("Must Enter Bill Name")
+        } else {
+            setBillNameEditWarning("")
+        }
+
+        if(billCompanyEdit.length === 0) {
+            setBillCompanyEditWarning("Must Enter Company Name")
+        } else {
+            setBillCompanyEditWarning("")
+        }
+
+        if(billAmountEdit <= 0) {
+            setBillAmountEditWarning("Must Enter Amount")
+        } else {
+            setBillAmountEditWarning("")
+        }
+
+        if(billFrequencyEdit <= 0) {
+            setBillFrequencyEditWarning("Must Enter Frequency of Bill (Days)")
+        } else {
+            setBillFrequencyEditWarning("")
+        }
+
+        if(billPaymentDateEdit === '') {
+            setBillPaymentDateEditWarning("Must Enter Payment Date")
+        } else {
+            setBillPaymentDateEditWarning("")
+        }
+        
+        if(billNameEdit && billCompanyEdit && billAmountEdit && billFrequencyEdit && billPaymentDateEdit && billAccountEdit && billBudgetEdit) {
+            editBill(localStorage.getItem("editing"), billNameEdit, billCompanyEdit,  billFrequencyEdit, billPaymentDateEdit, billAmountEdit, billAccountEdit, billBudgetEdit);
+            handleCloseEdit();
+            fetchBills();
+        }
+        
     }
 
     // post delete
@@ -183,6 +252,13 @@ const Expenses = () => {
     const [billPaymentDateAdd, setBillPaymentDateAdd] = useState('');
     const [billAccountAdd, setBillAccountAdd] = useState('');
     const [billBudgetAdd, setBillBudgetAdd] = useState('');
+
+    //add warnings
+    const [billNameAddWarning, setBillNameAddWarning] = useState('')
+    const [billCompanyAddWarning, setBillCompanyAddWarning] = useState('');
+    const [billAmountAddWarning, setBillAmountAddWarning] = useState('');
+    const [billFrequencyAddWarning, setBillFrequencyAddWarning] = useState('')
+    const [billPaymentDateAddWarning, setBillPaymentDateAddWarning] = useState('');
 
     //handles updates to input's
     const addBillInputHandler = () =>{
@@ -203,6 +279,13 @@ const Expenses = () => {
     const [billPaymentDateEdit, setBillPaymentDateEdit] = useState('');
     const [billAccountEdit, setBillAccountEdit] = useState('');
     const [billBudgetEdit, setBillBudgetEdit] = useState('');
+
+    //Edit Bill warnings
+    const [billNameEditWarning, setBillNameEditWarning] = useState('')
+    const [billCompanyEditWarning, setBillCompanyEditWarning] = useState('');
+    const [billAmountEditWarning, setBillAmountEditWarning] = useState('');
+    const [billFrequencyEditWarning, setBillFrequencyEditWarning] = useState('')
+    const [billPaymentDateEditWarning, setBillPaymentDateEditWarning] = useState('');
 
     //handles updates to input's
     const editBillInputHandler = () =>{
@@ -232,8 +315,8 @@ const Expenses = () => {
                         fields={['Bill Title', 'Bill Source', 'Amount', 'Next Due Date', 'Pay Frequency', 'Account', 'Budget', ]}
                         fieldIDs={['billNameAdd', 'billCompanyAdd', 'billAmountAdd', 'billPaymentDateAdd', 'billFrequencyAdd', 'billAccountAdd', 'billBudgetAdd']}
                         fieldTypes={['text', 'text', 'number', 'date', 'number', 'select', 'select']}
-                        warning={['','','','','','','']}
-                        warningIDs={['', '','', '','','','']}
+                        warning={[billNameAddWarning, billCompanyAddWarning,billAmountAddWarning, billPaymentDateAddWarning,billFrequencyAddWarning,'','']}
+                        warningIDs={['billNamedAddWarning', 'billCompanyAddWarning','billAmountAddWarning', 'billPaymentDateAddWarning','billFrequencyAddWarning','','']}
                         selectFields={[selectAccountList, categorySelectList]}
                         onChange={addBillInputHandler}
                         submitAction={addBill}
@@ -246,8 +329,8 @@ const Expenses = () => {
                         fields={['Bill Title', 'Bill Source', 'Amount', 'Next Due Date', 'Pay Frequency', 'Account', 'Budget', ]}
                         fieldIDs={['billNameEdit', 'billCompanyEdit', 'billAmountEdit', 'billPaymentDateEdit', 'billFrequencyEdit', 'billAccountEdit', 'billBudgetEdit']}
                         fieldTypes={['text', 'text', 'number', 'date', 'number', 'select', 'select']}
-                        warning={['','','','','','','']}
-                        warningIDs={['', '','', '','','','']}
+                        warning={[billNameEditWarning, billCompanyEditWarning,billAmountEditWarning, billPaymentDateEditWarning,billFrequencyEditWarning,'','']}
+                        warningIDs={['billNamedEditWarning', 'billCompanyEditWarning','billAmountEditWarning', 'billPaymentDateEditWarning','billFrequencyEditWarning','','']}
                         selectFields={[ selectAccountList, categorySelectList]}
                         onChange={editBillInputHandler}
                         submitAction={updateBill}
@@ -266,4 +349,4 @@ const Expenses = () => {
     );
 }
 
-export default Expenses
+export default Bills

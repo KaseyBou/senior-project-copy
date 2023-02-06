@@ -8,13 +8,15 @@ const connection = mysql.createConnection({
   
 })
 
-const {getEmail} = require('../helper-functions/functions')
+const {getEmail, validateEmail} = require('../helper-functions/functions')
 
 module.exports.insertBudget = async(req,res) => {
 
     let {category_name, is_calculated, monthly_budget, percentage} = req.body;
     let email = getEmail(req.headers.authorization).then((email) => {return email;});
-
+    /*if(!category_name) return res.status(400).json('Category Name Not Valid');
+    if(!monthly_budget) return res.status(400).json('Monthly Budget Not Valid');
+    if(!email) return res.status(400).json('Account Email Not Valid');*/
     console.log(is_calculated);
     
     var sql = `INSERT INTO Budgets (category_name, is_calculated, monthly_budget, percentage, user_id) 
@@ -39,7 +41,7 @@ module.exports.insertBudget = async(req,res) => {
 // TODO: don't use SELECT * because that gives out encrypted passwords and stuff
 module.exports.getBudget = async(req,res)=>{
   let email = getEmail(req.headers.authorization).then((email) => {return email;});
-
+  if(!email) return res.status(400).json('Account Email Not Valid');
   var sql = `SELECT * FROM Budgets INNER JOIN Users ON Users.user_id = Budgets.user_id WHERE email = '${await email}'`;
 
   connection.query(sql, function(err, rows)
@@ -63,6 +65,10 @@ module.exports.updateBudget = async(req, res) => {
 
   let {category_name, is_calculated, monthly_budget, percentage} = req.body;
   let email = getEmail(req.headers.authorization).then((email) => {return email;});
+  /*if(!budget_id) return res.status(400).json('Budget Id Not Valid');
+  if(!category_name) return res.status(400).json('Category Name Not Valid');
+  if(!monthly_budget) return res.status(400).json('Monthly Budget Not Valid');
+  if(!email) return res.status(400).json('Account Email Not Valid');*/
 
   var sql = `UPDATE Budgets SET category_name = '${category_name}', is_calculated = ${is_calculated}, monthly_budget = '${monthly_budget}',
     percentage = '${percentage}' WHERE budget_id = '${budget_id}'
@@ -86,7 +92,7 @@ connection.query(sql, function(err, rows)
 module.exports.deleteBudget = async(req, res) => {
   budget_id = req.params.budget_id;
   let email = getEmail(req.headers.authorization).then((email) => {return email;});
-
+  //if(!email) return res.status(400).json('Account Email Not Valid');
   var sql = `DELETE FROM Budgets WHERE budget_id = '${budget_id}'
     AND user_id=(SELECT user_id FROM Users WHERE email = '${await email}')`;
 

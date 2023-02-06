@@ -10,7 +10,7 @@ const connection = mysql.createConnection({
 })
 
 const functions = require('../helper-functions/functions')
-const {hashPassword, isPasswordCorrect, getEmail} = require('../helper-functions/functions')
+const {hashPassword, isPasswordCorrect, getEmail, passwordValidation, validateEmail, validatePhone} = require('../helper-functions/functions')
 //---------------User Posts------------------------------------------------
 
 //register user
@@ -18,14 +18,20 @@ module.exports.registerUser = (req,res) => {
 
     let {first_Name, last_Name, email, password, phone, profile_image, is_admin} = req.body;
   
-    let returnData = functions.hashPassword(password)
+    if(!first_Name) return res.status(464).json('First Name can not be blank');
+    if(!last_Name) return res.status(463).json('Last Name cant be blank');
+    if(!validateEmail(email)) return res.status(460).json('Email Not Valid');
+    if(!validatePhone(phone)) return res.status(461).json('Phone Not Valid');
+    if(!passwordValidation(password)) return res.status(462).json('Password does not meet requirements');
+
+    let returnData = hashPassword(password)
     salt = returnData[0];
     hash = returnData[1];
     
     //var sql = "INSERT INTO Users (first_name, last_name, email, password, password_salt, phone, profile_image, is_admin) Values ('firstName', 'lastName', 'testingg@testing.com', 'password', 'password_salt', 'phone', 'profile_image', 'is_admin')";
-     var sql = `INSERT INTO Users (first_name, last_name, email, password, password_salt, phone, profile_image, is_admin) Values ('${first_Name}', '${last_Name}', '${email}', '${hash}', '${salt}','${phone}', ${profile_image}, ${is_admin})`;
+    var sql = `INSERT INTO Users (first_name, last_name, email, password, password_salt, phone, profile_image, is_admin) Values ('${first_Name}', '${last_Name}', '${email}', '${hash}', '${salt}','${phone}', ${profile_image}, ${is_admin})`;
   
-     connection.query(sql, function(err, rows)
+    connection.query(sql, function(err, rows)
     {
   
       if (err){
@@ -48,11 +54,12 @@ module.exports.registerUser = (req,res) => {
 
         return err;
       }
-     else
+    else
       //If success
       res.status(200).json('Account Added Successfully!!')
       
     });
+    
   
   
 };
@@ -62,21 +69,25 @@ module.exports.editUser = async(req,res) => {
   
     let {first_Name, last_Name, email, password, phone, profile_image, user_id} = req.body;
 
+    if(!first_Name) return res.status(464).json('First Name can not be blank');
+    if(!last_Name) return res.status(463).json('Last Name cant be blank');
+    if(!validateEmail(email)) return res.status(460).json('Email Not Valid');
+    if(!validatePhone(phone)) return res.status(461).json('Phone Not Valid');
+    if(!passwordValidation(password)) return res.status(462).json('Password does not meet requirements');
+
     if(password === "") {
   
         var sql = `Update Users SET first_name = '${first_Name}', last_name = '${last_Name}', email = '${email}', phone = '${phone}', profile_image = ${profile_image} WHERE user_id = ${ user_id}`;
     } 
     else {
-        let returnData = functions.hashPassword(password)
+        let returnData = hashPassword(password)
         salt = returnData[0];
         hash = returnData[1];
         var sql = `Update Users SET first_name = '${first_Name}', last_name = '${last_Name}', email = '${email}', password = '${hash}', password_salt = '${salt}', phone = '${phone}', profile_image = ${profile_image} WHERE user_id = ${user_id}`;
     }
-    /*if(!firstName) return res.status(400).json('First Name can not be blank');
-    if(!lastName) return res.status(400).json('Last Name cant be blank');
-    if(!email) return res.status(400).json('Email cant be blank');
-    if(!password) return res.status(400).json('Password cant be blank');*/
+
   try {
+
      connection.query(sql, function(err, rows)
     {
   
@@ -97,9 +108,8 @@ module.exports.editUser = async(req,res) => {
           res.status(400).json('Sorry, Unable To Add');
           console.log("Error inserting : %s ",err.errno );
         }
-      }
-     else
-          //   create JWT token
+      }else {
+          //  create JWT token
           token = jwt.sign(
           {
             userEmail: email,
@@ -109,7 +119,7 @@ module.exports.editUser = async(req,res) => {
         );
       //If success
       res.status(200).json(token)
-  
+        }
     });
   }catch(err) {
     console.log(err)
@@ -121,6 +131,8 @@ module.exports.editUser = async(req,res) => {
 module.exports.deleteUser = (req,res) => {
   
   let {user_id, pw_attempt} = req.body;
+
+  if(!pw_attempt) return res.status(462).json('Password cannot be blank');
 
   var sql = `SELECT password, password_salt FROM Users WHERE user_id = '${user_id}';`;
 
@@ -134,7 +146,7 @@ module.exports.deleteUser = (req,res) => {
           console.log("Error retrieving : %s ",err );
         } else {
           // If password details retrieved successfully, compare to attempt
-          if(functions.isPasswordCorrect(rows[0].password, rows[0].password_salt, pw_attempt)){
+          if(isPasswordCorrect(rows[0].password, rows[0].password_salt, pw_attempt)){
 
             // run delete if password matches
             var sql = `DELETE FROM Users WHERE user_id = ${user_id}`;
@@ -166,7 +178,8 @@ module.exports.deleteUser = (req,res) => {
 module.exports.userLogin = (req,res) => {
   
     let {email, password} = req.body;
-  
+    if(!email) return res.status(460).json('Email Not Valid');
+    if(!password) return res.status(461).json('Phone Not Valid');
     var sql = `SELECT password, password_salt FROM Users WHERE email = '${email}'`;
   
     try {
@@ -180,7 +193,7 @@ module.exports.userLogin = (req,res) => {
           else {
         
               try {
-                  let correct = functions.isPasswordCorrect(rows[0]['password'], rows[0]['password_salt'], password)
+                  let correct = isPasswordCorrect(rows[0]['password'], rows[0]['password_salt'], password)
                   //console.log(correct)
                   //If success
                   if(correct) {
@@ -218,6 +231,7 @@ module.exports.userLogin = (req,res) => {
 
 module.exports.getAccountDetails = async(req, res) => {
   let email = getEmail(req.headers.authorization).then((email) => {return email;});
+  if(!email) return res.status(460).json('Email Not Valid');
   var sql = `SELECT user_id, email, first_name, last_name, phone, profile_image FROM Users WHERE email = '${ await email}';`;
 
     connection.query(sql, function(err, rows)
