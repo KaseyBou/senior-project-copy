@@ -178,7 +178,7 @@ module.exports.deleteUser = (req,res) => {
 module.exports.userLogin = (req,res) => {
   
     let {email, password} = req.body;
-    if(!validateEmail(email)) return res.status(460).json('Email Not Valid');
+    if(!email) return res.status(460).json('Email Not Valid');
     if(!password) return res.status(461).json('Phone Not Valid');
     var sql = `SELECT password, password_salt FROM Users WHERE email = '${email}'`;
   

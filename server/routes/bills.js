@@ -14,14 +14,14 @@ module.exports.addBill = async(req, res) => {
     let {bill_name, bill_source, pay_frequency, next_due, amount, account_id, budget_id} = req.body;
     let email = getEmail(req.headers.authorization).then((email) => {return email;});
 
-    if(!bill_name) return res.status(400).json('Bill Name Not Valid');
+    /*if(!bill_name) return res.status(400).json('Bill Name Not Valid');
     if(!bill_source) return res.status(400).json('Bill Source Not Valid');
     if(!pay_frequency) return res.status(400).json('Bill Frequency Not Valid');
     if(!next_due) return res.status(400).json('Bill Date Not Valid');
     if(!amount) return res.status(400).json('Bill Amount Not Valid');
     if(!account_id) return res.status(400).json('Account ID Not Valid');
     if(!budget_id) return res.status(400).json('Budget ID Not Valid');
-    if(!email) return res.status(400).json('Account Email Not Valid');
+    if(!email) return res.status(400).json('Account Email Not Valid');*/
 
     // since the code is set up to take a list, we still have to pass in the single value in list string format
     var idList = budget_id + ", ";
@@ -95,14 +95,14 @@ module.exports.updateBill = async(req, res) => {
 
     let {account_id, bill_name, bill_source, amount, next_due, pay_frequency, budget_id} = req.body;
     let email = getEmail(req.headers.authorization).then((email) => {return email;});
-    if(!bill_name) return res.status(400).json('Bill Name Not Valid');
+    /*if(!bill_name) return res.status(400).json('Bill Name Not Valid');
     if(!bill_source) return res.status(400).json('Bill Source Not Valid');
     if(!pay_frequency) return res.status(400).json('Bill Frequency Not Valid');
     if(!next_due) return res.status(400).json('Bill Date Not Valid');
     if(!amount) return res.status(400).json('Bill Amount Not Valid');
     if(!account_id) return res.status(400).json('Account ID Not Valid');
     if(!budget_id) return res.status(400).json('Budget ID Not Valid');
-    if(!email) return res.status(400).json('Account Email Not Valid');
+    if(!email) return res.status(400).json('Account Email Not Valid');*/
   
     var sql = `UPDATE Bills SET account_id = '${account_id}', budget_id = '${budget_id}, bill_name = '${bill_name}', bill_source = '${bill_source}', amount = '${amount}', next_due = '${next_due}', pay_frequency = '${pay_frequency}' 
     WHERE bill_id = '${bill_id}' AND user_id=(SELECT user_id FROM Users WHERE email = '${await email}')`;
@@ -123,8 +123,8 @@ module.exports.updateBill = async(req, res) => {
 module.exports.deleteBill = async(req, res) => {
     bill_id = req.params.bill_id;
     let email = getEmail(req.headers.authorization).then((email) => {return email;});
-    if(!bill_id) return res.status(400).json('Bill ID Not Valid');
-    if(!email) return res.status(400).json('Account Email Not Valid');
+    /*if(!bill_id) return res.status(400).json('Bill ID Not Valid');
+    if(!email) return res.status(400).json('Account Email Not Valid');*/
     var sql = `DELETE FROM Bills WHERE bill_id = '${bill_id}'
     AND user_id=(SELECT user_id FROM Users WHERE email = '${await email}')`;
 
