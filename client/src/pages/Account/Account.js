@@ -85,7 +85,7 @@ const Account = () => {
 
       }
 
-      const editAccount = () => {
+      const editAccount = async() => {
 
         if(firstName.length < 2 ) {
             setFirstNameWarning('Please Enter First Name')
@@ -121,20 +121,21 @@ const Account = () => {
             editUser(localStorage.getItem("editing"), firstName, lastName, email, password, phone);
 
             console.log(data)
+            
             if(data.status === 200) {
                 setFormMessage("Successfully Edited Account")
                 
-            } else {
-                setFormMessage("")
+            } else if(data.status !== 200) {
+                setFormMessage("Error")
             }
 
-            if(data.response.status === 460){
+            if(data.status === 460){
                 setEmailWarning("Email already in use");
             }  else {
                 setEmailWarning("");
             }
 
-            if (data.response.status === 461) {
+            if (data.status === 461) {
                 setPhoneWarning("Phone # already in use")
             } else {
                 setPhoneWarning("")
@@ -144,7 +145,7 @@ const Account = () => {
       }
 
       const delAccount = () => {
-        // TODO: you know the drill by this point
+              
         let passwordDelete = document.getElementById("passwordDelete").value;
         deleteUser(localStorage.getItem("editing"), passwordDelete);
         

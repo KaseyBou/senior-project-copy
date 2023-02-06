@@ -73,14 +73,14 @@ const usePost = (urlSegment : string) => {
             user_id: user_id
 
             },tokenHeader).then((response) => {
-                //console.log(response)
+                console.log(response)
                 cookies.set("TOKEN", response.data, {path: "/",});
             });
             setData(response)
         }catch(error) {
             //setError(true);
-            setData(error)
-            console.log(error);
+            setData(error.response)
+            console.log(error.response);
 
         } finally {
 

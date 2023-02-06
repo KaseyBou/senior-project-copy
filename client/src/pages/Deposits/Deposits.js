@@ -184,6 +184,7 @@ const Deposit = () => {
 
     //  add deposit
     const addDeposit = () => {
+        
         if(addSource && addAccount && addDepositDate && addAmount && !addSourceWarning && !addAccountWarning && !addDepositDateWarning && !addAmountWarning && addAmount === confirmAddAmount) {
             postDeposit(addSource, addDepositDate, addAmount, addAccount);
             handleCloseAdd();

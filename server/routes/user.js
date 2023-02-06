@@ -77,6 +77,7 @@ module.exports.editUser = async(req,res) => {
     if(!email) return res.status(400).json('Email cant be blank');
     if(!password) return res.status(400).json('Password cant be blank');*/
   try {
+
      connection.query(sql, function(err, rows)
     {
   
@@ -97,9 +98,8 @@ module.exports.editUser = async(req,res) => {
           res.status(400).json('Sorry, Unable To Add');
           console.log("Error inserting : %s ",err.errno );
         }
-      }
-     else
-          //   create JWT token
+      }else {
+          //  create JWT token
           token = jwt.sign(
           {
             userEmail: email,
@@ -109,7 +109,7 @@ module.exports.editUser = async(req,res) => {
         );
       //If success
       res.status(200).json(token)
-  
+        }
     });
   }catch(err) {
     console.log(err)

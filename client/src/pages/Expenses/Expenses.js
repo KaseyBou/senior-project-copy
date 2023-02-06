@@ -135,11 +135,19 @@ const Expenses = () => {
             editExpenseInputHandler();
         })
     }
+
+    //edit values
     const [forEdit, setForEdit] = useState('');
     const [dateEdit, setDateEdit] = useState('');
     const [totalSpentEdit, setTotalSpentEdit] = useState('')
     const [categoryEdit, setCategoryEdit] = useState('');
     const [accountEdit, setAccountEdit] = useState('');
+    //edit warnings
+    const [forEditWarning, setForEditWarning] = useState('');
+    const [editDateWarning, setEditDateWarning] = useState('');
+    const [totalSpentEditWarning, setTotalSpentEditWarning] = useState('')
+    const [categoryEditWarning, setCategoryEditWarning] = useState('');
+    const [accountEditWarning, setAccountEditWarning] = useState('');
 
     const [showDelete, setShowDelete] = useState(false);
     const handleCloseDelete = () => setShowDelete(false);
@@ -193,6 +201,24 @@ const Expenses = () => {
     //Post expense to server
     const addExpense = () => {
 
+        if(forAdd.length === 0) {
+            setForAddWarning("Must Enter For Field");
+        } else {
+            setForAddWarning("");
+        }
+
+        if(dateAdd === '') {
+            setAddDateWarning('Must Enter Date');
+        } else {
+            setAddDateWarning('');
+        }
+
+        if(totalSpentAdd <= 0) {
+            setTotalSpentAddWarning('Must Enter Amount Spent');
+        } else {
+            setTotalSpentAddWarning('');
+        }
+
         if(forAdd && dateAdd && totalSpentAdd && accountAdd && categoryAdd) {
             postExpenditure(forAdd, dateAdd, totalSpentAdd, accountAdd, categoryAdd);
             handleCloseAdd();
@@ -206,12 +232,31 @@ const Expenses = () => {
     }
 
     const editExpense = () => {
+
+        if(forEdit.length === 0) {
+            setForEditWarning("Must Enter For Field");
+        } else {
+            setForAddWarning("");
+        }
+
+        if(dateAdd === '') {
+            setAddDateWarning('Must Enter Date');
+        } else {
+            setAddDateWarning('');
+        }
+
+        if(totalSpentAdd <= 0) {
+            setTotalSpentAddWarning('Must Enter Amount Spent');
+        } else {
+            setTotalSpentAddWarning('');
+        }
+
         console.log(forEdit, dateEdit, totalSpentEdit, accountEdit, categoryEdit)
-        //if(forEdit.length !== null && dateEdit !== null && totalSpentEdit !== null && accountEdit !== null && categoryEdit !== null) {
-        editExpenditure(localStorage.getItem("editing"), accountEdit, forEdit, dateEdit, totalSpentEdit, categoryEdit);
-        handleCloseEdit();
-        fetchExpenses();
-        //}
+        if(forEdit && dateEdit && totalSpentEdit && accountEdit&& categoryEdit) {
+            editExpenditure(localStorage.getItem("editing"), accountEdit, forEdit, dateEdit, totalSpentEdit, categoryEdit);
+            handleCloseEdit();
+            fetchExpenses();
+        }
     }
 
     // post delete
@@ -252,7 +297,7 @@ const Expenses = () => {
                         fieldIDs={['forEdit', 'dateEdit', 'totalSpentEdit', 'categoryEdit', 'accountEdit']}
                         fieldTypes={['text', 'date', 'number', 'select', 'select']}
                         selectFields={[categorySelectList, selectAccountList]}
-                        warning={[forAddWarning, addDateWarning, totalSpentAddWarning, categoryAddWarning, accountAddWarning]}
+                        warning={[forEditWarning, editDateWarning, totalSpentEditWarning, categoryEditWarning, accountEditWarning]}
                         warningIDs={['forAddWarning', 'addDateWarning', 'totalSpentAddWarning', 'categoryAddWarning', 'accountAddWarning']}
                         onChange={editExpenseInputHandler}
                         submitAction={editExpense}
