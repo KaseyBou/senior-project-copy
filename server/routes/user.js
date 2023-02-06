@@ -73,13 +73,13 @@ module.exports.editUser = async(req,res) => {
     if(!last_Name) return res.status(463).json('Last Name cant be blank');
     if(!validateEmail(email)) return res.status(460).json('Email Not Valid');
     if(!validatePhone(phone)) return res.status(461).json('Phone Not Valid');
-    if(!passwordValidation(password)) return res.status(462).json('Password does not meet requirements');
 
     if(password === "") {
   
         var sql = `Update Users SET first_name = '${first_Name}', last_name = '${last_Name}', email = '${email}', phone = '${phone}', profile_image = ${profile_image} WHERE user_id = ${ user_id}`;
     } 
     else {
+        if(!passwordValidation(password)) return res.status(462).json('Password does not meet requirements');
         let returnData = hashPassword(password)
         salt = returnData[0];
         hash = returnData[1];
@@ -179,7 +179,7 @@ module.exports.userLogin = (req,res) => {
   
     let {email, password} = req.body;
     if(!email) return res.status(460).json('Email Not Valid');
-    if(!password) return res.status(461).json('Phone Not Valid');
+    if(!password) return res.status(461).json('Password Not Valid');
     var sql = `SELECT password, password_salt FROM Users WHERE email = '${email}'`;
   
     try {
