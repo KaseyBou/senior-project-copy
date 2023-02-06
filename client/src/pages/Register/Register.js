@@ -92,12 +92,12 @@ const Register = () => {
             setConfirmPasswordWarning('Passwords do not match')
         }
 
-        if(passwordValidation(password) && validateEmail(email) && validatePhone(phone) && lastName.length > 2 && firstName.length > 2 && password === confirmPassword) {
+        if(passwordValidation(password) && validateEmail(email) && validatePhone(phone) && lastName.length >= 2 && firstName.length >= 2 && password === confirmPassword) {
 
             
             postRegister(firstName, lastName, email, password, phone)
 
-            if(success) {
+            if(data.status === 200) {
                 home();
             } 
             if(data.response.status === 460){
@@ -111,7 +111,7 @@ const Register = () => {
             } else {
                 setPhoneWarning("")
             }
-        }
+        } 
     }
 
 
