@@ -35,7 +35,7 @@ const {addAccount, editAccount, deleteAccount, getAccounts} = require('./routes/
 const {logError} = require('./routes/errorLog');
 const { addDeposit, getDeposit, updateDeposit, deleteDeposit } = require("./routes/deposits");
 const { addExpenditure, getExpenditure, updateExpenditure, deleteExpenditure } = require("./routes/expenditures");
-const {insertBudget, getBudget, updateBudget, deleteBudget} = require("./routes/budget")
+const {insertBudget, getBudget, updateBudget, deleteBudget, getBudgetsByIncome} = require("./routes/budget")
 
 //---------------User Posts------------------------------------------------
 
@@ -73,6 +73,8 @@ app.delete('/BankAccount/:account_id',  auth, deleteAccount);
 app.post('/Budget',  auth, insertBudget);
 
 app.get('/Budget',  auth, getBudget);
+
+app.get('/Budget/:income_id', auth, getBudgetsByIncome);
 
 app.put('/Budget/:budget_id',  auth, updateBudget);
 

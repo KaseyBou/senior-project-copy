@@ -54,7 +54,7 @@ const useIncome = (urlSegment : string) => {
         }
     };
 
-    const editIncome = async(income_id: number, account_id: number, gross_pay: number, pay_day: Date, pay_frequency: number) => {
+    const editIncome = async(income_id: number, account_id: number, gross_pay: number, pay_day: Date, pay_frequency: number, budgets: Object) => {
         try {
             setLoading(true);
             setError(false);
@@ -62,7 +62,8 @@ const useIncome = (urlSegment : string) => {
                 account_id: `${account_id}`,
                 gross_pay: `${gross_pay}`,
                 pay_day: `${pay_day}`,
-                pay_frequency: `${pay_frequency}`
+                pay_frequency: `${pay_frequency}`,
+                budgets: {budgets}
             }, tokenHeader)
             setData(response);
             console.log(response);

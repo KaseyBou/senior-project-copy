@@ -90,7 +90,22 @@ const useBudget = (urlSegment : string) => {
         }
     }
 
-    return {postBudget, getCategories, editCategory, deleteCategory}
+    const getCategoriesByIncome = async(income_id: number) => {
+        try{
+            setLoading(true);
+            setError(false);
+            const response = await axios.get(`${baseURL}${urlSegment}/${income_id}`, tokenHeader);
+            setData(response);
+        } catch(error) {
+            setError(true);
+            console.log(error);
+        } finally {
+            setLoading(false);
+            return data;
+        }
+    }
+
+    return {postBudget, getCategories, editCategory, deleteCategory, getCategoriesByIncome}
     
 };
 

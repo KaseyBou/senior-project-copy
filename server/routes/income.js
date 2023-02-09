@@ -47,7 +47,6 @@ module.exports.insertIncome = async(req,res) => {
       });
 }
 
-// TODO: don't use SELECT * because that gives out encrypted passwords and stuff
 module.exports.getIncomes = async(req,res)=>{
 
   let email = getEmail(req.headers.authorization).then((email) => {return email;});
@@ -99,7 +98,7 @@ module.exports.getIncomes = async(req,res)=>{
 module.exports.updateIncome = async(req, res) => {
   income_id = req.params.income_id;
 
-  let {account_id, gross_pay, pay_day, pay_frequency} = req.body;
+  let {account_id, gross_pay, pay_day, pay_frequency, budgets} = req.body;
   let email = getEmail(req.headers.authorization).then((email) => {return email;});
 
   /*if(!account_id) return res.status(400).json('Account ID Not Valid');
@@ -110,9 +109,16 @@ module.exports.updateIncome = async(req, res) => {
   if(!budgets) return res.status(400).json('Income Category Not Valid');
   if(!email) return res.status(400).json('Account Email Not Valid');*/
 
-  var sql = `UPDATE Incomes SET account_id = '${account_id}', gross_pay = '${gross_pay}', pay_day = '${pay_day}',
-    pay_frequency = '${pay_frequency}' WHERE income_id = '${income_id}'
-    AND user_id=(SELECT user_id FROM Users WHERE email = '${await email}')`;
+  var idList = "";
+    var percentList = "";
+    console.log(budgets.budgets);
+    for(key of Object.keys(budgets.budgets)){
+      idList += key.substring(7) + ", ";
+      percentList += budgets.budgets[key] + ", ";
+    }
+
+  var sql = 'CALL `financial_planner`.`Edit_Income`(' + income_id + ', ' + account_id +', ' + gross_pay + ', "' + pay_day +'", '
+    + pay_frequency +', "' + await email + '", "' + idList + '", "' + percentList + '");';
 
   console.log(sql);
 
