@@ -12,15 +12,15 @@ const {hashPassword, isPasswordCorrect, getEmail, validateEmail} = require('../h
 
 module.exports.insertIncome = async(req,res) => {
 
-    let {account_id, gross_pay, pay_day, pay_frequency, budgets} = req.body;
+    let {account_id, gross_pay, pay_day, pay_frequency, budgets, budget_id} = req.body;
     let email = getEmail(req.headers.authorization).then((email) => {return email;});
 
-    /*if(!account_id) return res.status(400).json('Account ID Not Valid');
+    if(!account_id) return res.status(400).json('Account ID Not Valid');
     if(!gross_pay) return res.status(400).json('Income Pay Not Valid');
     if(!pay_day) return res.status(400).json('Income date Not Valid');
     if(!pay_frequency) return res.status(400).json('Income frequency Not Valid');
-    if(!budgets) return res.status(400).json('Income Category Not Valid');
-    if(!email) return res.status(400).json('Account Email Not Valid');*/
+    if(!budget_id) return res.status(400).json('Income Category Not Valid');
+    if(!email) return res.status(400).json('Account Email Not Valid');
     // generate string from list of IDs and percentages to be connected
     var idList = "";
     var percentList = "";
@@ -50,7 +50,7 @@ module.exports.insertIncome = async(req,res) => {
 module.exports.getIncomes = async(req,res)=>{
 
   let email = getEmail(req.headers.authorization).then((email) => {return email;});
-  //if(!email) return res.status(400).json('Account Email Not Valid');
+  if(!email) return res.status(400).json('Account Email Not Valid');
 
   var sql = `SELECT income_id, gross_pay, pay_day, pay_frequency, account_id
     FROM Incomes INNER JOIN Users ON Users.user_id = Incomes.user_id
@@ -101,13 +101,13 @@ module.exports.updateIncome = async(req, res) => {
   let {account_id, gross_pay, pay_day, pay_frequency, budgets} = req.body;
   let email = getEmail(req.headers.authorization).then((email) => {return email;});
 
-  /*if(!account_id) return res.status(400).json('Account ID Not Valid');
+  if(!account_id) return res.status(400).json('Account ID Not Valid');
   if(!income_id) return res.status(400).json('Income ID Not Valid');
   if(!gross_pay) return res.status(400).json('Income Pay Not Valid');
   if(!pay_day) return res.status(400).json('Income date Not Valid');
   if(!pay_frequency) return res.status(400).json('Income frequency Not Valid');
-  if(!budgets) return res.status(400).json('Income Category Not Valid');
-  if(!email) return res.status(400).json('Account Email Not Valid');*/
+  //if(!budget_id) return res.status(400).json('Income Category Not Valid');
+  if(!email) return res.status(400).json('Account Email Not Valid');
 
   var idList = "";
     var percentList = "";
@@ -140,8 +140,8 @@ connection.query(sql, function(err, rows)
 module.exports.deleteIncome = async(req, res) => {
   income_id = req.params.income_id;
   let email = getEmail(req.headers.authorization).then((email) => {return email;});
-  //if(!income_id) return res.status(400).json('Income ID Not Valid');
-  //if(!email) return res.status(400).json('Account Email Not Valid');
+  if(!income_id) return res.status(400).json('Income ID Not Valid');
+  if(!email) return res.status(400).json('Account Email Not Valid');
 
   var sql = `DELETE FROM Incomes WHERE income_id = '${income_id}'
     AND user_id=(SELECT user_id FROM Users WHERE email = '${await email}')`;

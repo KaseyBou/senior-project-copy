@@ -14,9 +14,9 @@ module.exports.insertBudget = async(req,res) => {
 
     let {category_name, is_calculated, monthly_budget, percentage} = req.body;
     let email = getEmail(req.headers.authorization).then((email) => {return email;});
-    /*if(!category_name) return res.status(400).json('Category Name Not Valid');
+    if(!category_name) return res.status(400).json('Category Name Not Valid');
     if(!monthly_budget) return res.status(400).json('Monthly Budget Not Valid');
-    if(!email) return res.status(400).json('Account Email Not Valid');*/
+    if(!email) return res.status(400).json('Account Email Not Valid');
     console.log(is_calculated);
     
     var sql = `INSERT INTO Budgets (category_name, is_calculated, monthly_budget, percentage, user_id) 
@@ -65,10 +65,10 @@ module.exports.updateBudget = async(req, res) => {
 
   let {category_name, is_calculated, monthly_budget, percentage} = req.body;
   let email = getEmail(req.headers.authorization).then((email) => {return email;});
-  /*if(!budget_id) return res.status(400).json('Budget Id Not Valid');
+  if(!budget_id) return res.status(400).json('Budget Id Not Valid');
   if(!category_name) return res.status(400).json('Category Name Not Valid');
   if(!monthly_budget) return res.status(400).json('Monthly Budget Not Valid');
-  if(!email) return res.status(400).json('Account Email Not Valid');*/
+  if(!email) return res.status(400).json('Account Email Not Valid');
 
   var sql = `UPDATE Budgets SET category_name = '${category_name}', is_calculated = ${is_calculated}, monthly_budget = '${monthly_budget}',
     percentage = '${percentage}' WHERE budget_id = '${budget_id}'
@@ -92,7 +92,7 @@ connection.query(sql, function(err, rows)
 module.exports.deleteBudget = async(req, res) => {
   budget_id = req.params.budget_id;
   let email = getEmail(req.headers.authorization).then((email) => {return email;});
-  //if(!email) return res.status(400).json('Account Email Not Valid');
+  if(!email) return res.status(400).json('Account Email Not Valid');
   var sql = `DELETE FROM Budgets WHERE budget_id = '${budget_id}'
     AND user_id=(SELECT user_id FROM Users WHERE email = '${await email}')`;
 
