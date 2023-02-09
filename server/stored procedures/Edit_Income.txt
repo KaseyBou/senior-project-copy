@@ -1,0 +1,20 @@
+CREATE DEFINER=`admin`@`%` PROCEDURE `Edit_Income`(
+    new_income_id INT,
+	new_account_id INT,
+    new_gross_pay DECIMAL,
+    new_pay_day DATE,
+    new_pay_frequency INT,
+    new_email VARCHAR(255),
+    idlist TEXT,
+    percentlist TEXT
+)
+BEGIN
+	-- update the income itself
+	UPDATE Incomes SET account_id = new_account_id, gross_pay = new_gross_pay, pay_day = new_pay_day,
+		pay_frequency = new_pay_frequency WHERE income_id = new_income_id
+		AND user_id=(SELECT user_id FROM Users WHERE email = new_email);
+	
+    -- clear current budget connections and regenerate based on updated selections
+    DELETE FROM Budget_Connections WHERE connection_type = 'income' AND linked_id = new_income_id;
+    CALL `financial_planner`.`Create_Budget_Connections`('', 'income', idlist, percentlist);
+END

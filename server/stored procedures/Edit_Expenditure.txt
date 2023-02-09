@@ -1,0 +1,41 @@
+CREATE DEFINER=`admin`@`%` PROCEDURE `Edit_Expenditure`(
+	new_expenditure_id INT,
+	new_account_id INT,
+    new_recipient VARCHAR(50),
+    expenditure_date DATETIME,
+    new_total_amount DECIMAL,
+    new_budget_id INT
+)
+BEGIN
+	-- declare vars
+    DECLARE old_total_amount DECIMAL;
+    DECLARE old_budget_id INT;
+    DECLARE old_account_id INT;
+    
+	-- retrieve old expenditure destinations and amount
+    SELECT total_amount, budget_id, account_id
+		INTO old_total_amount, old_budget_id, old_account_id
+        FROM Expenditures WHERE expenditure_id = new_expenditure_id;
+	
+    -- update expenditure
+    UPDATE Expenditures SET
+		account_id = new_account_id,
+        recipient = new_recipient,
+        date = expenditure_date,
+        total_amount = new_total_amount,
+        budget_id = new_budget_id
+        WHERE expenditure_id = new_expenditure_id;
+        
+	-- update old budget and account
+    UPDATE Budgets SET
+		monthly_budget = monthly_budget + old_total_amount
+        WHERE budget_id = old_budget_id;
+    UPDATE Accounts SET
+		balance = balance + old_total_amount
+		WHERE account_id = old_account_id;
+        
+	-- subtract amount from new budget and account
+    UPDATE Budgets SET monthly_budget = monthly_budget - new_total_amount WHERE budget_id = new_budget_id;
+    UPDATE Accounts SET balance = balance - new_total_amount WHERE account_id = new_account_id;
+    
+END

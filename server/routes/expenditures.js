@@ -20,18 +20,20 @@ module.exports.addExpenditure = async(req, res) => {
   if(!budget_id) return res.status(400).json('Expenditure category Not Valid');
   if(!email) return res.status(400).json('Account Email Not Valid');
 
-  var sql = `INSERT INTO Expenditures(recipient, date, total_amount, account_id, budget_id, user_id) VALUES ('${recipient}', '${date}', '${total_amount}', '${account_id}', '${budget_id}',
-  (SELECT user_id FROM Users WHERE email = '${await email}'))`;
+  var sql = 'CALL `financial_planner`.`Create_Expenditure`(' + account_id + ', "' + recipient + '", "' + date +
+  '", ' + total_amount + ', ' + budget_id + ', "' + await email + '");';
+
+  console.log(sql);
 
   connection.query(sql, function (err, rows) {
     if (err) {
       //If error
-      res.status(400).json('Sorry!!Unable To Find');
+      res.status(400).json('Insertion Error');
       console.log('Error inserting : %s ', err);
       //console.log(res)
     } else {
       //If success
-      res.status(200).json('Expenditure Added Successfully!!');
+      res.status(200).json(rows);
     }
   });
 };
@@ -57,7 +59,7 @@ module.exports.updateExpenditure = async(req, res) => {
   let { account_id, recipient, date, total_amount, budget_id } = req.body;
   let email = getEmail(req.headers.authorization).then((email) => {return email;});
 
-  if(!recipient) return res.status(400).json('Expenditure Recepient Not Valid');
+  if(!recipient) return res.status(400).json('Expenditure Recipient Not Valid');
   if(!date) return res.status(400).json('Expenditure Date Not Valid');
   if(!total_amount) return res.status(400).json('Expenditure amount Not Valid');
   if(!account_id) return res.status(400).json('Expenditure account Not Valid');
@@ -65,17 +67,17 @@ module.exports.updateExpenditure = async(req, res) => {
   if(!expenditure_id) return res.status(400).json('Expenditure ID Not Valid');
   if(!email) return res.status(400).json('Account Email Not Valid');
 
-  var sql = `UPDATE Expenditures SET account_id = '${account_id}', recipient = '${recipient}', date = '${date}', total_amount = '${total_amount}', budget_id = '${budget_id}'
-  WHERE expenditure_id = '${expenditure_id}' AND user_id=(SELECT user_id FROM Users WHERE email = '${await email}')`;
+  var sql = 'CALL `financial_planner`.`Edit_Expenditure`(' + expenditure_id + ', ' + account_id + ', "' + recipient +
+  '", "' + date + '", ' + total_amount + ', ' + budget_id + ');';
 
   connection.query(sql, function (err, rows) {
     if (err) {
       //If error
-      res.status(400).json('Sorry!!Unable To Add');
-      console.log('Error inserting : %s ', err);
+      res.status(400).json('Edit Error');
+      console.log('Error editing : %s ', err);
     }
     //If success
-    else res.status(200).json('Expenditure updated Successfully!!');
+    else res.status(200).json(rows);
   });
 };
 
@@ -84,7 +86,7 @@ module.exports.deleteExpenditure = async(req, res) => {
   let email = getEmail(req.headers.authorization).then((email) => {return email;});
   if(!email) return res.status(400).json('Account Email Not Valid');
   if(!expenditure_id) return res.status(400).json('Expenditure ID Not Valid');
-  var sql = `DELETE FROM Expenditures WHERE expenditure_id = '${expenditure_id}' AND user_id=(SELECT user_id FROM Users WHERE email = '${await email}')`;
+  var sql = 'CALL `financial_planner`.`Delete_Expenditure`(' + expenditure_id + ');';
 
   connection.query(sql, function (err, rows) {
     if (err) {
