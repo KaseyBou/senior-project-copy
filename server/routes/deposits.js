@@ -10,7 +10,7 @@ const connection = mysql.createConnection({
 const {hashPassword, isPasswordCorrect, getEmail, validateEmail} = require('../helper-functions/functions')
 
 module.exports.addDeposit = async(req, res) => {
-  let {source, date, total_amount, account_id } = req.body;
+  let {source, date, total_amount, account_id, budget_id } = req.body;
   let email = getEmail(req.headers.authorization).then((email) => {return email;});
   if(!source) return res.status(400).json('Deposit Source Not Valid');
   if(!date) return res.status(400).json('Deposit Date Not Valid');
@@ -18,10 +18,8 @@ module.exports.addDeposit = async(req, res) => {
   if(!account_id) return res.status(400).json('Deposit account Not Valid');
   if(!email) return res.status(400).json('Account Email Not Valid');
 
-  var sql = `INSERT INTO Deposits(source, date, total_amount, account_id, user_id) 
-  VALUES ('${source}', '${date}', '${total_amount}', '${account_id}',
-   (SELECT user_id FROM Users WHERE email = '${await email}'))`;
-  //(SELECT user_id FROM Users WHERE email = '${await email}')'`;
+  var sql = 'CALL `financial_planner`.`Create_Deposit`(' + account_id + ', "' + source + '", "' + date + '", ' + total_amount +
+  ', ' + budget_id + ', "' + await email + '");';
 
   connection.query(sql, function (err, rows) {
     if (err) {
@@ -56,7 +54,7 @@ module.exports.getDeposit = async(req, res) => {
 module.exports.updateDeposit = async(req, res) => {
   deposit_id = req.params.deposit_id;
 
-  let { account_id, source, date, total_amount } = req.body;
+  let { account_id, source, date, total_amount, budget_id } = req.body;
   let email = getEmail(req.headers.authorization).then((email) => {return email;});
 
   if(!source) return res.status(400).json('Deposit Source Not Valid');
@@ -66,9 +64,8 @@ module.exports.updateDeposit = async(req, res) => {
   if(!deposit_id) return res.status(400).json('Deposit id Not Valid');
   if(!email) return res.status(400).json('Account Email Not Valid');
 
-  var sql = `UPDATE Deposits SET source = '${source}', account_id = '${account_id}', date = '${date}',
-   total_amount = '${total_amount}' WHERE deposit_id = '${deposit_id}'
-   AND user_id=(SELECT user_id FROM Users WHERE email = '${await email}')`;
+  var sql = 'CALL `financial_planner`.`Edit_Deposit`(' + deposit_id + ', ' + account_id + ', "' + source + '", "' + date +
+  '", ' + total_amount + ', ' + budget_id + ');';
 
   connection.query(sql, function (err, rows) {
     if (err) {
@@ -86,8 +83,7 @@ module.exports.deleteDeposit = async(req, res) => {
   let email = getEmail(req.headers.authorization).then((email) => {return email;});
   if(!email) return res.status(400).json('Account Email Not Valid');
 
-  var sql = `DELETE FROM Deposits WHERE deposit_id = '${deposit_id}'
-  AND user_id=(SELECT user_id FROM Users WHERE email = '${ await email}')`;
+  var sql = 'CALL `financial_planner`.`Delete_Deposit`(' + deposit_id + ');';
 
   connection.query(sql, function (err, rows) {
     if (err) {

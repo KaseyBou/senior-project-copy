@@ -26,7 +26,7 @@ const Income = () => {
     const {postAccount, postDeleteAccount, getAccounts} = useAccount("BankAccount")
 
     // budget hook instance
-    const {postBudget, getCategories, editCategory, deleteCategory} = useBudget("Budget");
+    const {postBudget, getCategories, editCategory, deleteCategory, getCategoriesByIncome} = useBudget("Budget");
 
     // income state
     const [incomes, setIncomes] = useState(null);
@@ -108,9 +108,23 @@ const Income = () => {
         setShowEdit(false);
         fetchIncomeList();
     }
-    const handleShowEdit = (id) => {
+    const handleShowEdit = async(id) => {
         setShowEdit(true);
         localStorage.setItem("editing", id);
+
+        // load list of currently connected budgets
+        getCategoriesByIncome(id).then((data) => {
+            // get array of checkboxes and percentage inputs
+            // let budgetCheckboxes = document.getElementsByClassName("budgetCheckbox");
+            // let budgetPercentages = document.getElementsByClassName("budgetPercentage");
+            console.log(data.data);
+            for(let category of data.data){
+                console.log(category.budget_ID);
+                console.log(category.conn_percentage);
+                document.getElementById('budget_' + category.budget_ID).checked = true;
+                document.getElementById('percentage_' + category.budget_ID).value = category.conn_percentage;
+            }
+        })
 
         // load existing data into form
         getIncomes().then((data) => {
@@ -274,7 +288,16 @@ const Income = () => {
         // make sure no syntax errors are present and nothing is blank
         if(accountEdit && grossPayEdit && payDateEdit && payFrequencyEdit
         && !accountEditWarning && !grossPayEditWarning && !payFrequencyEditWarning && !payDateEditWarning){
-            editIncome(localStorage.getItem("editing"), accountEdit, grossPayEdit, payDateEdit, payFrequencyEdit);
+            let budgetDict = {};
+            let budgetCheckboxes = document.getElementsByClassName("budgetCheckbox");
+            let budgetPercentages = document.getElementsByClassName("budgetPercentage");
+            for(var i = 0; i < budgetCheckboxes.length; i++){
+                if(budgetCheckboxes[i].checked){
+                    budgetDict[budgetCheckboxes[i].id] = budgetPercentages[i].value;
+                }
+            }
+
+            editIncome(localStorage.getItem("editing"), accountEdit, grossPayEdit, payDateEdit, payFrequencyEdit, budgetDict);
             handleCloseEdit();
 
             // clear form data from state
@@ -330,7 +353,11 @@ const Income = () => {
                         selectFields={[accountList]}
                         onChange={editInputHandler}
                         submitAction={changeIncome}
-                    />
+                    >
+                        <table>
+                            {budgetList}
+                        </table>
+                    </CustomForm>
                 </Modal>
 
                 <Modal buttonText="Confirm Deletion" show={showDelete} handleShow={handleShowDelete} handleClose={handleCloseDelete}>

@@ -108,3 +108,18 @@ module.exports.deleteBudget = async(req, res) => {
     res.status(200).json('Income deleted Successfully!!')
   });
 }
+
+module.exports.getBudgetsByIncome = async(req, res) => {
+  income_id = req.params.income_id;
+  let email = getEmail(req.headers.authorization).then((email) => {return email;});
+
+  var sql = `SELECT budget_ID, conn_percentage FROM Budget_Connections WHERE connection_type = 'income' AND linked_id = ${income_id};`;
+  connection.query(sql, function(err, rows){
+    if(err){
+      res.status(400).json('Retrieval error');
+      console.log('Retrieval error: %s', err)
+    } else {
+      res.status(200).json(rows);
+    }
+  })
+}

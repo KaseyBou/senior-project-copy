@@ -11,6 +11,7 @@ import CustomForm from '../../components/CustomForm/CustomForm';
 import SearchBar from '../../components/SearchBar/SearchBar';
 import useDeposits from '../../hooks/useDeposits.tsx';
 import useAccount from '../../hooks/useAccount.tsx';
+import useBudget from '../../hooks/useBudget.tsx';
 
 const Deposit = () => {
 
@@ -25,11 +26,17 @@ const Deposit = () => {
 
     // account hook instance
     const {getAccounts} = useAccount("BankAccount")
+
+    const { getCategories } = useBudget("Budget");
+
     // list of accounts for form
     const [accountSelectList, setSelectAccountList] = useState(null);
 
     //list of accounts
     const [accountList, setAccountList] = useState([]);
+
+    // list of budgets
+    const [categoryList, setCategorySelectList] = useState(null);
 
     //add deposit values & warnings
     //Values
@@ -37,13 +44,13 @@ const Deposit = () => {
     const [addAccount, setAddAccount] = useState('');
     const [addDepositDate, setAddDepositDate] = useState('');
     const [addAmount, setAddAmount] = useState('');
-    const [confirmAddAmount, setConfirmAddAmount] = useState('');
+    const [addBudget, setAddBudget] = useState('');
     //Warnings
     const [addSourceWarning, setAddSourceWarning] = useState('');
     const [addAccountWarning, setAddAccountWarning] = useState('');
     const [addDepositDateWarning, setAddDepositDateWarning] = useState('');
     const [addAmountWarning, setAddAmountWarning] = useState('');
-    const [confirmAddAmountWarning, setConfirmAddAmountWarning] = useState('');
+    const [addBudgetWarning, setAddBudgetWarning] = useState('');
 
     //edit deposit values & warnings
     //Values
@@ -51,13 +58,13 @@ const Deposit = () => {
     const [editAccount, setEditAccount] = useState('');
     const [editDepositDate, setEditDepositDate] = useState('');
     const [editAmount, setEditAmount] = useState('');
-    const [confirmEditAmount, setConfirmEditAmount] = useState('');
+    const [editBudget, setEditBudget] = useState('');
     //Warnings
     const [editSourceWarning, setEditSourceWarning] = useState('');
     const [editAccountWarning, setEditAccountWarning] = useState('');
     const [editDepositDateWarning, setEditDepositDateWarning] = useState('');
     const [editAmountWarning, setEditAmountWarning] = useState('');
-    const [confirmEditAmountWarning, setConfirmEditAmountWarning] = useState('');
+    const [editBudgetWarning, setEditBudgetWarning] = useState('');
 
     //password values warning
     const [userPassword, setUserPassword] = useState('');
@@ -114,6 +121,18 @@ const Deposit = () => {
 
         }).then(fetchDeposits())
 
+        //get budget categories
+        getCategories().then((categories) => {
+            setCategorySelectList(categories.data.map((category) => {
+                return <option value={category.budget_ID}>{category.category_name}</option>
+            }))
+
+            //setting category list **Push is not the correct method for adding to useState array
+            categories.data.map((category) => {
+                //return setAccountList(accountList => [...accountList, {id: account.account_id, name: account.account_name}]);
+                return categoryList.push([category.budget_ID, category.category_name])
+            })
+        });
         
     },[])
 
@@ -132,6 +151,7 @@ const Deposit = () => {
                     document.getElementById("editDepositAccount").value = deposit.account_id;
                     document.getElementById("editDepositDate").value = deposit.date.toString().substring(0, 10);
                     document.getElementById("editDepositAmount").value = deposit.total_amount;
+                    document.getElementById("editBudget").value = deposit.budget_id;
                 }
             }
             // run validation to clear error messages
@@ -155,13 +175,12 @@ const Deposit = () => {
         setAddAccount(document.getElementById('addDepositAccount').value);
         setAddDepositDate(document.getElementById('addDepositDate').value);
         setAddAmount(document.getElementById('addDepositAmount').value);
-
+        setAddBudget(document.getElementById('addBudget').value);
         if(addAmount < 1 && !addAmount) {
             setAddAmountWarning("Amount must be greater than 0")
         } else {
             setAddAmountWarning("")
         }
-        setConfirmAddAmount(document.getElementById('addConfirmAmount').value);
 
     }
 
@@ -170,12 +189,12 @@ const Deposit = () => {
         setEditAccount(document.getElementById('editDepositAccount').value);
         setEditDepositDate(document.getElementById('editDepositDate').value);
         setEditAmount(document.getElementById('editDepositAmount').value);
+        setEditBudget(document.getElementById('editBudget').value);
         if(editAmount < 1) {
             setEditAmountWarning("Amount must be greater than 0")
         } else {
             setEditAmountWarning("")
         }
-        setConfirmEditAmount(document.getElementById('editConfirmAmount').value);
     }
 
     const passwordInputHandler = () => {
@@ -185,14 +204,13 @@ const Deposit = () => {
     //  add deposit
     const addDeposit = () => {
         
-        if(addSource && addAccount && addDepositDate && addAmount && !addSourceWarning && !addAccountWarning && !addDepositDateWarning && !addAmountWarning && addAmount === confirmAddAmount) {
-            postDeposit(addSource, addDepositDate, addAmount, addAccount);
+        if(addSource && addAccount && addDepositDate && addAmount && !addSourceWarning && !addAccountWarning && !addDepositDateWarning && !addAmountWarning) {
+            postDeposit(addSource, addDepositDate, addAmount, addAccount, addBudget);
             handleCloseAdd();
             setAddSource(null)
             setAddAccount(null);
             setAddDepositDate(null);
             setAddAmount(null);
-            setConfirmAddAmount(null);
             fetchDeposits();
         }
     }
@@ -200,8 +218,8 @@ const Deposit = () => {
     // post update
     const changeDeposit = () => {
 
-        if(editSource && editAccount && editDepositDate && editAmount && !editSourceWarning && !editAccountWarning && !editDepositDateWarning && !editAmountWarning && editAmount === confirmEditAmount) {
-            editDeposit(localStorage.getItem("editing"),  editAccount, editSource, editDepositDate, editAmount);
+        if(editSource && editAccount && editDepositDate && editAmount && !editSourceWarning && !editAccountWarning && !editDepositDateWarning && !editAmountWarning) {
+            editDeposit(localStorage.getItem("editing"),  editAccount, editSource, editDepositDate, editAmount, editBudget);
             handleCloseEdit();
             fetchDeposits();
         }
@@ -226,12 +244,12 @@ const Deposit = () => {
                 <Modal buttonText="Add Deposit" show={showAdd} handleShow={handleShowAdd} handleClose={handleCloseAdd}>
                     <CustomForm
                         title="Add Deposit"
-                        fields={['Source', 'Account', 'Deposit Date', 'Amount', 'Confirm Amount']}
-                        fieldIDs={['addSource','addDepositAccount', 'addDepositDate', 'addDepositAmount', 'addConfirmAmount']}
-                        fieldTypes={['text', 'select', 'date', 'number', 'number']}
-                        warning={[addSourceWarning, addAccountWarning, addDepositDateWarning, addAmountWarning, confirmAddAmountWarning]}
-                        warningIDs={['addSourceWarning', 'addDepositAccountWarning', 'addDepositDateWarning', 'addAmountWarning', 'confirmAddAmountWarning']}
-                        selectFields={[accountSelectList]}
+                        fields={['Source', 'Account', 'Deposit Date', 'Amount', 'Budget Category']}
+                        fieldIDs={['addSource','addDepositAccount', 'addDepositDate', 'addDepositAmount', 'addBudget']}
+                        fieldTypes={['text', 'select', 'date', 'number', 'select']}
+                        warning={[addSourceWarning, addAccountWarning, addDepositDateWarning, addAmountWarning, addBudgetWarning]}
+                        warningIDs={['addSourceWarning', 'addDepositAccountWarning', 'addDepositDateWarning', 'addAmountWarning', 'addBudgetWarning']}
+                        selectFields={[accountSelectList, categoryList]}
                         onChange={addInputHandler}
                         submitAction={addDeposit}
                     />
@@ -241,12 +259,12 @@ const Deposit = () => {
                 <Modal buttonText="Confirm Changes" show={showEdit} handleShow={handleShowEdit} handleClose={handleCloseEdit}>
                     <CustomForm
                         title="Edit Deposit"
-                        fields={['Source', 'Account', 'Deposit Date', 'Amount', 'Confirm Amount']}
-                        fieldIDs={['editSource', 'editDepositAccount', 'editDepositDate', 'editDepositAmount', 'editConfirmAmount']}
-                        fieldTypes={['text', 'select', 'date', 'number', 'number']}
-                        warning={[editSourceWarning, editAccountWarning, editDepositDateWarning, editAmountWarning, confirmEditAmountWarning]}
-                        warningIDs={['editSourceWarning', 'editDepositAccountWarning', 'editDepositDateWarning', 'editAmountWarning', 'confirmEditAmountWarning']}
-                        selectFields={[accountSelectList]}
+                        fields={['Source', 'Account', 'Deposit Date', 'Amount', 'Budget Category']}
+                        fieldIDs={['editSource', 'editDepositAccount', 'editDepositDate', 'editDepositAmount', 'editBudget']}
+                        fieldTypes={['text', 'select', 'date', 'number', 'select']}
+                        warning={[editSourceWarning, editAccountWarning, editDepositDateWarning, editAmountWarning, editBudgetWarning]}
+                        warningIDs={['editSourceWarning', 'editDepositAccountWarning', 'editDepositDateWarning', 'editAmountWarning', 'editBudgetWarning']}
+                        selectFields={[accountSelectList, categoryList]}
                         onChange={editInputHandler}
                         submitAction={changeDeposit}
                     />
