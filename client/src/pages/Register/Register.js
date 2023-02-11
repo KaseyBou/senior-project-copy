@@ -97,22 +97,27 @@ const Register = () => {
             
             postRegister(firstName, lastName, email, password, phone)
 
-            if(data.status === 200) {
-                home();
-            } 
-            if(data.response.status === 460){
-                setEmailWarning("Email already in use");
-            }  else {
-                setEmailWarning("");
-            }
-
-            if (data.response.status === 461) {
-                setPhoneWarning("Phone # already in use")
-            } else {
-                setPhoneWarning("")
-            }
         } 
     }
+
+    useEffect(() => {
+        
+        if(data.status === 200) {
+            home();
+        } 
+        if(data.response.status === 460){
+            setEmailWarning("Email already in use");
+        }  else {
+            setEmailWarning("");
+        }
+
+        if (data.response.status === 461) {
+            setPhoneWarning("Phone # already in use")
+        } else {
+            setPhoneWarning("")
+        }
+
+    }, [Register])
 
 
     //returning JSX
