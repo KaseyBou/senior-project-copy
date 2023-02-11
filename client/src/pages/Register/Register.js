@@ -56,7 +56,7 @@ const Register = () => {
         inputHandler()
     })
     //Register
-    const Register = async() =>{
+    const Register = () =>{
         
         if(firstName.length < 2 ) {
             setFirstNameWarning('Please Enter First Name')
@@ -101,17 +101,17 @@ const Register = () => {
     }
 
     useEffect(() => {
-        
+
         if(data.status === 200) {
             home();
         } 
-        if(data.response.status === 460){
+        if(data.status === 460){
             setEmailWarning("Email already in use");
         }  else {
             setEmailWarning("");
         }
 
-        if (data.response.status === 461) {
+        if (data.status === 461) {
             setPhoneWarning("Phone # already in use")
         } else {
             setPhoneWarning("")
