@@ -1,0 +1,26 @@
+CREATE DEFINER=`admin`@`%` PROCEDURE `Delete_Deposit`(
+	new_deposit_id INT
+)
+BEGIN
+	-- declare vars
+    DECLARE old_total_amount DECIMAL;
+    DECLARE old_budget_id INT;
+    DECLARE old_account_id INT;
+    
+	-- retrieve old expenditure destinations and amount
+    SELECT total_amount, budget_id, account_id
+		INTO old_total_amount, old_budget_id, old_account_id
+        FROM Deposits WHERE deposit_id = new_deposit_id;
+        
+	-- delete expenditure
+    DELETE FROM Deposits WHERE deposit_id = new_deposit_id;
+    
+    -- update account and budget by removing expenditure
+    UPDATE Budgets SET
+		monthly_budget = monthly_budget - old_total_amount
+        WHERE budget_id = old_budget_id;
+    UPDATE Accounts SET
+		balance = balance - old_total_amount
+		WHERE account_id = old_account_id;
+    
+END

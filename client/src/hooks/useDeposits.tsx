@@ -18,7 +18,7 @@ const useDeposits = (urlSegment: string) => {
   }
 
   //add a deposit
-  const postDeposit = async (source: string, date: Date, total_amount: number, account_id: number
+  const postDeposit = async (source: string, date: Date, total_amount: number, account_id: number, budget_id: number
   ) => {
     try {
       console.log(source, date, total_amount, account_id)
@@ -29,6 +29,7 @@ const useDeposits = (urlSegment: string) => {
         date: `${date}`,
         total_amount: `${total_amount}`,
         account_id: `${account_id}`,
+        budget_id: `${budget_id}`
       }, tokenHeader);
       setData(response);
     } catch (error) {
@@ -58,7 +59,7 @@ const useDeposits = (urlSegment: string) => {
 
   //edit deposit
 
-  const editDeposit = async (deposit_id: number, account_id: number, deposit_source: string, date: Date, total_amount: number
+  const editDeposit = async (deposit_id: number, account_id: number, deposit_source: string, date: Date, total_amount: number, budget_id: number
   ) => {
     try {
       setLoading(true);
@@ -70,6 +71,7 @@ const useDeposits = (urlSegment: string) => {
           source: `${deposit_source}`,
           date: `${date}`,
           total_amount: `${total_amount}`,
+          budget_id: `${budget_id}`
         }, tokenHeader
       );
       setData(response);
