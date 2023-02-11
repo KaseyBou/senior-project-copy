@@ -38,12 +38,17 @@ const Login = () => {
     //Login
     const Login = () => {
 
-        postLogin(email, password);
+        if(email.length !== 0 && password.length !== 0) {
+            postLogin(email, password);
+        } else {
+
+        }
         
     } 
 
     useEffect(() => {
         
+        console.log(data)
         if(data.status === 200) {
 
             if(cookies.get("TOKEN") !== undefined) {
@@ -52,8 +57,10 @@ const Login = () => {
     
             } 
             else {
-                setEmailWarning("Incorrect Email or Password");
+                setPasswordWarning("Incorrect Email or Password");
             }
+        } else if(data.status === 400)  {
+            setEmailWarning("Incorrect Email or Password");
         }
 
     }, [Login])

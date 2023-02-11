@@ -133,6 +133,7 @@ const usePost = (urlSegment : string) => {
            // return true;
         }catch(error) {
             setError(true);
+            setData(error.response)
             //console.log(error);
             //return false;
         } finally {
