@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import Cookies from "universal-cookie";
 import {useNavigate} from "react-router-dom";
+import CustomForm from '../../components/CustomForm/CustomForm';
 
 //import Loading from '../Loading/Loading';
 import './Report.css';
-//import { useNavigate } from 'react-router-dom';
 
 const Report = () => {
 
@@ -20,11 +20,30 @@ const Report = () => {
         }
 
     },[])
+
+    const inputHandler = () => {
+
+    }
+
+    const getReport = () => {
+
+    }
+
+
     //returning JSX
     return (
         <>
-            <h1>Report</h1>
-
+            <CustomForm
+                title='Register'
+                fields={["Report Format", "Report Type", "Budget Categories", "Start Date", "End Date"]}
+                fieldIDs={['reportFormat', 'reportType', 'reportCategories', 'startDate', 'endDate']}
+                warning={['', '', '']}
+                warningIDs={['', '', '']}
+                fieldTypes={['select', 'select', 'select', 'date', 'date']}
+                selectFields={[]}
+                onChange={inputHandler}
+                submitAction={getReport}
+            ></CustomForm>
         </>
     );
 }

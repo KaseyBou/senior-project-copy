@@ -3,7 +3,7 @@ import Loading from '../../components/Loading/Loading.tsx';
 import './Login.css';
 import { useNavigate } from 'react-router-dom';
 import CustomForm from '../../components/CustomForm/CustomForm';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import usePost from '../../hooks/useUserAccount.tsx';
 import Cookies from 'universal-cookie';
 const cookies = new Cookies();
@@ -36,22 +36,27 @@ const Login = () => {
     }
 
     //Login
-    const Login = async() => {
+    const Login = () => {
 
         postLogin(email, password);
         
+    } 
+
+    useEffect(() => {
+        
         if(data.status === 200) {
 
-            if(cookies.get("TOKEN").length !== 0) {
+            if(cookies.get("TOKEN") !== undefined) {
             
                 dashboard();
-
+    
+            } 
+            else {
+                setEmailWarning("Incorrect Email or Password");
             }
-        } else {
-            setEmailWarning("Incorrect Email or Password");
         }
 
-    }
+    }, [Login])
 
     //returning JSX
     return (
