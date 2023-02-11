@@ -44,8 +44,8 @@ const usePost = (urlSegment : string) => {
 
         }catch(error) {
             //setError(true);
-            setData(error)
-            console.log(error);
+            setData(error.response)
+            console.log(error.response);
 
         } finally {
 

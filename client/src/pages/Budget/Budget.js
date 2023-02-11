@@ -14,6 +14,7 @@ import InformationDisplay from '../../components/InformationDisplay/InformationD
 import useBudget from '../../hooks/useBudget.tsx';
 import useIncome from '../../hooks/useIncome.tsx';
 import useBills from '../../hooks/useBills.tsx';
+import PieChart from '../../graphing/PieChart';
 
 const Budget = () => {
     // instance of budget hook
@@ -174,7 +175,8 @@ const Budget = () => {
 
     },[])
 
-    // on render, get list of incomes
+    const pieChartValues = [];
+        // on render, get list of incomes
     const fetchIncomeList = () => {
         getCategories().then((data) => {
             setCategories(data.data.map((category) => {
@@ -190,6 +192,7 @@ const Budget = () => {
                 />
                 )
             }));
+
         })
     }
     useEffect(fetchIncomeList, [])
@@ -203,6 +206,7 @@ const Budget = () => {
     //returning JSX
     return (
         <>
+            <PieChart values={[1,2,3]}/>
             <div id="CategoryList">
                 {categories}
             </div>
