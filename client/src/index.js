@@ -21,6 +21,7 @@ import Account from './pages/Account/Account'
 import Deposits from './pages/Deposits/Deposits'
 import BankAccounts from './pages/BankAccounts/BankAccounts'
 import Bills from './pages/Bills/Bills';
+import Verification from './pages/Verification/Verification';
 
 //Navigation Routing for Website
 ReactDOM.render(
@@ -41,6 +42,8 @@ ReactDOM.render(
             <Route path="/Register" element={<Register />}/>
             <Route path="/Login" element={<Login />}/>
             <Route path="/Account" element={<Account />}/>
+            <Route path="/Verify/:verificationString" element={<Verification/>}/>
+            <Route path='*' element={<p>Route Not Found</p>} />
           </Route>
         </Routes>
     </BrowserRouter>

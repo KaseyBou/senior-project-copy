@@ -39,6 +39,7 @@ const Login = () => {
     const Login = () => {
 
         if(email.length !== 0 && password.length !== 0) {
+
             postLogin(email, password);
         } else {
 
@@ -48,7 +49,7 @@ const Login = () => {
 
     useEffect(() => {
         
-        console.log(data)
+        console.log(data.status)
         if(data.status === 200) {
 
             if(cookies.get("TOKEN") !== undefined) {
@@ -59,11 +60,15 @@ const Login = () => {
             else {
                 setPasswordWarning("Incorrect Email or Password");
             }
-        } else if(data.status === 400)  {
-            setEmailWarning("Incorrect Email or Password");
+        } else if(data.status === 467) {
+
+            setPasswordWarning("Email Not Verified");
+
+        }else if(data.status === 400)  {
+            setPasswordWarning("Incorrect Email or Password");
         }
 
-    }, [Login])
+    }, [data])
 
     //returning JSX
     return (
