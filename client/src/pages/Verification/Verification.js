@@ -14,9 +14,6 @@ const Account = () => {
     //calling postRegister function
     const {getEmailVerification, error, loading} = usePost('Verify');
     const { verificationString } = useParams();
-    console.log(verificationString)
-
-    console.log(verificationString)
 
     const home = () => {
         navigate('/');
@@ -25,7 +22,7 @@ const Account = () => {
 
     useEffect(() => {
 
-        getEmailVerification('GAACAAEA')
+        getEmailVerification(verificationString)
         
     },[])
 
@@ -34,7 +31,7 @@ const Account = () => {
     }
 
     if(error) {
-        return <p>There was an error</p>
+        return <h1>Not Found </h1>
 
     }
 
