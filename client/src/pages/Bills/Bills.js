@@ -14,6 +14,8 @@ import useBills from '../../hooks/useBills.tsx';
 import useAccount from '../../hooks/useAccount.tsx';
 import useBudget from '../../hooks/useBudget.tsx';
 
+import setRowColor from '../../utils/setRowColor';
+
 const Bills = () => {
 
     const cookies = new Cookies();
@@ -74,6 +76,9 @@ const Bills = () => {
     },[])
 
     const fetchBills = () => {
+
+        //Data Row Column Color
+        setRowColor({color: "#68AD66"})
 
         getBills().then((data) => {
             
