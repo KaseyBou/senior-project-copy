@@ -6,14 +6,15 @@ import usePost from '../../hooks/useUserAccount.tsx';
 import Button from 'react-bootstrap/Button';
 import Loading from '../../components/Loading/Loading.tsx'
 
-import { useSearchParams} from 'react-router-dom';
+import { useParams} from 'react-router-dom';
 
 const Account = () => {
 
     const navigate = useNavigate();
     //calling postRegister function
     const {getEmailVerification, error, loading} = usePost('Verify');
-    const { verificationString } = useSearchParams();
+    const { verificationString } = useParams();
+    console.log(verificationString)
 
     console.log(verificationString)
 
