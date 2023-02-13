@@ -36,7 +36,8 @@ const usePost = (urlSegment : string) => {
             password_salt: ``,
             phone:`${phone}`,
             profile_image: null,
-            is_admin: 0
+            is_admin: 0,
+            is_verified: 0
             })
             console.log(response)
             setData(response);
@@ -129,12 +130,12 @@ const usePost = (urlSegment : string) => {
                 return response;
             })
             setData(response);
-            //console.log(response)
+            console.log(response)
            // return true;
         }catch(error) {
             setError(true);
             setData(error.response)
-            //console.log(error);
+            console.log(error);
             //return false;
         } finally {
 
@@ -164,8 +165,27 @@ const usePost = (urlSegment : string) => {
 
         }
     }
+
+        // get account details
+        const getEmailVerification = async (verificationString: string) => {
+            try {
+                setLoading(true);
+                setError(false);
+                const response = await axios.get(`${baseURL}${urlSegment}/${verificationString}`)
+                setData(response);
+                return response;
+            }catch(error) {
+                setError(true);
+                //console.log(error);
     
-    return {postRegister, postLogin, editUser, deleteUser, getAccountDetails, data, loading, error, success}
+            } finally {
+    
+                setLoading(false);
+    
+            }
+        }
+    
+    return {postRegister, postLogin, editUser, deleteUser, getAccountDetails, getEmailVerification, data, loading, error, success}
 
 }
 

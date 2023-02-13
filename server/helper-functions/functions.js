@@ -57,4 +57,17 @@ const getEmail = async(token) => {
     return decodedToken.userEmail;
 }
 
-module.exports = {hashPassword, isPasswordCorrect, passwordValidation, validateEmail, validatePhone, getEmail}
+const generateString = () => {
+
+    let result = '';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const charactersLength = 8;
+    let counter = 0;
+    while (counter < charactersLength) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+      counter += 1;
+    }
+    return result;
+}
+
+module.exports = {hashPassword, isPasswordCorrect, passwordValidation, validateEmail, validatePhone, getEmail, generateString}
