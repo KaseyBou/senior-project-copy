@@ -69,10 +69,9 @@ module.exports.registerUser = (req,res) => {
 //email verification for user
 module.exports.verifyUser = (req, res) => {
 
-  const {verification_string} = req.params.verificationString
-  console.log(req.params.verificationString)
-  //var sql = `SELECT * FROM Users WHERE verification_string = '${verification_string}'`;
-  var sql = `SELECT user_id, email FROM Users WHERE is_verified = 0 AND verification_string = 'GAACAAEA'`;
+  const verification_string = req.params.verificationString
+
+  var sql = `SELECT user_id, email FROM Users WHERE is_verified = 0 AND verification_string = '${verification_string}'`;
 
     connection.query(sql, function(err, rows)
     {

@@ -17,7 +17,7 @@ const sendVerificationEmail = (Email, verificationString) => {
         from: sender,
         to: Email,
         subject: "Email Confirmation",
-        html: `Confirm <a href=http://localhost:3000/Verify/:${verificationString}> here </a> to verify your email.`
+        html: `Confirm <a href=http://localhost:3000/Verify/${verificationString}> here </a> to verify your email.`
     };
 
     Transport.sendMail(emailOptions, function(error, response) {
