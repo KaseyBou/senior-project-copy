@@ -1,0 +1,4 @@
+CREATE EVENT IF NOT EXISTS daily_snapshot
+	ON SCHEDULE EVERY 1 DAY
+	STARTS '2023-2-14 00:00:00'
+    DO CALL `financial_planner`.`Take_Snapshot`();
