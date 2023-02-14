@@ -61,7 +61,7 @@ const generateString = () => {
 
     let result = '';
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    const charactersLength = 8;
+    const charactersLength = 255;
     let counter = 0;
     while (counter < charactersLength) {
       result += characters.charAt(Math.floor(Math.random() * charactersLength));
