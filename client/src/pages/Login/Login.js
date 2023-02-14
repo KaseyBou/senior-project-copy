@@ -18,6 +18,10 @@ const Login = () => {
         navigate("/Dashboard");
     };
 
+    const accountRecovery = () => {
+        navigate("/Recovery");
+    };
+
     //state variables
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -83,6 +87,7 @@ const Login = () => {
                 onChange={inputHandler}
                 submitAction={Login}
             ></CustomForm>
+            <a href={accountRecovery}>Forgot Password</a>
         </>
     );
     
