@@ -135,6 +135,9 @@ const Report = () => {
                 submitAction={getReport}
             ></CustomForm>
 
+            <table>
+                
+            </table>
         </>
     );
 }
