@@ -1,0 +1,58 @@
+CREATE DEFINER=`admin`@`%` PROCEDURE `Take_Snapshot`()
+BEGIN
+	-- variables to be pulled into
+    DECLARE my_account_id INT;
+    DECLARE my_balance DECIMAL;
+    DECLARE my_user_id INT;
+    
+    DECLARE my_budget_id INT;
+    DECLARE my_total_amount DECIMAL;
+    
+    -- other vars
+	DECLARE snapshotDate DATETIME;
+    DECLARE loopDone BINARY;
+    
+	-- cursors for looping through tables
+	DECLARE accountCurs CURSOR FOR SELECT account_id, balance, user_id FROM Accounts;
+    DECLARE budgetCurs CURSOR FOR SELECT budget_ID, monthly_budget, user_id FROM Budgets;
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET loopDone = 1;
+    
+    -- retrieve current date
+    SET snapshotDate = now();
+    
+    -- loop through accounts table
+    OPEN accountCurs;
+    SET loopDone = 0;
+    REPEAT
+        -- get next entry
+        FETCH accountCurs INTO my_account_id, my_balance, my_user_id;
+        
+        -- take snapshot of entry
+        IF loopDone = 0 THEN
+			INSERT INTO Balances (account_id, balance, date, user_id)
+				VALUES (my_account_id, my_balance, snapshotDate, my_user_id);
+		END IF;
+        
+	UNTIL loopDone END REPEAT;
+    CLOSE accountCurs;
+    
+    -- loop through budgets table
+    OPEN budgetCurs;
+    SET loopDone = 0;
+    REPEAT
+		-- get next entry
+        FETCH budgetCurs INTO my_budget_id, my_total_amount, my_user_id;
+        
+        -- take snapshot of entry
+        IF loopDone = 0 THEN
+			INSERT INTO Budget_Balances (budget_id, balance, date, user_id)
+				VALUES (my_budget_id, my_total_amount, snapshotDate, my_user_id);
+		END IF;
+            
+	UNTIL loopDone END REPEAT;
+    CLOSE budgetCurs;
+    
+    -- return success message
+    SELECT 'OK';
+    
+END
