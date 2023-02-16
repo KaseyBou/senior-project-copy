@@ -1,5 +1,3 @@
-const functions = require("./helper-functions/functions.js")
-
 const express = require("express");
 
 const PORT = process.env.PORT || 3001;
@@ -30,7 +28,7 @@ const connection = mysql.createConnection({
 //functions from routes
 const {insertIncome, getIncomes, updateIncome, deleteIncome} = require('./routes/income');
 const { addBill, getBills, updateBill, deleteBill } = require("./routes/bills.js");
-const {userLogin, deleteUser, editUser, registerUser, getAccountDetails, verifyUser } = require('./routes/user');
+const {userLogin, deleteUser, editUser, registerUser, getAccountDetails, verifyUser, recoverUser, passwordReset } = require('./routes/user');
 const {addAccount, editAccount, deleteAccount, getAccounts} = require('./routes/bankAccount');
 const {logError} = require('./routes/errorLog');
 const { addDeposit, getDeposit, updateDeposit, deleteDeposit } = require("./routes/deposits");
@@ -50,10 +48,16 @@ app.post('/DeleteUser',  auth, deleteUser);
 
 app.post('/Login', userLogin);
 
-app.get('/Verify/:verificationString', verifyUser);
-
 //get user
 app.get('/User',  auth, getAccountDetails);
+
+//USER ACCOUNT VERIFICATION & RECOVERY *********************************************************************
+
+app.post('/Recover', recoverUser);
+
+app.get('/Verify/:verificationString', verifyUser);
+
+app.post('/Reset', passwordReset);
 
 // BANK ACCOUNT ********************************************************************************************
 

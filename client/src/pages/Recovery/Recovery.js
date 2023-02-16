@@ -23,7 +23,7 @@ const Recovery = () => {
     const [emailWarning, setEmailWarning] = useState('');
 
     //calling postLogin function
-    const { postLogin, data, error, loading } = usePost('Login');
+    const { postRecover, data, error, loading } = usePost('Recover');
 
     //handles updates to input's
     const inputHandler = () =>{
@@ -36,16 +36,18 @@ const Recovery = () => {
 
         if(email.length !== 0) {
 
-            //postLogin(email, password);
-        } else {
-
-        }
+            postRecover(email);
+        } 
         
     } 
 
     useEffect(() => {
         
-        console.log(data.status)
+        if(data.status === 200) {
+            setEmailWarning("Recovery Email Sent")
+        } else if (data.status === 400) {
+            setEmailWarning("Email Not Found")
+        }
 
     }, [data])
 

@@ -11,7 +11,7 @@ const connection = mysql.createConnection({
 
 const {hashPassword, isPasswordCorrect, getEmail, passwordValidation, validateEmail, validatePhone, generateString} = require('../helper-functions/functions');
 
-const {sendVerificationEmail} = require('../helper-functions/nodemailer');
+const {sendVerificationEmail, sendRecoveryEmail} = require('../helper-functions/nodemailer');
 //---------------User Posts------------------------------------------------
 
 //register user
@@ -293,3 +293,91 @@ module.exports.getAccountDetails = async(req, res) => {
       res.status(200).json(rows)
     });
 }
+
+//email verification for user
+module.exports.recoverUser = (req, res) => {
+
+  const {email} = req.body
+
+  var sql = `SELECT user_id, email FROM Users WHERE email = '${email}'`;
+
+    connection.query(sql, function(err, rows)
+    {
+
+        if (err){
+          //If error
+          res.status(468).json('Email Not Found');
+          console.log("Error retrieving : %s ",err );
+        }
+        else {
+          //If success
+
+          //   create JWT token
+          const token = jwt.sign(
+            {
+              userEmail: email,
+            },
+            "RANDOM-TOKEN"
+          );
+
+          console.log(token)
+          var sql = `Update Users SET verification_string = '${token}' WHERE email = '${email}'`;
+
+          connection.query(sql, function(err, rows)
+          {
+      
+              if (err){
+                //If error
+                res.status(400).json('Unable to Verify');
+                console.log("Error retrieving : %s ",err );
+              }
+              else {
+                //If success
+      
+                sendRecoveryEmail(email, token);
+                res.status(200).json(rows) 
+              }
+          });
+
+        }
+    });
+}
+
+//reset password
+module.exports.passwordReset = async(req,res) => {
+  
+    let {password, verification_string} = req.body;
+
+    if(!passwordValidation(password)) return res.status(462).json('Password does not meet requirements');
+    let returnData = hashPassword(password)
+    salt = returnData[0];
+    hash = returnData[1];
+
+    //   create JWT token
+    const token = jwt.sign(
+      {
+        userEmail: email,
+      },
+      "RANDOM-TOKEN"
+    );
+
+    var sql = `Update Users SET password = '${hash}', password_salt = '${salt}', verification_string = '${token}' WHERE verification_string = '${verification_string}'`;
+  
+    try {
+
+      connection.query(sql, function(err, rows)
+      {
+
+        if (err){
+          console.log(err)
+        }else {
+          
+        //If success
+        res.status(200).json('Successfully Changed Password')
+          }
+      });
+    }catch(err) {
+      console.log(err)
+    }
+
+};

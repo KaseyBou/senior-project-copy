@@ -29,4 +29,33 @@ const sendVerificationEmail = (Email, verificationString) => {
     })
 }
 
-module.exports = {sendVerificationEmail}
+const sendRecoveryEmail = (Email, verificationString) => {
+
+    var Transport = nodemailer.createTransport({
+        service: "Gmail",
+        auth: {
+            user: "financial.planner.email@gmail.com",
+            pass: "wzgxopiprypkicea"
+        }
+    });
+
+    let emailOptions;
+    let sender = "Financial Planner";
+
+    emailOptions = {
+        from: sender,
+        to: Email,
+        subject: "Reset Password",
+        html: `Confirm <a href=http://localhost:3000/Reset/${verificationString}> here </a> to reset your password.`
+    };
+
+    Transport.sendMail(emailOptions, function(error, response) {
+        if(error) {
+            console.log(error);
+        } else {
+            console.log("Message sent");
+        }
+    })
+}
+
+module.exports = {sendVerificationEmail, sendRecoveryEmail}
