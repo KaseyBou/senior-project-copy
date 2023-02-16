@@ -14,6 +14,8 @@ import useIncome from '../../hooks/useIncome.tsx';
 import useAccount from '../../hooks/useAccount.tsx';
 import useBudget from '../../hooks/useBudget.tsx';
 
+import setRowColor from '../../utils/setRowColor';
+
 const Income = () => {
 
     const cookies = new Cookies();
@@ -46,6 +48,10 @@ const Income = () => {
 
     // on render, get list of incomes
     const fetchIncomeList = () => {
+        
+        //Data Row Column Color
+        setRowColor({color: "#1D742B"})
+
         getIncomes().then((data) => {
             setIncomes(data.data.map((income) => {
                 let date = new Date(income.pay_day);

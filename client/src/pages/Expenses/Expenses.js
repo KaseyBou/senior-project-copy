@@ -15,6 +15,8 @@ import useExpenditures from '../../hooks/useExpenditures.tsx';
 import useAccount from '../../hooks/useAccount.tsx';
 import useBudget from '../../hooks/useBudget.tsx';
 
+import setRowColor from '../../utils/setRowColor';
+
 const Expenses = () => {
 
     const cookies = new Cookies();
@@ -77,6 +79,9 @@ const Expenses = () => {
     },[])
 
     const fetchExpenses = async() => {
+
+        //Data Row Column Color
+        setRowColor({color: "#A1CD69"})
 
         getExpenditure().then((data) => {
             
