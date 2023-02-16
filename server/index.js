@@ -36,6 +36,7 @@ const {logError} = require('./routes/errorLog');
 const { addDeposit, getDeposit, updateDeposit, deleteDeposit } = require("./routes/deposits");
 const { addExpenditure, getExpenditure, updateExpenditure, deleteExpenditure } = require("./routes/expenditures");
 const {insertBudget, getBudget, updateBudget, deleteBudget, getBudgetsByIncome} = require("./routes/budget")
+const { getReportData } = require("./routes/report");
 
 //---------------User Posts------------------------------------------------
 
@@ -127,7 +128,9 @@ app.put('/Expenditures/:expenditure_id',  auth, updateExpenditure);
 
 app.delete('/Expenditures/:expenditure_id',  auth, deleteExpenditure);
 
+// REPORT GENERATION DATA ****************************************************************************************
 
+app.post('/ReportData', auth, getReportData);
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))

@@ -49,7 +49,7 @@ const CustomForm = (props) => {
                         <label htmlFor={props.fields[i]} className="formLabel">{props.fields[i]}</label>
                     </td>
                     <td>
-                        <input type={type} className="formInput" colSpan="2" name={props.fieldIDs[i]} id={props.fieldIDs[i]} onChange={props.onChange} />
+                        <input type={type} className={"formInput form_" + type} colSpan="2" name={props.fieldIDs[i]} id={props.fieldIDs[i]} onChange={props.onChange} />
                     </td>
                 </tr>
                 <tr> 
