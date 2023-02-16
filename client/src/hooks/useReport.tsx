@@ -34,7 +34,25 @@ const useReport = (urlSegment : string) => {
         }
     };
 
-    return {getInfo}
+    const getSnapshotValues = async(type: string, idList: number[]) => {
+        try {
+            setLoading(true);
+            setError(false);
+
+            // need to use post to have request body
+            const response = await axios.post(`${baseURL}ReportData`,{type: type, idList: idList}, tokenHeader)
+            setData(response);
+            return response;
+        }catch(error) {
+            setError(true);
+            console.log(error);
+        } finally {
+            setLoading(false);
+            //return data;
+        }
+    }
+
+    return {getInfo, getSnapshotValues}
     
 };
 

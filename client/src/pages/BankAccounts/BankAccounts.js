@@ -13,6 +13,8 @@ import SearchBar from '../../components/SearchBar/SearchBar';
 
 import useAccount from '../../hooks/useAccount.tsx';
 
+import setRowColor from '../../utils/setRowColor';
+
 const BankAccounts = () => {
 
     //intializing
@@ -72,6 +74,10 @@ const BankAccounts = () => {
         },[])
 
     const fetchAccounts = () => {
+        
+        //Data Row Column Color
+        setRowColor({color: "#498A67"})
+
         //getting and setting deposits for deposit list
         getAccounts().then((data) => {
             setAccounts(data.data.map((account) => {

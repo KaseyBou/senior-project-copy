@@ -12,6 +12,7 @@ import SearchBar from '../../components/SearchBar/SearchBar';
 import useDeposits from '../../hooks/useDeposits.tsx';
 import useAccount from '../../hooks/useAccount.tsx';
 import useBudget from '../../hooks/useBudget.tsx';
+import setRowColor from '../../utils/setRowColor';
 
 const Deposit = () => {
 
@@ -71,6 +72,9 @@ const Deposit = () => {
     const [passwordWarning, setPasswordWarning] = useState('');
     //Initialization
     const fetchDeposits = () => {
+        //Data Row Column Color
+        setRowColor({color: "#A0C697"})
+
         //getting and setting deposits for deposit list
         getDeposit().then((data) => {
             setDeposits(data.data.map((deposit) => {

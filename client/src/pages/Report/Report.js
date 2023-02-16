@@ -10,6 +10,11 @@ import useBills from '../../hooks/useBills.tsx';
 import useExpenditures from '../../hooks/useExpenditures.tsx';
 import useAccount from '../../hooks/useAccount.tsx';
 import useBudget from '../../hooks/useBudget.tsx';
+import useReport from '../../hooks/useReport.tsx';
+import ScatterPlot from '../../graphing/ScatterPlot';
+
+import Button from '../../components/Button/Button';
+import Plot from 'react-plotly.js';
 
 const Report = () => {
 
@@ -21,6 +26,7 @@ const Report = () => {
     // account hook instance
     const {getAccounts} = useAccount("BankAccount")
     const { getCategories } = useBudget("Budget");
+    const { getInfo, getSnapshotValues } = useReport("");
 
 
     useEffect(() => {
@@ -30,20 +36,127 @@ const Report = () => {
 
     },[])
 
-    const inputHandler = () => {
+    // holds if form or report is shown (false = form, true = report)
+    const [displayReport, setDisplayReport] = useState('');
 
-    }
+    // holds report data when relevant
+    const [reportData, setReportData] = useState(null);
 
-    const getReport = () => {
+    // form field states
+    const [reportFormat, setReportFormat] = useState('');
+    const [reportType, setReportType] = useState('');
+    const [startDate, setStartDate] = useState(null);
+    const [endDate, setEndDate] = useState(null);
 
-    }
+    // states to handle current list of fields available
+    const [fieldList, setFieldList] = useState([]);
+    const [fieldIds, setFieldIds] = useState([]);
+    const [fieldTypes, setFieldTypes] = useState([]);
 
+    // list of selected IDs
+    const [selectedIds, setSelectedIds] = useState([]);
+    
     // list of accounts
-    const [accountList, setAccountList] = useState([]);
-    const [selectAccountList, setSelectAccountList] = useState([]);
+    const [accountNameList, setAccountNameList] = useState([]);
+    const [accountIdList, setAccountIdList] = useState([]);
+    const [accountSelectList, setAccountSelectList] = useState([]);
 
-    const [categoryList, setCategoryList] = useState([]);
+    const [categoryNameList, setCategoryNameList] = useState([]);
+    const [categoryIdList, setCategoryIdList] = useState([]);
     const [categorySelectList, setCategorySelectList] = useState([]);
+
+    // initialize field list
+    useEffect(() => {
+        setFieldList(["Report Format", "Report Type", "Start Date", "End Date"]);
+        setFieldIds(['reportFormat', 'reportType', 'startDate', 'endDate']);
+        setFieldTypes(['select', 'select', 'date', 'date']);
+    },[])
+
+    const inputHandler = () => {
+        setReportFormat(document.getElementById('reportFormat').value);
+        setReportType(document.getElementById('reportType').value);
+        setStartDate(document.getElementById('startDate').value);
+        setEndDate(document.getElementById('endDate').value);
+
+        // get list of selected accounts or budgets, save to state
+        var CheckedIds = [];
+        let checkboxes = document.getElementsByClassName('form_checkbox')
+        for(let i = 0; i < checkboxes.length; i++){
+            if(checkboxes[i].checked){
+                let idNum = parseInt(checkboxes[i].id.substring(7))
+                CheckedIds.push(idNum);
+            }
+        }
+        console.log(CheckedIds)
+        setSelectedIds(CheckedIds);
+    }
+
+    // handle change of report type
+    useEffect(() => {
+        // update field list and id list
+        let tempFieldList = ["Report Format", "Report Type", "Start Date", "End Date"];
+        let tempIdList = ['reportFormat', 'reportType', 'startDate', 'endDate'];
+        let tempTypeList = ['select', 'select', 'date', 'date']
+        if(reportType === 'accounts'){
+            accountNameList.forEach((account) => {
+                tempFieldList.push(account);
+                tempTypeList.push('checkbox')
+            })
+            accountIdList.forEach((account) => {
+                tempIdList.push("account" + account);
+            })
+        } else if(reportType === 'budgets'){
+            categoryNameList.forEach((budget) => {
+                tempFieldList.push(budget);
+                tempTypeList.push('checkbox');
+            })
+            categoryIdList.forEach((budget) => {
+                tempIdList.push("budget_" + budget);
+            })
+        }
+                
+        setFieldList(tempFieldList);
+        setFieldIds(tempIdList);
+        setFieldTypes(tempTypeList);
+
+        // clear checkboxes
+        let checkboxes = document.getElementsByClassName('form_checkbox')
+        for(let i = 0; i < checkboxes.length; i++){
+            checkboxes.item(i).checked = false;
+        }
+    }, [reportType])
+
+    const getReport = async(type, idList) => {
+        let reportData = await getSnapshotValues(type, idList);
+
+        var dataSet = [];
+
+        idList.forEach((id) => {
+            var xData = [];
+            var yData = [];
+            var label = '';
+
+            reportData.data.forEach((dataPoint) => {
+                if(dataPoint.id === id && dataPoint.date >= startDate && dataPoint.date <= endDate){
+                    xData.push(dataPoint.date);
+                    yData.push(dataPoint.balance);
+                    label = dataPoint.name;
+                }
+            });
+
+            dataSet.push({
+                x: xData,
+                y: yData,
+                name: label,
+                type: 'scatter'
+            });
+        })
+
+        setReportData(dataSet);
+        
+        setDisplayReport(true);  
+    }
+
      // income state
 
      const [expenditures, setExpenditures] = useState(null);
@@ -59,15 +172,19 @@ const Report = () => {
         getAccounts().then((accounts) => {
 
             //setting account select options
-            setSelectAccountList(accounts.data.map((account) => {
+            setAccountSelectList(accounts.data.map((account) => {
                 return <option value={account.account_id}>{account.account_name}</option>
             }))
 
-            //setting account list **Push is not the correct method for adding to useState array
-            accounts.data.map((account) => {
-                //return setAccountList(accountList => [...accountList, {id: account.account_id, name: account.account_name}]);
-                return accountList.push([account.account_id, account.account_name])
-            })
+            // setting account name list
+            setAccountNameList(accounts.data.map((account) => {
+                return account.account_name;
+            }));
+
+            // setting account id list
+            setAccountIdList(accounts.data.map((account) => {
+                return account.account_id;
+            }))
 
         }).then(
 
@@ -77,11 +194,15 @@ const Report = () => {
                 return <option value={category.budget_ID}>{category.category_name}</option>
             }))
 
-            //setting category list **Push is not the correct method for adding to useState array
-            categories.data.map((category) => {
-                //return setAccountList(accountList => [...accountList, {id: account.account_id, name: account.account_name}]);
-                return categoryList.push([category.budget_ID, category.category_name])
-            })
+            //setting category name list
+            setCategoryNameList(categories.data.map((category) => {
+                return category.category_name
+            }))
+
+            //setting category ID list
+            setCategoryIdList(categories.data.map((category) => {
+                return category.budget_ID;
+            }))
         }).then(fetchExpenses()))
 
     },[])
@@ -98,14 +219,14 @@ const Report = () => {
                 let categoryName;
 
                 //grabbing bank account name for display
-                for(let i = 0; i < accountList.length; i++) {
-                    if(accountList[i][0] === expenditure.account_id) {
-                        accountName = accountList[i][1];
+                for(let i = 0; i < accountNameList.length; i++) {
+                    if(accountNameList[i] === expenditure.account_id) {
+                        accountName = accountNameList[i];
                     }
                 }
-                for(let i = 0; i < categoryList.length; i++) {
-                    if(categoryList[i][0] === expenditure.budget_id) {
-                        categoryName = categoryList[i][1];
+                for(let i = 0; i < categoryNameList.length; i++) {
+                    if(categoryNameList[i] === expenditure.budget_id) {
+                        categoryName = categoryNameList[i];
                     }
                 }
 
@@ -123,17 +244,31 @@ const Report = () => {
     //returning JSX
     return (
         <>
-            <CustomForm
-                title='Register'
-                fields={["Report Format", "Report Type", "Budget Categories", "Start Date", "End Date"]}
-                fieldIDs={['reportFormat', 'reportType', 'reportCategories', 'startDate', 'endDate']}
+            {!displayReport && <CustomForm
+                title='Generate Report'
+                fields={fieldList}
+                fieldIDs={fieldIds}
                 warning={['', '', '']}
                 warningIDs={['', '', '']}
-                fieldTypes={['select', 'select', 'select', 'date', 'date']}
-                selectFields={[]}
+                fieldTypes={fieldTypes}
+                selectFields={[
+                    [<option value='table'>Tabular</option>, <option value='graph'>Graphical</option>],
+                    [<option value='null'>-- SELECT ONE --</option>,<option value='accounts'>Accounts</option>, <option value='budgets'>Budgets</option>],
+                    reportType==='accounts'?accountSelectList:categorySelectList
+                ]}
                 onChange={inputHandler}
-                submitAction={getReport}
-            ></CustomForm>
+                submitAction={() => {
+                    getReport(reportType, selectedIds);
+                }}
+            ></CustomForm>}
+
+            {displayReport && <>
+                <Button text="New Report" function={() => setDisplayReport(false)}/>
+                <Plot
+                    data={reportData}
+                    layout={ {width: 800, height: 400, title: 'TEST'} }
+                />
+            </>}
 
             <table>
                 
