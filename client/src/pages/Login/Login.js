@@ -86,8 +86,9 @@ const Login = () => {
                 fieldTypes={['text', 'text']}
                 onChange={inputHandler}
                 submitAction={Login}
+                linkAddr='/Recovery'
+                linkMessage='Forgot Password'
             ></CustomForm>
-            <a href={accountRecovery}>Forgot Password</a>
         </>
     );
     

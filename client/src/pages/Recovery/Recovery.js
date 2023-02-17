@@ -4,15 +4,14 @@ import './Recovery.css';
 import { useNavigate } from 'react-router-dom';
 import CustomForm from '../../components/CustomForm/CustomForm';
 import { useState, useEffect } from 'react';
-import usePost from '../../hooks/useUserAccount.tsx';
-import Cookies from 'universal-cookie';
-const cookies = new Cookies();
+import useSecurity from '../../hooks/useUserSecurity.tsx';
+import validations from '../../utils/validations';
 
 const Recovery = () => {
 
     //Initializing
     const navigate = useNavigate();
-    //var emailValidator = require("email-validator");
+    const { validateEmail } = validations();
 
     const home = () => {
         navigate("/");
@@ -23,7 +22,7 @@ const Recovery = () => {
     const [emailWarning, setEmailWarning] = useState('');
 
     //calling postLogin function
-    const { postRecover, data, error, loading } = usePost('Recover');
+    const { postRecover, data, error, loading } = useSecurity('Recover');
 
     //handles updates to input's
     const inputHandler = () =>{
@@ -34,22 +33,26 @@ const Recovery = () => {
     //initiate account recovery
     const RecoverAccount = () => {
 
-        if(email.length !== 0) {
+        if(validateEmail(email)) {
 
             postRecover(email);
-        } 
+
+        } else {
+            setEmailWarning("Email Not Valid")
+        }
         
     } 
-
+ 
     useEffect(() => {
         
         if(data.status === 200) {
             setEmailWarning("Recovery Email Sent")
-        } else if (data.status === 400) {
+        } else if (data.status === 468) {
             setEmailWarning("Email Not Found")
         }
 
     }, [data])
+
 
     //returning JSX
     return (

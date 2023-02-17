@@ -12,7 +12,7 @@ const Account = () => {
 
     const navigate = useNavigate();
     //calling postRegister function
-    const {getEmailVerification, error, loading} = usePost('Verify');
+    const {getVerification, error, loading} = usePost('Verify');
     const { verificationString } = useParams();
 
     const home = () => {
@@ -22,7 +22,7 @@ const Account = () => {
 
     useEffect(() => {
 
-        getEmailVerification(verificationString)
+        getVerification(verificationString)
         
     },[])
 

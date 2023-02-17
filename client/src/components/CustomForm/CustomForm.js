@@ -19,14 +19,18 @@ const CustomForm = (props) => {
         submitAction:PropTypes.func,
         onChange:PropTypes.func,
         isCancellable:PropTypes.bool,
-        formMessage:PropTypes.string
+        formMessage:PropTypes.string,
+        linkAddr:PropTypes.string,
+        linkMessage:PropTypes.string
     }
 
     //default props
     CustomForm.defaultProp = {
         button: "",
         fields: "",
-        formMessage:""
+        formMessage:"",
+        linkAddr:"",
+        linkMessage:""
     }
 
     // generate fields from array of fields
@@ -96,13 +100,22 @@ const CustomForm = (props) => {
                         {fieldsJSX}
                     </tbody>
                 </table>
+                {props.formMessage !== "" ? (
                 <div>
                     <p id='formMessage'>{props.formMessage}</p>
                 </div>
+                ):(
+                    ""
+                )}
                 <div className="formButtons">
                     <Button text="Submit" function={props.submitAction}/>
                     {props.isCancellable && <Button text="Cancel"/>} {/*TODO: add cancel functionality*/}
                 </div>
+                {props.linkAddr !== "" && props.linkMessage !== "" ? (
+                        <a href={props.linkAddr}>{props.linkMessage}</a>
+                    ): (
+                        ""
+                    )}
             </div>
             {props.children}
         </div>

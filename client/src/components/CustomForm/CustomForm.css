@@ -3,13 +3,13 @@
     display: flex;
     background-color: #B5B5B5 ;
     padding: 2%;
-    width: 75%;
+    width: 60%;
     margin: auto;
     border-radius: 1em;
 }
 
 .formTable{
-    width: 75%;
+    width: 60%;
     table-layout: fixed;
     margin-left: 13%
 }

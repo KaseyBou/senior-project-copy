@@ -28,7 +28,8 @@ const connection = mysql.createConnection({
 //functions from routes
 const {insertIncome, getIncomes, updateIncome, deleteIncome} = require('./routes/income');
 const { addBill, getBills, updateBill, deleteBill } = require("./routes/bills.js");
-const {userLogin, deleteUser, editUser, registerUser, getAccountDetails, verifyUser, recoverUser, passwordReset } = require('./routes/user');
+const {userLogin, deleteUser, editUser, registerUser, getAccountDetails} = require('./routes/user');
+const { verifyUser, recoverUser, passwordReset, resetValidity } = require('./routes/userSecurity');
 const {addAccount, editAccount, deleteAccount, getAccounts} = require('./routes/bankAccount');
 const {logError} = require('./routes/errorLog');
 const { addDeposit, getDeposit, updateDeposit, deleteDeposit } = require("./routes/deposits");
@@ -58,7 +59,9 @@ app.post('/Recover', recoverUser);
 
 app.get('/Verify/:verificationString', verifyUser);
 
-app.post('/Reset', passwordReset);
+app.get('/Reset/:verificationString', resetValidity);
+
+app.put('/Reset/:verificationString', passwordReset);
 
 // BANK ACCOUNT ********************************************************************************************
 

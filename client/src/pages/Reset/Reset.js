@@ -9,6 +9,7 @@ import Cookies from 'universal-cookie';
 import validations from '../../utils/validations';
 import { useParams} from 'react-router-dom';
 
+import useUserSecurity from '../../hooks/useUserSecurity.tsx';
 
 const Login = () => {
 
@@ -21,15 +22,22 @@ const Login = () => {
         navigate("/");
     };
 
+    const {getVerification, resetPass, data, error, loading} = useUserSecurity('Reset');
+
     const { verificationString } = useParams();
+
+    useEffect(() => {
+        
+        getVerification(verificationString)
+
+    }, [verificationString])
+
+    
     //state variables
     const [confirmPassword, setConfirmPassword] = useState('');
     const [password, setPassword] = useState('');
 
     const [passwordWarning, setPasswordWarning] = useState('');
-
-    //calling postLogin function
-    const { resetPass, data, error, loading } = usePost('Reset');
 
     //handles updates to input's
     const inputHandler = () =>{
@@ -43,6 +51,7 @@ const Login = () => {
 
         if(passwordValidation(password) && password === confirmPassword) {
 
+            resetPass(password, verificationString)
             
         } else {
 
@@ -52,11 +61,21 @@ const Login = () => {
 
     useEffect(() => {
         
-        console.log(data.status)
+        if(data.status === 201) {
+            setPasswordWarning("Password Successfully Changed")
+        }
 
 
-    }, [data])
+    }, [ResetPassword])
 
+    if (loading) {
+        return <Loading/>;
+    }
+
+    if(data.status === 460) {
+        return <h1>Error. Not Found</h1>
+
+    }
     //returning JSX
     return (
         <>
