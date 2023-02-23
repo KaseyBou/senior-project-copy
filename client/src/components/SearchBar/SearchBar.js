@@ -3,6 +3,7 @@ import './SearchBar.css';
 //import { useNavigate } from 'react-router-dom';
 //import { useSelector} from 'react-redux';
 import PropTypes from 'prop-types';
+import Button from 'react-bootstrap/esm/Button';
 //import Button from '../Button/Button';
 
 const SearchBar = (props) => {
@@ -28,9 +29,16 @@ const SearchBar = (props) => {
     return (
 
         
-        <div className=" mt-4">
+        <div className="searchbar mt-4">
             
-            <input className="searchForm" name={props.fieldID} id={props.fieldID} type={props.fieldType} placeholder={props.placeholder} onChange={props.onChange}></input>
+            <input
+                className="searchForm"
+                name={props.fieldID}
+                id={props.fieldID}
+                type={props.fieldType}
+                placeholder={props.placeholder}
+                onChange={props.onChange}>
+            </input>
         
         </div>
        
