@@ -91,14 +91,13 @@ const usePost = (urlSegment : string) => {
     };
 
     //hook to edit user account
-    const updateEmail = async(user_id: number, email: string, password: string) => {
+    const updateEmail = async(user_id: number, email: string) => {
 
         try {
             setLoading(true);
             setError(false);
             const response = await axios.put(`${baseURL}${urlSegment}/${user_id}`, {
             email: `${email}`,
-            password: `${password}`,
             user_id: user_id
 
             },tokenHeader).then((response) => {

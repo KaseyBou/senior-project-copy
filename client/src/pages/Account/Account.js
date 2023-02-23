@@ -30,7 +30,9 @@ const Account = () => {
     },[])
 
     //calling postRegister function
-    const {editUser, deleteUser, getAccountDetails, updateEmail, changePassword, data, loading, error, success} = usePost('User');
+    const {editUser, deleteUser, getAccountDetails, data, loading, error, success} = usePost('User');
+    const {changePassword} = usePost('Password');
+    const {updateEmail} = usePost('Email');
     //validation functions
     const {passwordValidation, validateEmail, validatePhone} = validations();
     //state variables
@@ -53,76 +55,92 @@ const Account = () => {
     // state variable for visibility of delete confirmation
     const [showDelete, setShowDelete] = useState(false);
     const handleShowDelete = (id) => {
-    setShowDelete(true);
+        if(!showDelete) {
+            setShowDelete(true);
+            setShowEmail(false);
+            setShowInfo(false);
+            setShowPassword(false);
+        } else {
+            setShowEmail(false);
+        }
     localStorage.setItem("deleting", id);
     }
     const handleCloseDelete = () => setShowDelete(false);
 
     //email modal controls
     const [showEmail, setShowEmail] = useState(false);
-    const handleCloseEmail = () => setShowEmail(false);
     const handleShowEmail = () => {
-    setShowEmail(true);
+        if(!showEmail) {
+            setShowEmail(true);
+            setShowInfo(false);
+            setShowPassword(false);
+            setShowDelete(false);
+        } else {
+            setShowEmail(false);
+        }
     //localStorage.setItem("editing", id)
     }
     //password modal controls
     const [showPassword, setShowPassword] = useState(false);
-    const handleClosePassword = () => setShowPassword(false);
     const handleShowPassword = () => {
-    setShowPassword(true);
+        if(!showPassword) {
+            setShowPassword(true);
+            setShowEmail(false);
+            setShowInfo(false);
+            setShowDelete(false);
+        } else {
+            setShowPassword(false);
+        }
     //localStorage.setItem("editing", id)
     }
 
     //info modal controls
     const [showInfo, setShowInfo] = useState(false);
-    const handleCloseInfo = () => setShowInfo(false);
     const handleShowInfo = (id) => {
-    setShowInfo(true);
-    //localStorage.setItem("editing", id)
+        if(!showInfo) {
+            setShowInfo(true);
+            setShowEmail(false);
+            setShowPassword(false);
+        } else {
+            setShowInfo(false);
+        }
+    localStorage.setItem("editing", id)
     }
       
-    const [accountInfo, setAccountInfo] = useState([])
+    let [accountInfo, setAccountInfo] = useState([]);
+
     useEffect(() => {
-        // load existing data into form
+
         getAccountDetails().then((accountData) => {
-            let account = accountData.data[0];
-            setAccountInfo(account)
-            
-            localStorage.setItem("editing", account.user_id)
+            //let account = accountData.data[0];
+            //console.log(account)
+            //setAccountInfo(account)
+            accountInfo = accountData.data[0];
+            console.log(accountInfo.first_name)
+            document.getElementById("firstName").value = accountInfo.first_name;
+            document.getElementById("lastName").value = accountInfo.last_name;
+            document.getElementById("phone").value = accountInfo.phone;
+            document.getElementById("email").value = accountInfo.email;
+            localStorage.setItem("editing", accountInfo.user_id)
+            inputHandler();
 
         })
-    },[])
 
-    useEffect(() => {
-     
-        console.log(accountInfo)
-        document.getElementById("firstName").value = accountInfo.first_name;
-        document.getElementById("lastName").value = accountInfo.last_name;
-        document.getElementById("phone").value = accountInfo.phone;
-
-                // load existing data into form
-                /*setAccountInfo(getAccountDetails().then((accountData) => {
-                    let account = accountData.data[0];
-                    console.log(account)
-                    localStorage.setItem("editing", account.user_id)
-                    document.getElementById("firstName").value = account.first_name;
-                    document.getElementById("lastName").value = account.last_name;
-                    document.getElementById("email").value = account.email;
-                    document.getElementById("phone").value = account.phone;
-        
-                    inputHandler();
-                }))*/
-    },[accountInfo])
+    },[setShowEmail, setShowInfo])
 
       //handles updates to input's
       const inputHandler = () =>{
         
-          setFirstName(document.getElementById("firstName").value);
+        if(showInfo){
+           setFirstName(document.getElementById("firstName").value);
           setLastName(document.getElementById("lastName").value);
           setPhone(document.getElementById("phone").value);
+        } else if(showEmail) {
           setEmail(document.getElementById("email").value);
+        } else if (showPassword) {
           setPassword(document.getElementById("password").value);
           setConfirmPassword(document.getElementById("confirmPassword").value);
+        }
 
       }
 
@@ -151,7 +169,7 @@ const Account = () => {
             //console.log(localStorage.getItem("editing"))
             editUser(localStorage.getItem("editing"), firstName, lastName, phone);
 
-            console.log(data)
+            //console.log(data)
             
             if(data.status === 200) {
                 setFormMessage("Successfully Edited Account")
@@ -175,9 +193,8 @@ const Account = () => {
             setConfirmPasswordWarning('Passwords do not match')
         }
 
-        if(passwordValidation(password) && password === confirmPassword) {
+        if(password === confirmPassword) {
 
-            //console.log(localStorage.getItem("editing"))
             changePassword(localStorage.getItem("editing"), password);
 
             console.log(data)
@@ -215,8 +232,9 @@ const Account = () => {
        
         if(validateEmail(email)) {
 
+            //console.log(email)
             //console.log(localStorage.getItem("editing"))
-            updateEmail(localStorage.getItem("editing"), email, password);
+            updateEmail(localStorage.getItem("editing"), email);
 
             console.log(data)
             
@@ -256,22 +274,28 @@ const Account = () => {
     //returning JSX
     return (
         <>
-            <Modal show={showEmail} handleShow={handleShowEmail} handleClose={handleCloseEmail}>
-                <CustomForm
-                    title='Change Email (Must Verify E-mail Address)'
-                    fields={["E-Mail Address"]}
-                    fieldIDs={['email']}
-                    onChange={inputHandler}
-                    submitAction={changeEmail}
-                    fieldTypes={[ 'email']}
-                    warning={[ emailWarning]}
-                    warningIDs={['emailWarning']}
-                    formMessage={formMessage}
-                ></CustomForm>
-            </Modal>
+            <div className='d-flex'>
             <Button text='Update Email' function={handleShowEmail}/>
+            <Button text='Update Password' function={handleShowPassword}/>
+            <Button text='Update Information' function={handleShowInfo}/>
+            <Button text='Delete Account' function={handleShowDelete}/>
+            </div>
 
-            <Modal show={showPassword} handleShow={handleShowPassword} handleClose={handleClosePassword}>
+                {showEmail ? (
+                    <CustomForm
+                        title='Change Email (Must Verify E-mail Address)'
+                        fields={["E-Mail Address"]}
+                        fieldIDs={['email']}
+                        onChange={inputHandler}
+                        submitAction={changeEmail}
+                        fieldTypes={[ 'email']}
+                        warning={[ emailWarning]}
+                        warningIDs={['emailWarning']}
+                        formMessage={formMessage}
+                    ></CustomForm>
+
+                ):showPassword ? (
+            
                 <CustomForm
                     title='Change Password'
                     fields={["New Password", "Confirm Password"]}
@@ -283,10 +307,8 @@ const Account = () => {
                     warningIDs={['passwordWarning', 'confirmPasswordWarning']}
                     formMessage={formMessage}
                 ></CustomForm>
-            </Modal>
-            <Button text='Update Password' function={handleShowPassword}/>
+                ):showInfo ? (
 
-            <Modal show={showInfo} handleShow={handleShowInfo} handleClose={handleCloseInfo}>
                 <CustomForm
                     title='Edit Information'
                     fields={["First Name", "Last Name", "Phone Number"]}
@@ -298,11 +320,7 @@ const Account = () => {
                     warningIDs={['firstNameWarning', 'lastNameWarning', 'phoneWarning']}
                     formMessage={formMessage}
                 ></CustomForm>
-            </Modal>
-            <Button text='Update Information' function={handleShowInfo}/>
-
-            <Button text='Delete Account' function={handleShowDelete}/>
-            <Modal show={showDelete} handleShow={handleShowDelete} handleClose={handleCloseDelete}>
+            ):showDelete ? (
                 <CustomForm
                     title = "Delete your account? (this cannot be undone)"
                     fields = {['password']}
@@ -313,10 +331,12 @@ const Account = () => {
                     // onChange = {console.log("placeholder")}
                     submitAction = {delAccount}
                     formMessage={formMessage}
+            
                 />
-            </Modal>
+            
+            ):''}
         </>
-        );
+    );
 }
 
 export default Account

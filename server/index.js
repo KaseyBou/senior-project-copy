@@ -28,7 +28,7 @@ const connection = mysql.createConnection({
 //functions from routes
 const {insertIncome, getIncomes, updateIncome, deleteIncome} = require('./routes/income');
 const { addBill, getBills, updateBill, deleteBill } = require("./routes/bills.js");
-const {userLogin, deleteUser, editUser, registerUser, getAccountDetails} = require('./routes/user');
+const {userLogin, deleteUser, editUser, registerUser, getAccountDetails, updatePassword, updateEmail} = require('./routes/user');
 const { verifyUser, recoverUser, passwordReset, resetValidity } = require('./routes/userSecurity');
 const {addAccount, editAccount, deleteAccount, getAccounts} = require('./routes/bankAccount');
 const {logError} = require('./routes/errorLog');
@@ -46,7 +46,10 @@ app.post('/Register', auth,  registerUser);
 app.put('/User/:user_id',  auth, editUser);
 
 //change email
-app.put('/User/:user_id',  auth, editUser);
+app.put('/Email/:user_id',  auth, updateEmail);
+
+//edit password
+app.put('/Password/:user_id',  auth, updatePassword);
 
 //delete user account
 app.post('/DeleteUser',  auth, deleteUser);

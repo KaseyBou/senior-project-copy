@@ -69,27 +69,15 @@ module.exports.registerUser = (req,res) => {
 //edit user account
 module.exports.editUser = async(req,res) => {
   
-    let {first_Name, last_Name, email, password, phone, profile_image, user_id} = req.body;
+    let {first_Name, last_Name, phone,user_id} = req.body;
 
     if(!first_Name) return res.status(464).json('First Name can not be blank');
     if(!last_Name) return res.status(463).json('Last Name cant be blank');
-    if(!validateEmail(email)) return res.status(460).json('Email Not Valid');
     if(!validatePhone(phone)) return res.status(461).json('Phone Not Valid');
 
-    if(password === "") {
-  
-        var sql = `Update Users SET first_name = '${first_Name}', last_name = '${last_Name}', email = '${email}', phone = '${phone}', profile_image = ${profile_image} WHERE user_id = ${ user_id}`;
-    } 
-    else {
-        if(!passwordValidation(password)) return res.status(462).json('Password does not meet requirements');
-        let returnData = hashPassword(password)
-        salt = returnData[0];
-        hash = returnData[1];
-        var sql = `Update Users SET first_name = '${first_Name}', last_name = '${last_Name}', email = '${email}', password = '${hash}', password_salt = '${salt}', phone = '${phone}', profile_image = ${profile_image} WHERE user_id = ${user_id}`;
-    }
+    var sql = `Update Users SET first_name = '${first_Name}', last_name = '${last_Name}', phone = '${phone}' WHERE user_id = ${user_id}`;
 
-  try {
-
+    try { 
      connection.query(sql, function(err, rows)
     {
   
@@ -111,18 +99,11 @@ module.exports.editUser = async(req,res) => {
           console.log("Error inserting : %s ",err.errno );
         }
       }else {
-          //  create JWT token
-          token = jwt.sign(
-          {
-            userEmail: email,
-          },
-          "RANDOM-TOKEN",
-          { expiresIn: "1h" }
-        );
-      //If success
-      res.status(200).json(token)
-        }
+        //If success
+        res.status(200).json('Success')
+      }
     });
+
   }catch(err) {
     console.log(err)
   }
@@ -132,7 +113,7 @@ module.exports.editUser = async(req,res) => {
 //edit user account
 module.exports.updatePassword = async(req,res) => {
   
-      let {email, password, user_id} = req.body;
+      let {password, user_id} = req.body;
 
           if(!passwordValidation(password)) return res.status(462).json('Password does not meet requirements');
           let returnData = hashPassword(password)
@@ -163,18 +144,7 @@ module.exports.updatePassword = async(req,res) => {
             res.status(400).json('Sorry, Unable To Add');
             console.log("Error inserting : %s ",err.errno );
           }
-        }else {
-            //  create JWT token
-            token = jwt.sign(
-            {
-              userEmail: email,
-            },
-            "RANDOM-TOKEN",
-            { expiresIn: "1h" }
-          );
-        //If success
-        res.status(200).json(token)
-          }
+        }
       });
     }catch(err) {
       console.log(err)
@@ -185,7 +155,7 @@ module.exports.updatePassword = async(req,res) => {
 //edit user account
 module.exports.updateEmail = async(req,res) => {
   
-  let { email, password, user_id} = req.body;
+  let { email, user_id} = req.body;
 
   if(!validateEmail(email)) return res.status(460).json('Email Not Valid');
 
