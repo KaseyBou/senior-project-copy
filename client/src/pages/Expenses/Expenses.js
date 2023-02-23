@@ -290,8 +290,9 @@ const Expenses = () => {
 
                     // drop all entries that don't contain search query
                     for(var i = 0; i < copy.length; i++){
-                        if(!copy[i].recipient.includes(document.getElementById('search').value)){
+                        if(!copy[i].recipient.toLowerCase().includes(document.getElementById('search').value.toLowerCase())){
                             copy.splice(i, 1);
+                            i--; // need to move back one to avoid skipping after deletion
                         }
                     }
 
