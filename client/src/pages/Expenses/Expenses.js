@@ -38,7 +38,8 @@ const Expenses = () => {
     const [categorySelectList, setCategorySelectList] = useState([]);
      // income state
 
-     const [expenditures, setExpenditures] = useState(null);
+    const [expenditures, setExpenditures] = useState(null);
+    const [fullExpenditures, setFullExpenditures] = useState(null);
 
     //support functionality
     useEffect(() => {
@@ -78,42 +79,45 @@ const Expenses = () => {
 
     },[])
 
+    const renderRows = (data) => {
+        setExpenditures(data.map((expenditure) => {
+            let theDate = new Date(expenditure.date);
+            let dateString = theDate.getMonth()+1 + " / " + theDate.getDate() + " / " + (theDate.getYear()+1900);
+            let accountName;
+            let categoryName;
+
+            //grabbing bank account name for display
+            for(let i = 0; i < accountList.length; i++) {
+                if(accountList[i][0] === expenditure.account_id) {
+                    accountName = accountList[i][1];
+                }
+            }
+            for(let i = 0; i < categoryList.length; i++) {
+                if(categoryList[i][0] === expenditure.budget_id) {
+                    categoryName = categoryList[i][1];
+                }
+            }
+
+            return(
+                <DataRow
+                title=""
+                labels={["Recipient: ", "Account: ", "Date: ", "Amount: ", "Category: "]}
+                rows={[expenditure.recipient, accountName, dateString, '$' + expenditure.total_amount, categoryName]}
+                HandleEdit={() => handleShowEdit(expenditure.expenditure_id)}
+                HandleDelete={() => handleShowDelete(expenditure.expenditure_id)}
+            />
+            )
+        }));
+    }
+
     const fetchExpenses = async() => {
 
         //Data Row Column Color
         setRowColor({color: "#A1CD69"})
 
         getExpenditure().then((data) => {
-            
-            setExpenditures(data.data.map((expenditure) => {
-                let theDate = new Date(expenditure.date);
-                let dateString = theDate.getMonth()+1 + " / " + theDate.getDate() + " / " + (theDate.getYear()+1900);
-                let accountName;
-                let categoryName;
-
-                //grabbing bank account name for display
-                for(let i = 0; i < accountList.length; i++) {
-                    if(accountList[i][0] === expenditure.account_id) {
-                        accountName = accountList[i][1];
-                    }
-                }
-                for(let i = 0; i < categoryList.length; i++) {
-                    if(categoryList[i][0] === expenditure.budget_id) {
-                        categoryName = categoryList[i][1];
-                    }
-                }
-
-                return(
-                    <DataRow
-                    title=""
-                    labels={["For: ", "Account: ", "Date: ", "Amount: ", "Category: "]}
-                    rows={[expenditure.recipient, accountName, dateString, '$' + expenditure.total_amount, categoryName]}
-                    HandleEdit={() => handleShowEdit(expenditure.expenditure_id)}
-                    HandleDelete={() => handleShowDelete(expenditure.expenditure_id)}
-                />
-                )
-            }
-            ));
+            setFullExpenditures(data.data);
+            renderRows(data.data);
         })
         
     }
@@ -178,6 +182,9 @@ const Expenses = () => {
     const [totalSpentAddWarning, setTotalSpentAddWarning] = useState('')
     const [categoryAddWarning, setCategoryAddWarning] = useState('');
     const [accountAddWarning, setAccountAddWarning] = useState('');
+
+    // State for search query
+    const [query, setQuery] = useState('');
 
     //handles updates to input's
     const addExpenseInputHandler = () =>{
@@ -274,7 +281,25 @@ const Expenses = () => {
     //returning JSX
     return (
         <>
-            <SearchBar/>
+            <SearchBar
+                placeholder='Expense Recipient'
+                fieldID="search"
+                onChange={() => {
+                    // copy full list into local var
+                    var copy = fullExpenditures.slice();
+
+                    // drop all entries that don't contain search query
+                    for(var i = 0; i < copy.length; i++){
+                        if(!copy[i].recipient.toLowerCase().includes(document.getElementById('search').value.toLowerCase())){
+                            copy.splice(i, 1);
+                            i--; // need to move back one to avoid skipping after deletion
+                        }
+                    }
+
+                    // rerender
+                    renderRows(copy);
+                }}
+            />
             <div id="ExpenseList">
                 {expenditures}
             </div>

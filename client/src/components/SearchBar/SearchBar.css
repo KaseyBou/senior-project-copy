@@ -1,3 +1,7 @@
+.searchbar{
+    display: flex;
+    flex-direction: row;
+}
 
 .searchForm {
     display: flex;

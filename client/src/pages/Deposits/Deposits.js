@@ -22,8 +22,10 @@ const Deposit = () => {
 
     // income hook instance
     const { postDeposit, getDeposit, editDeposit, deleteDeposit } = useDeposits("Deposits");
+
     // income state
     const [deposits, setDeposits] = useState(null);
+    const [fullDeposits, setFullDeposits] = useState(null);
 
     // account hook instance
     const {getAccounts} = useAccount("BankAccount")
@@ -70,6 +72,31 @@ const Deposit = () => {
     //password values warning
     const [userPassword, setUserPassword] = useState('');
     const [passwordWarning, setPasswordWarning] = useState('');
+
+    const renderRows = (data) => {
+        setDeposits(data.map((deposit) => {
+            let theDate = new Date(deposit.date);
+            let dateString = theDate.getMonth()+1 + " / " + theDate.getDate() + " / " + (theDate.getYear()+1900);
+            let accountName;
+
+            //grabbing bank account name for display
+            for(let i = 0; i < accountList.length; i++) {
+                if(accountList[i][0] === deposit.account_id) {
+                    accountName = accountList[i][1];
+                }
+            }
+            return(
+                <DataRow
+                title=""
+                labels={["Source: ", "Account: ", "Date: ", "Amount: "]}
+                rows={[deposit.source, accountName, dateString, '$' + deposit.total_amount]}
+                HandleEdit={() => handleShowEdit(deposit.deposit_id)}
+                HandleDelete={() => handleShowDelete(deposit.deposit_id)}
+                />
+            )
+        }));
+    }
+
     //Initialization
     const fetchDeposits = () => {
         //Data Row Column Color
@@ -77,27 +104,8 @@ const Deposit = () => {
 
         //getting and setting deposits for deposit list
         getDeposit().then((data) => {
-            setDeposits(data.data.map((deposit) => {
-                let theDate = new Date(deposit.date);
-                let dateString = theDate.getMonth()+1 + " / " + theDate.getDate() + " / " + (theDate.getYear()+1900);
-                let accountName;
-
-                //grabbing bank account name for display
-                for(let i = 0; i < accountList.length; i++) {
-                    if(accountList[i][0] === deposit.account_id) {
-                        accountName = accountList[i][1];
-                    }
-                }
-                    return(
-                    <DataRow
-                    title=""
-                    labels={["Source: ", "Account: ", "Date: ", "Amount: "]}
-                    rows={[deposit.source, accountName, dateString, '$' + deposit.total_amount]}
-                    HandleEdit={() => handleShowEdit(deposit.deposit_id)}
-                    HandleDelete={() => handleShowDelete(deposit.deposit_id)}
-                />
-                )
-            }));
+            setFullDeposits(data.data);
+            renderRows(data.data);
         })
     }
 
@@ -239,7 +247,25 @@ const Deposit = () => {
     //returning JSX
     return (
         <>
-            <SearchBar/>
+            <SearchBar
+                placeholder='Deposit Source'
+                fieldID="search"
+                onChange={() => {
+                    // copy full list into local var
+                    var copy = fullDeposits.slice();
+
+                    // drop all entries that don't contain search query
+                    for(var i = 0; i < copy.length; i++){
+                        if(!copy[i].source.toLowerCase().includes(document.getElementById('search').value.toLowerCase())){
+                            copy.splice(i, 1);
+                            i--; // need to move back one to avoid skipping after deletion
+                        }
+                    }
+
+                    // rerender
+                    renderRows(copy);
+                }}
+            />
             <div id="DepositList">
                 {deposits}
             </div>

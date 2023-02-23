@@ -138,7 +138,13 @@ const Report = () => {
 
             reportData.data.forEach((dataPoint) => {
                 if(dataPoint.id === id && dataPoint.date >= startDate && dataPoint.date <= endDate){
-                    xData.push(dataPoint.date);
+                    // set date to be at midnight
+                    var newDate = new Date(dataPoint.date);
+                    newDate.setHours(0);
+                    newDate.setMinutes(0);
+                    newDate.setSeconds(0);
+
+                    xData.push(newDate);
                     yData.push(dataPoint.balance);
                     label = dataPoint.name;
                 }
@@ -152,6 +158,7 @@ const Report = () => {
             });
         })
 
+        console.log(dataSet);
         setReportData(dataSet);
         
         setDisplayReport(true);  
@@ -241,6 +248,18 @@ const Report = () => {
         
     }
 
+    // get list of dates between start and end, used in tabular report
+    const getDateList = (startDate, endDate) => {
+        var dateList = [];
+        for(var d = new Date(startDate); d <= new Date(endDate); d.setDate(d.getDate() + 1)){
+            d.setHours(0);
+            d.setMinutes(0);
+            d.setSeconds(0);
+            dateList.push(new Date(d.getTime()));
+        }
+        return dateList;
+    }
+
     //returning JSX
     return (
         <>
@@ -252,8 +271,14 @@ const Report = () => {
                 warningIDs={['', '', '']}
                 fieldTypes={fieldTypes}
                 selectFields={[
-                    [<option value='table'>Tabular</option>, <option value='graph'>Graphical</option>],
-                    [<option value='null'>-- SELECT ONE --</option>,<option value='accounts'>Accounts</option>, <option value='budgets'>Budgets</option>],
+                    [<option value='table'>Tabular</option>,
+                        <option value='graph'>Graphical</option>,
+                        <option value='both'>Both</option>],
+
+                    [<option value='null'>-- SELECT ONE --</option>,
+                        <option value='accounts'>Accounts</option>,
+                        <option value='budgets'>Budgets</option>],
+
                     reportType==='accounts'?accountSelectList:categorySelectList
                 ]}
                 onChange={inputHandler}
@@ -263,11 +288,38 @@ const Report = () => {
             ></CustomForm>}
 
             {displayReport && <>
-                <Button text="New Report" function={() => setDisplayReport(false)}/>
-                <Plot
+                {(reportFormat === 'table' || reportFormat === 'both') && <>
+                    <table className='reportTable'>
+                        <thead><tr>
+                            <th id="spacer" />
+                            {reportData.map((column) => {
+                                return <td>{column.name}</td>
+                            })}
+                        </tr></thead>
+                        <tbody>
+                            {
+                                getDateList(startDate, endDate).map((date) => {
+                                    return(<tr>
+                                        <td>{date.toDateString()}</td>
+                                        {reportData.map((column) => {
+                                            for(var i = 0; i < column.x.length; i++){
+                                                if(column.x[i].getTime() == date.getTime()){
+                                                    return <td>{column.y[i]}</td>
+                                                }
+                                            }
+                                            return <td>N/A</td>
+                                        })}
+                                    </tr>)
+                                })
+                            }
+                        </tbody>
+                    </table>
+                </>}
+                {(reportFormat === 'graph' || reportFormat === 'both') && <>
+                    <Button text="New Report" function={() => setDisplayReport(false)} /><Plot
                     data={reportData}
-                    layout={ {width: 800, height: 400, title: 'TEST'} }
-                />
+                    layout={{ width: 800, height: 400, title: 'TEST' }} />
+                </>}
             </>}
 
             <table>
