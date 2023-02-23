@@ -59,7 +59,7 @@ const usePost = (urlSegment : string) => {
     };
 
     //hook to edit user account
-    const editUser = async(user_id: number, first_Name: string, last_Name: string, email: string, password: string, phone: string) => {
+    const editUser = async(user_id: number, first_Name: string, last_Name: string, phone: string) => {
 
         try {
             setLoading(true);
@@ -67,15 +67,72 @@ const usePost = (urlSegment : string) => {
             const response = await axios.put(`${baseURL}${urlSegment}/${user_id}`, {
             first_Name: `${first_Name}`,
             last_Name: `${last_Name}`,
-            email: `${email}`,
-            password: `${password}`,
             phone:`${phone}`,
             profile_image: null,
             user_id: user_id
 
             },tokenHeader).then((response) => {
                 console.log(response)
+                //cookies.set("TOKEN", response.data, {path: "/",});
+            });
+            setData(response)
+        }catch(error) {
+            //setError(true);
+            setData(error.response)
+            console.log(error.response);
+
+        } finally {
+
+            setLoading(false);
+
+        }
+
+        return {data}
+    };
+
+    //hook to edit user account
+    const updateEmail = async(user_id: number, email: string, password: string) => {
+
+        try {
+            setLoading(true);
+            setError(false);
+            const response = await axios.put(`${baseURL}${urlSegment}/${user_id}`, {
+            email: `${email}`,
+            password: `${password}`,
+            user_id: user_id
+
+            },tokenHeader).then((response) => {
+                console.log(response)
                 cookies.set("TOKEN", response.data, {path: "/",});
+            });
+            setData(response)
+        }catch(error) {
+            //setError(true);
+            setData(error.response)
+            console.log(error.response);
+
+        } finally {
+
+            setLoading(false);
+
+        }
+
+        return {data}
+    };
+
+    //hook to edit user account
+    const changePassword = async(user_id: number, password: string) => {
+
+        try {
+            setLoading(true);
+            setError(false);
+            const response = await axios.put(`${baseURL}${urlSegment}/${user_id}`, {
+            password: `${password}`,
+            user_id: user_id
+
+            },tokenHeader).then((response) => {
+                console.log(response)
+                //cookies.set("TOKEN", response.data, {path: "/",});
             });
             setData(response)
         }catch(error) {
@@ -166,7 +223,7 @@ const usePost = (urlSegment : string) => {
         }
     }
 
-    return {postRegister, postLogin, editUser, deleteUser, getAccountDetails, data, loading, error, success}
+    return {postRegister, postLogin, editUser, deleteUser, getAccountDetails, updateEmail, changePassword, data, loading, error, success}
 
 }
 

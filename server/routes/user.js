@@ -128,6 +128,109 @@ module.exports.editUser = async(req,res) => {
   }
   
 };
+
+//edit user account
+module.exports.updatePassword = async(req,res) => {
+  
+      let {email, password, user_id} = req.body;
+
+          if(!passwordValidation(password)) return res.status(462).json('Password does not meet requirements');
+          let returnData = hashPassword(password)
+          salt = returnData[0];
+          hash = returnData[1];
+          var sql = `Update Users SET password = '${hash}', password_salt = '${salt}' WHERE user_id = ${user_id}`;
+      
+
+    try {
+
+      connection.query(sql, function(err, rows)
+      {
+
+        if (err){
+          if(err.errno === 1062) {
+
+            console.log(err.sqlMessage)
+            if(err.sqlMessage.includes('email_UNIQUE')) {
+                res.status(460).json('Sorry, Email already Taken');
+            }
+            if(err.sqlMessage.includes('phone_UNIQUE')) {
+              res.status(461).json('Sorry, Phone already Taken');
+            }
+
+            //console.log("Error inserting : %s ",err );
+          } else {
+          //If error
+            res.status(400).json('Sorry, Unable To Add');
+            console.log("Error inserting : %s ",err.errno );
+          }
+        }else {
+            //  create JWT token
+            token = jwt.sign(
+            {
+              userEmail: email,
+            },
+            "RANDOM-TOKEN",
+            { expiresIn: "1h" }
+          );
+        //If success
+        res.status(200).json(token)
+          }
+      });
+    }catch(err) {
+      console.log(err)
+    }
+
+};
+
+//edit user account
+module.exports.updateEmail = async(req,res) => {
+  
+  let { email, password, user_id} = req.body;
+
+  if(!validateEmail(email)) return res.status(460).json('Email Not Valid');
+
+  //if(!passwordValidation(password)) return res.status(462).json('Password does not meet requirements');
+  
+  var sql = `Update Users SET email = '${email}' WHERE user_id = ${user_id}`;
+  
+
+try {
+
+   connection.query(sql, function(err, rows)
+  {
+
+    if (err){
+      if(err.errno === 1062) {
+
+        console.log(err.sqlMessage)
+        if(err.sqlMessage.includes('email_UNIQUE')) {
+            res.status(460).json('Sorry, Email already Taken');
+        }
+
+        //console.log("Error inserting : %s ",err );
+      } else {
+      //If error
+        res.status(400).json('Sorry, Unable To Add');
+        console.log("Error inserting : %s ",err.errno );
+      }
+    }else {
+        //  create JWT token
+        token = jwt.sign(
+        {
+          userEmail: email,
+        },
+        "RANDOM-TOKEN",
+        { expiresIn: "1h" }
+      );
+    //If success
+    res.status(200).json(token)
+      }
+  });
+}catch(err) {
+  console.log(err)
+}
+
+};
   
 //delete user account
 module.exports.deleteUser = (req,res) => {

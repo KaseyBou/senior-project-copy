@@ -45,6 +45,9 @@ app.post('/Register', auth,  registerUser);
 //edit user account
 app.put('/User/:user_id',  auth, editUser);
 
+//change email
+app.put('/User/:user_id',  auth, editUser);
+
 //delete user account
 app.post('/DeleteUser',  auth, deleteUser);
 
