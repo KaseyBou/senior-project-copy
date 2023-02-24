@@ -101,6 +101,18 @@ const Account = () => {
             setShowInfo(true);
             setShowEmail(false);
             setShowPassword(false);
+            getAccountDetails().then((accountData) => {
+                accountInfo = accountData.data[0];
+    
+                console.log(accountInfo);
+                document.getElementById("firstName").value = accountInfo.first_name;
+                document.getElementById("lastName").value = accountInfo.last_name;
+                document.getElementById("phone").value = accountInfo.phone;
+                document.getElementById("email").value = accountInfo.email;
+                localStorage.setItem("editing", accountInfo.user_id)
+                inputHandler();
+    
+            })
         } else {
             setShowInfo(false);
         }
@@ -108,25 +120,6 @@ const Account = () => {
     }
       
     let [accountInfo, setAccountInfo] = useState([]);
-
-    useEffect(() => {
-
-        getAccountDetails().then((accountData) => {
-            //let account = accountData.data[0];
-            //console.log(account)
-            //setAccountInfo(account)
-            accountInfo = accountData.data[0];
-            console.log(accountInfo.first_name)
-            document.getElementById("firstName").value = accountInfo.first_name;
-            document.getElementById("lastName").value = accountInfo.last_name;
-            document.getElementById("phone").value = accountInfo.phone;
-            document.getElementById("email").value = accountInfo.email;
-            localStorage.setItem("editing", accountInfo.user_id)
-            inputHandler();
-
-        })
-
-    },[setShowEmail, setShowInfo])
 
       //handles updates to input's
       const inputHandler = () =>{
