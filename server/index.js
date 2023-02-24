@@ -29,7 +29,7 @@ const connection = mysql.createConnection({
 const {insertIncome, getIncomes, updateIncome, deleteIncome} = require('./routes/income');
 const { addBill, getBills, updateBill, deleteBill } = require("./routes/bills.js");
 const {userLogin, deleteUser, editUser, registerUser, getAccountDetails, updatePassword, updateEmail} = require('./routes/user');
-const { verifyUser, recoverUser, passwordReset, resetValidity } = require('./routes/userSecurity');
+const { verifyUser, recoverUser, passwordReset, resetValidity, updateEmailVerification } = require('./routes/userSecurity');
 const {addAccount, editAccount, deleteAccount, getAccounts} = require('./routes/bankAccount');
 const {logError} = require('./routes/errorLog');
 const { addDeposit, getDeposit, updateDeposit, deleteDeposit } = require("./routes/deposits");
@@ -46,7 +46,7 @@ app.post('/Register', auth,  registerUser);
 app.put('/User/:user_id',  auth, editUser);
 
 //change email
-app.put('/Email/:user_id',  auth, updateEmail);
+app.put('/Update/:user_id',  auth, updateEmailVerification);
 
 //edit password
 app.put('/Password/:user_id',  auth, updatePassword);
@@ -64,6 +64,8 @@ app.get('/User',  auth, getAccountDetails);
 app.post('/Recover', recoverUser);
 
 app.get('/Verify/:verificationString', verifyUser);
+
+//app.get('/UpdateEmail/:verificationString', )
 
 app.get('/Reset/:verificationString', resetValidity);
 

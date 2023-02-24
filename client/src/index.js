@@ -24,6 +24,7 @@ import Bills from './pages/Bills/Bills';
 import Verification from './pages/Verification/Verification';
 import Recovery from './pages/Recovery/Recovery';
 import Reset from './pages/Reset/Reset';
+import UpdateEmail from './pages/UpdateEmail/UpdateEmail';
 
 //Navigation Routing for Website
 ReactDOM.render(
@@ -45,6 +46,7 @@ ReactDOM.render(
             <Route path="/Login" element={<Login />}/>
             <Route path="/Account" element={<Account />}/>
             <Route path="/Verify/:verificationString" element={<Verification/>}/>
+            <Route path="/Update/:verificationString" element={<UpdateEmail/>}/>
             <Route path="/Reset/:verificationString" element={<Reset/>}/>
             <Route path="/Recovery" element={<Recovery />}/>
             <Route path='*' element={<p>Route Not Found</p>} />

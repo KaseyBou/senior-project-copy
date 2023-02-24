@@ -248,6 +248,8 @@ module.exports.deleteUser = (req,res) => {
       
   }
 };
+
+
   
 //login
 module.exports.userLogin = (req,res) => {

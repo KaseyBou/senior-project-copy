@@ -11,15 +11,17 @@ const connection = mysql.createConnection({
 
 const {hashPassword, isPasswordCorrect, getEmail, passwordValidation, validateEmail, validatePhone, generateString} = require('../helper-functions/functions');
 
-const {sendVerificationEmail, sendRecoveryEmail} = require('../helper-functions/nodemailer');
+const {sendUpdateEmailEmail, sendRecoveryEmail} = require('../helper-functions/nodemailer');
 //---------------User security------------------------------------------------
 
 //email verification for user
-module.exports.verifyUser = (req, res) => {
+module.exports.verifyUser = async(req, res) => {
 
   const verification_string = req.params.verificationString
+  let email = getEmail(req.params.verificationString).then((email) => {return email;});
+  email = await email;
 
-  var sql = `SELECT user_id, email FROM Users WHERE is_verified = 0 AND verification_string = '${verification_string}'`;
+  var sql = `SELECT user_id, email, is_verified FROM Users WHERE verification_string = '${verification_string}'`;
 
     connection.query(sql, function(err, rows)
     {
@@ -31,9 +33,13 @@ module.exports.verifyUser = (req, res) => {
         }
         else {
           //If success
+          if(rows[0].is_verified === false) {
 
-          var sql = `Update Users SET is_verified = true WHERE user_id = ${rows[0]['user_id']} AND email = '${rows[0]['email']}'`;
+            var sql = `Update Users SET email = true WHERE user_id = ${rows[0].user_id} AND email = '${rows[0].email}'`;
+          }else {
 
+            var sql = `Update Users SET email = '${email}' WHERE user_id = ${rows[0].user_id} AND email = '${rows[0].email}'`;
+          }
           connection.query(sql, function(err, rows)
           {
       
@@ -177,3 +183,55 @@ module.exports.passwordReset = async(req,res) => {
     }
 
 };
+
+//email verification for user
+module.exports.updateEmailVerification = async(req, res) => {
+  let userEmail = getEmail(req.headers.authorization).then((userEmail) => {return userEmail;});
+  userEmail = await userEmail;
+  const {email, user_id} = req.body
+
+  var sql = `SELECT email FROM Users WHERE email = '${email}'`;
+  
+    connection.query(sql, function(err, rows)
+    {
+        if(err) {
+            //If error
+            //res.status(468).json('Email Not Found');
+            console.log("Error retrieving : %s ",err );
+        }
+
+        if (rows.length === 0){
+            //   create JWT token
+            const token = jwt.sign(
+              {
+                userEmail: email,
+              },
+              "RANDOM-TOKEN"
+            );
+
+            let expirationDate = new Date()
+            expirationDate.setMinutes(expirationDate.getMinutes() + 10);
+            expirationDate = expirationDate.toISOString().slice(0, 19).replace('T', ' ');
+
+            console.log(userEmail)
+            var sql2 = `Update Users SET verification_string = '${token}', reset_exp_date = '${expirationDate}' WHERE email = '${userEmail}'`;
+            connection.query(sql2, function(err, rows)
+            {
+        
+                if (err){
+                  //If error
+                  res.status(400).json('Unable to Verify');
+                  console.log("Error retrieving : %s ",err );
+                }
+                else {
+                  //If success
+        
+                  sendUpdateEmailEmail(email, token);
+                  res.status(200).json(rows) 
+                }
+            });
+
+        }
+        else {res.status(201).json(res.response)}
+    });
+}

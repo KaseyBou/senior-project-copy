@@ -32,7 +32,7 @@ const Account = () => {
     //calling postRegister function
     const {editUser, deleteUser, getAccountDetails, data, loading, error, success} = usePost('User');
     const {changePassword} = usePost('Password');
-    const {updateEmail} = usePost('Email');
+    const {sendUpdateEmailRequest} = usePost('Update');
     //validation functions
     const {passwordValidation, validateEmail, validatePhone} = validations();
     //state variables
@@ -101,6 +101,7 @@ const Account = () => {
             setShowInfo(true);
             setShowEmail(false);
             setShowPassword(false);
+            setShowDelete(false);
         } else {
             setShowInfo(false);
         }
@@ -144,7 +145,7 @@ const Account = () => {
 
       }
 
-      const editInfo = async() => {
+      const editInfo = () => {
 
         if(firstName.length < 2 ) {
             setFirstNameWarning('Please Enter First Name')
@@ -187,7 +188,7 @@ const Account = () => {
 
       }
 
-      const updatePassword = async() => {
+      const updatePassword = () => {
 
         if(password !== confirmPassword) {
             setConfirmPasswordWarning('Passwords do not match')
@@ -221,7 +222,7 @@ const Account = () => {
 
       }
 
-      const changeEmail = async() => {
+      const changeEmail = () => {
 
         if(!validateEmail(email)) { //emailValidator.validate(email)
             setEmailWarning('Please Enter Valid Email')
@@ -233,13 +234,13 @@ const Account = () => {
         if(validateEmail(email)) {
 
             //console.log(email)
-            //console.log(localStorage.getItem("editing"))
-            updateEmail(localStorage.getItem("editing"), email);
+            console.log(localStorage.getItem("editing"))
+            sendUpdateEmailRequest(localStorage.getItem("editing"), email);
 
             console.log(data)
             
             if(data.status === 200) {
-                setFormMessage("Successfully Edited Account")
+                setFormMessage("Verification Email Sent")
                 
             } else if(data.status !== 200) {
                 setFormMessage("Error")

@@ -91,7 +91,7 @@ const usePost = (urlSegment : string) => {
     };
 
     //hook to edit user account
-    const updateEmail = async(user_id: number, email: string) => {
+    const sendUpdateEmailRequest = async(user_id: number, email: string) => {
 
         try {
             setLoading(true);
@@ -102,7 +102,34 @@ const usePost = (urlSegment : string) => {
 
             },tokenHeader).then((response) => {
                 console.log(response)
-                cookies.set("TOKEN", response.data, {path: "/",});
+                //cookies.set("TOKEN", response.data, {path: "/",});
+            });
+            setData(response)
+        }catch(error) {
+            //setError(true);
+            setData(error.response)
+            console.log(error.response);
+
+        } finally {
+
+            setLoading(false);
+
+        }
+
+        return {data}
+    };
+
+    //hook to update email
+    const updateEmail = async(verification_string: String) => {
+
+        try {
+            setLoading(true);
+            setError(false);
+            const response = await axios.get(`${baseURL}${urlSegment}/${verification_string}`, {
+
+            }).then((response) => {
+                console.log(response)
+                //cookies.set("TOKEN", response.data, {path: "/",});
             });
             setData(response)
         }catch(error) {
@@ -222,7 +249,7 @@ const usePost = (urlSegment : string) => {
         }
     }
 
-    return {postRegister, postLogin, editUser, deleteUser, getAccountDetails, updateEmail, changePassword, data, loading, error, success}
+    return {postRegister, postLogin, editUser, deleteUser, getAccountDetails, updateEmail, sendUpdateEmailRequest, changePassword, data, loading, error, success}
 
 }
 
