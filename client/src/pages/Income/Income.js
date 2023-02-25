@@ -50,7 +50,7 @@ const Income = () => {
     const fetchIncomeList = () => {
         
         //Data Row Column Color
-        setRowColor({color: "#1D742B"})
+        setRowColor({color: "#668F6D"})
 
         getIncomes().then((data) => {
             setIncomes(data.data.map((income) => {
