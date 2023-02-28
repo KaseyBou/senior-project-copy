@@ -158,7 +158,7 @@ app.use(express.static(path.join(__dirname, "client")))
 // ...
 // Right before your app.listen(), add this:
 app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "client", "index.js"));
+    res.sendFile(path.join(__dirname, "../client", "index.js"));
 });
 
 app.listen(PORT, () => {
