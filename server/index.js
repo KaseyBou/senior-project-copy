@@ -13,6 +13,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(__dirname));
 // cookie parser middleware
 const auth = require("./auth");
+const path = require('path');
 
 const { Console } = require("console");
 const e = require("express");
@@ -152,13 +153,13 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
   // ... other app.use middleware 
-/*app.use(express.static(path.join(__dirname, "client", "build")))
+app.use(express.static(path.join(__dirname, "client", "build")))
 
 // ...
 // Right before your app.listen(), add this:
 app.get("*", (req, res) => {
     res.sendFile(path.join(__dirname, "client", "build", "index.html"));
-});*/
+});
 
 app.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);
