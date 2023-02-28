@@ -151,11 +151,14 @@ app.use(bodyParser.urlencoded({ extended: false }))
 // parse application/json
 app.use(bodyParser.json())
 
+  // ... other app.use middleware 
+app.use(express.static(path.join(__dirname, "client", "build")))
 
-
-app.get("/api", auth, (req, res) => {
-    res.json({ message: "Hello from server!" });
-  });
+// ...
+// Right before your app.listen(), add this:
+app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "client", "build", "index.html"));
+});
 
 app.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);
