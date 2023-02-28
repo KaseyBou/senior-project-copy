@@ -153,13 +153,13 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
   // ... other app.use middleware 
-app.use(express.static(path.join(__dirname, "client")))
+//app.use(express.static(path.join(__dirname, "client")))
 
 // ...
 // Right before your app.listen(), add this:
-app.get("*", (req, res) => {
+/*app.get("*", (req, res) => {
     res.sendFile(path.join(__dirname, "client", "index.js"));
-});
+});**/
 
 app.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);
