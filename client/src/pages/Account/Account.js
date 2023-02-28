@@ -22,6 +22,7 @@ const Account = () => {
     // on render, get list of Deposits
     useEffect(() => {
 
+        console.log(cookies.get("TOKEN"))
         //verifying user is logged in
         if(cookies.get("TOKEN") === undefined) {
             navigate("/");

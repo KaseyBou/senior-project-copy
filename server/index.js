@@ -65,8 +65,6 @@ app.post('/Recover', recoverUser);
 
 app.get('/Verify/:verificationString', verifyUser);
 
-//app.get('/UpdateEmail/:verificationString', )
-
 app.get('/Reset/:verificationString', resetValidity);
 
 app.put('/Reset/:verificationString', passwordReset);
