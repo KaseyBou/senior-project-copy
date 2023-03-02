@@ -153,7 +153,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
   // ... other app.use middleware 
-//app.use(express.static(path.join(__dirname, "client")))
+app.use(express.static(path.join(__dirname, "client")))
 
 // ...
 // Right before your app.listen(), add this:
