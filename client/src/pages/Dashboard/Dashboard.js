@@ -36,6 +36,8 @@ const Dashboard = () => {
         if(cookies.get("TOKEN") === undefined) {
           navigate("/")
         }
+
+        console.log(cookies.get("TOKEN"))
         
 
     },[])
