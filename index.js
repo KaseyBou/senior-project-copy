@@ -157,9 +157,9 @@ app.use(bodyParser.json())
 
 // ...
 // Right before your app.listen(), add this:
-/*app.get("*", (req, res) => {
+app.get("*", (req, res) => {
     res.sendFile(path.join(__dirname, "client", "index.js"));
-});**/
+});
 
 app.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);
