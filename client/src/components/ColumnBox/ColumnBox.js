@@ -25,8 +25,8 @@ const ColumnBox = (props) => {
     return (
 
         <div className="col-sm column-style">
-            <img src={props.pictureFilePath} alt={props.altText}></img>
             <h3>{props.title}</h3>
+            {props.children}
             <p>{props.text}</p>
             {props.button}
         </div>

@@ -36,7 +36,7 @@ const {logError} = require('./routes/errorLog');
 const { addDeposit, getDeposit, updateDeposit, deleteDeposit } = require("./routes/deposits");
 const { addExpenditure, getExpenditure, updateExpenditure, deleteExpenditure } = require("./routes/expenditures");
 const {insertBudget, getBudget, updateBudget, deleteBudget, getBudgetsByIncome} = require("./routes/budget")
-const { getReportData } = require("./routes/report");
+const { getReportData, getDashboardData } = require("./routes/report");
 
 //---------------User Posts------------------------------------------------
 
@@ -146,6 +146,9 @@ app.delete('/Expenditures/:expenditure_id',  auth, deleteExpenditure);
 
 app.post('/ReportData', auth, getReportData);
 
+app.get('/DashboardData', auth, getDashboardData);
+
+
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
 
@@ -158,7 +161,7 @@ app.use(express.static(path.join(__dirname, "client")))
 // ...
 // Right before your app.listen(), add this:
 app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname,"senior-project/client", "index.js"));
+    res.sendFile(path.join(__dirname,"client", "index.js"));
 });
 
 app.listen(PORT, () => {
