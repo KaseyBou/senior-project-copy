@@ -6,6 +6,7 @@
         "heroku-postbuild": "cd client && npm install && npm run build"
     },
     "dependencies": {
+      "node": "^19.7.0",
       "concurrently": "^7.6.0",
       "body-parser": "^1.20.1",
       "cors": "^2.8.5",
