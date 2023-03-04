@@ -19,7 +19,6 @@ const path = require('path');
 app.use(express.static(path.join(__dirname, '../frontend/build')))
 
 const { Console } = require("console");
-const e = require("express");
 const connection = mysql.createConnection({
   host: 'financial-planner.c3p10rqx8lpz.us-east-1.rds.amazonaws.com',
   port: 3306,
@@ -164,7 +163,7 @@ app.use(express.static(path.join(__dirname, "client")))
 // ...
 // Right before your app.listen(), add this:
 app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname + "../client/src/pages/Home/Home.js"));
+    res.sendFile(path.join(__dirname + "/../client/src/pages/Home/Home.js"));
 });
 
 app.listen(PORT, () => {
