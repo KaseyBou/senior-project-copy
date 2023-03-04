@@ -55,6 +55,10 @@ const HomeNavbar = () => {
       navigate("/Bills")
     }
 
+    const bankAccount = () => {
+      navigate("/Budget");
+    };
+
     const logout = () => {
       cookies.remove("TOKEN");
       home();
