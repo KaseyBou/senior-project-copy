@@ -93,7 +93,9 @@ const Dashboard = () => {
               name: label,
               type: 'scatter'
           });
-      })
+        })
+
+        // convert list of upcoming bills into display elements
         
         setBudgetData({budgetX,budgetY})
         console.log(savingsDataList);

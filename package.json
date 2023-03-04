@@ -1,6 +1,9 @@
 {
     "scripts": {
-        "start": "node index.js"
+        "client": "cd client && npm start",
+        "api": "node index.js",
+        "dev": "concurrently --kill-others-on-fail \"npm run api\" \"npm run client\"",
+        "heroku-postbuild": "cd frontend && npm install && npm run build"
     },
     "dependencies": {
         "body-parser": "^1.20.1",
