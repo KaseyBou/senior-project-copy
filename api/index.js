@@ -18,7 +18,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(__dirname));
 // cookie parser middleware
 const auth = require("./auth");
-const path = require('path');
 
 const { Console } = require("console");
 const e = require("express");
