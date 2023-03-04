@@ -1,8 +1,3 @@
-const path = require('path')
-
-// Serve static files from the React frontend app
-app.use(express.static(path.join(__dirname, '../frontend/build')))
-
 const express = require("express");
 
 const PORT = process.env.PORT || 3001;
@@ -18,6 +13,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(__dirname));
 // cookie parser middleware
 const auth = require("./auth");
+const path = require('path');
+
+// Serve static files from the React frontend app
+app.use(express.static(path.join(__dirname, '../frontend/build')))
 
 const { Console } = require("console");
 const e = require("express");
