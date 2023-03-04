@@ -17,6 +17,7 @@ const path = require('path');
 
 // Serve static files from the React frontend app
 app.use(express.static(path.join(__dirname, '../frontend/build')))
+app.use(express.static('../client/src/pages'));
 
 const { Console } = require("console");
 const e = require("express");
