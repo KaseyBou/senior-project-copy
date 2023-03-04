@@ -15,6 +15,9 @@ app.use(express.static(__dirname));
 const auth = require("./auth");
 const path = require('path');
 
+// Serve static files from the React frontend app
+app.use(express.static(path.join(__dirname, '../frontend/build')))
+
 const { Console } = require("console");
 const e = require("express");
 const connection = mysql.createConnection({
@@ -36,7 +39,7 @@ const {logError} = require('./routes/errorLog');
 const { addDeposit, getDeposit, updateDeposit, deleteDeposit } = require("./routes/deposits");
 const { addExpenditure, getExpenditure, updateExpenditure, deleteExpenditure } = require("./routes/expenditures");
 const {insertBudget, getBudget, updateBudget, deleteBudget, getBudgetsByIncome} = require("./routes/budget")
-const { getReportData } = require("./routes/report");
+const { getReportData, getDashboardData } = require("./routes/report");
 
 //---------------User Posts------------------------------------------------
 
@@ -146,6 +149,9 @@ app.delete('/Expenditures/:expenditure_id',  auth, deleteExpenditure);
 
 app.post('/ReportData', auth, getReportData);
 
+app.get('/DashboardData', auth, getDashboardData);
+
+
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
 
@@ -158,7 +164,7 @@ app.use(express.static(path.join(__dirname, "client")))
 // ...
 // Right before your app.listen(), add this:
 app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "client/src/pages", "Home/Home.js"));
+    res.sendFile(path.join(__dirname + "../client/src/pages/Home/Home.js"));
 });
 
 

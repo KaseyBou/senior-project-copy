@@ -10,8 +10,8 @@ const BarPlot = (props) => {
         yData:PropTypes.array,
         plotTitle:PropTypes.string,
         height:PropTypes.number,
-        width:PropTypes.number
-
+        width:PropTypes.number,
+        margin:PropTypes.number
     }
 
     //default props
@@ -20,8 +20,8 @@ const BarPlot = (props) => {
         yData: [2, 5, 3],
         plotTitle: '',
         height: 400,
-        width: 400
-
+        width: 400,
+        margin: 50
     }
 
     //returning jsx
@@ -35,7 +35,7 @@ const BarPlot = (props) => {
           },
           //{type: 'bar', x: [1, 2, 3], y: [2, 5, 3]},
         ]}
-        layout={ {width: props.width, height: props.height, title: props.plotTitle} }
+        layout={ {width: props.width, height: props.height, title: props.plotTitle, margin: {l: props.margin, r: props.margin, t: props.margin, b: props.margin}} }
       />
 
     );

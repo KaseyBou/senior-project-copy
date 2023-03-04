@@ -56,3 +56,49 @@ module.exports.getReportData = async(req, res) => {
         });
     }
 }
+
+module.exports.getDashboardData = async(req, res) => {
+    let email = getEmail(req.headers.authorization).then((email) => {return email;});
+
+    var sql = `SELECT * FROM Budgets WHERE user_id = (SELECT user_id FROM Users WHERE email = ${connection.escape(await email)});`;
+
+    connection.query(sql, async function(err, rows)
+    {
+        if (err){
+            //If error
+            res.status(400).json('Retrieval Error');
+            console.log("Error getting report data : %s ",err );
+            }
+        else
+            var budgets = rows;
+
+            sql = `SELECT * FROM Balances
+                WHERE user_id = (SELECT user_id FROM Users WHERE email = ${connection.escape(await email)})
+                AND date > DATE_SUB(CURDATE(), INTERVAL 7 DAY);`;
+            
+            connection.query(sql, async function(err, rows){
+                if(err) {
+                    res.status(400).json('Retrieval Error');
+                    console.log("Error getting report data at level 2: %s ",err );
+                } else {
+                    var balances = rows;
+
+                    sql = `SELECT * FROM Bills
+                        WHERE user_id = (SELECT user_id FROM Users WHERE email = ${connection.escape(await email)})
+                        AND next_due > DATE_SUB(CURDATE(), INTERVAL 7 DAY)`
+
+                    connection.query(sql, function(err, rows){
+                        if(err) {
+                            res.status(400).json('Retrieval Error');
+                            console.log("Error getting report data at level 3: %s ",err );
+                        } else {
+                            var bills = rows;
+
+                            res.status(200).json({budgets, balances, bills})
+                        }
+                    })
+                }
+            })
+
+    });
+}
