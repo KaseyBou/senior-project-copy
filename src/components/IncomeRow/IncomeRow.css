@@ -1,0 +1,23 @@
+
+.incomeRow {
+    display: flex;
+    width:90%;
+    justify-content: space-between;
+    background-color: #32752D ;
+    color:white;
+    margin: auto;
+    margin-top:20px;
+    border-radius: 2em;
+    padding-left:7em;
+    padding-top:1em;
+}
+
+.incomeDetails{
+    text-align: left;
+}
+
+.incomeButtons{
+    display: flex; 
+    margin-top: auto;
+    margin-bottom: auto;
+}
