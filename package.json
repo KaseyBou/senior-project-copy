@@ -1,7 +1,8 @@
 {
     "scripts": {
-        "client": "cd client && npm start"
-
+        "api": "cd api && npm start",
+        "dev": "concurrently --kill-others-on-fail \"npm run api\"",
+        "heroku-postbuild": "concurrently --kill-others-on-fail \"cd api && npm install && npm start\""
     },
     "dependencies": {
       "node": "^19.7.0",
