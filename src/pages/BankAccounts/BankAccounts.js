@@ -241,7 +241,6 @@ const BankAccounts = () => {
     //returning JSX
     return (
         <>
-            <SearchBar/>
             <div id="BankAccountList">
                 {accounts}
             </div>

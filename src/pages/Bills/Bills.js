@@ -306,7 +306,6 @@ const Bills = () => {
     //returning JSX
     return (
         <>
-            <SearchBar/>
             <div id="BillsList" className='list'>
                 {bills}
             </div>
