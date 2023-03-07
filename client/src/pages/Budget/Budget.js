@@ -207,7 +207,7 @@ const Budget = () => {
     return (
         <>
             <PieChart values={[1,2,3]}/>
-            <div id="CategoryList">
+            <div id="CategoryList" className='list'>
                 {categories}
             </div>
 

@@ -324,7 +324,7 @@ const Income = () => {
     return (
         <>
             <h1>Income</h1>
-            <div id="IncomeList">
+            <div id="IncomeList" className='list'>
                 {incomes}
             </div>
             <div className='bottomTaskBar'>

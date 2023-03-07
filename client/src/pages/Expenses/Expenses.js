@@ -300,7 +300,7 @@ const Expenses = () => {
                     renderRows(copy);
                 }}
             />
-            <div id="ExpenseList">
+            <div id="ExpenseList" className='list'>
                 {expenditures}
             </div>
 

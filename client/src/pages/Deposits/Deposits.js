@@ -266,7 +266,7 @@ const Deposit = () => {
                     renderRows(copy);
                 }}
             />
-            <div id="DepositList">
+            <div id="DepositList" className='list'>
                 {deposits}
             </div>
             <div className='bottomTaskBar'>
