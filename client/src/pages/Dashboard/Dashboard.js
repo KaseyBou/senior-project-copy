@@ -42,7 +42,7 @@ const Dashboard = () => {
           navigate("/")
         }
 
-        console.log(cookies.get("TOKEN"))
+        //console.log(cookies.get("TOKEN"))
         
 
     },[])
@@ -100,7 +100,7 @@ const Dashboard = () => {
         // convert list of upcoming bills into display elements
         
         setBudgetData({budgetX,budgetY})
-        console.log(savingsDataList);
+        //console.log(savingsDataList);
         setSavingsData(savingsDataList)
       });
     }, [])

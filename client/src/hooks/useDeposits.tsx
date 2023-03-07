@@ -21,7 +21,7 @@ const useDeposits = (urlSegment: string) => {
   const postDeposit = async (source: string, date: Date, total_amount: number, account_id: number, budget_id: number
   ) => {
     try {
-      console.log(source, date, total_amount, account_id)
+      //console.log(source, date, total_amount, account_id)
       setLoading(true);
       setError(false);
       const response = await axios.post(`${baseURL}${urlSegment}`, {
@@ -34,7 +34,7 @@ const useDeposits = (urlSegment: string) => {
       setData(response);
     } catch (error) {
       setError(true);
-      console.log(error);
+      //console.log(error);
     } finally {
       setLoading(false);
     }
@@ -50,7 +50,7 @@ const useDeposits = (urlSegment: string) => {
       return response;
     } catch (error) {
       setError(true);
-      console.log(error);
+      //console.log(error);
     } finally {
       setLoading(false);
       //return data;
@@ -77,7 +77,7 @@ const useDeposits = (urlSegment: string) => {
       setData(response);
     } catch (error) {
       setError(true);
-      console.log(error);
+      //console.log(error);
     } finally {
       setLoading(false);
       return data;
@@ -96,7 +96,7 @@ const useDeposits = (urlSegment: string) => {
       setData(response);
     } catch (error) {
       setError(true);
-      console.log(error);
+      //console.log(error);
     } finally {
       setLoading(false);
       return data;

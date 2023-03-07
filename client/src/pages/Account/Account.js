@@ -22,7 +22,7 @@ const Account = () => {
     // on render, get list of Deposits
     useEffect(() => {
 
-        console.log(cookies.get("TOKEN"))
+        //console.log(cookies.get("TOKEN"))
         //verifying user is logged in
         if(cookies.get("TOKEN") === undefined) {
             navigate("/");
@@ -105,7 +105,7 @@ const Account = () => {
             getAccountDetails().then((accountData) => {
                 accountInfo = accountData.data[0];
     
-                console.log(accountInfo);
+                //console.log(accountInfo);
                 document.getElementById("firstName").value = accountInfo.first_name;
                 document.getElementById("lastName").value = accountInfo.last_name;
                 document.getElementById("phone").value = accountInfo.phone;
@@ -191,7 +191,7 @@ const Account = () => {
 
             changePassword(localStorage.getItem("editing"), password);
 
-            console.log(data)
+            //console.log(data)
             
             if(data.status === 200) {
                 setFormMessage("Successfully Edited Account")
@@ -230,7 +230,7 @@ const Account = () => {
             console.log(localStorage.getItem("editing"))
             sendUpdateEmailRequest(localStorage.getItem("editing"), email);
 
-            console.log(data)
+            //console.log(data)
             
             if(data.status === 200) {
                 setFormMessage("Verification Email Sent")

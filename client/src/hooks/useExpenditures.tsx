@@ -33,7 +33,7 @@ const useExpenditures = (urlSegment: string) => {
       setData(response);
     } catch (error) {
       setError(true);
-      console.log(error);
+      //console.log(error);
     } finally {
       setLoading(false);
     }
@@ -49,7 +49,7 @@ const useExpenditures = (urlSegment: string) => {
       return response;
     } catch (error) {
       setError(true);
-      console.log(error);
+      //console.log(error);
     } finally {
       setLoading(false);
       //return data;
@@ -76,7 +76,7 @@ const useExpenditures = (urlSegment: string) => {
       setData(response);
     } catch (error) {
       setError(true);
-      console.log(error);
+      //console.log(error);
     } finally {
       setLoading(false);
       return data;
@@ -95,7 +95,7 @@ const useExpenditures = (urlSegment: string) => {
       setData(response);
     } catch (error) {
       setError(true);
-      console.log(error);
+      //console.log(error);
     } finally {
       setLoading(false);
       return data;
