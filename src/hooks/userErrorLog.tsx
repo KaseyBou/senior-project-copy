@@ -24,7 +24,7 @@ const useErrorLog = (urlSegment : string) => {
             setData(response);
         }catch(error) {
             setError(true);
-            console.log(error);
+            //console.log(error);
         } finally {
             setLoading(false);
         }

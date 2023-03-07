@@ -33,7 +33,7 @@ const useBills = (urlSegment : string) => {
             setData(response);
         }catch(error) {
             setError(true);
-            console.log(error);
+            //console.log(error);
         } finally {
             setLoading(false);
         }
@@ -48,7 +48,7 @@ const useBills = (urlSegment : string) => {
             return response;
         }catch(error) {
             setError(true);
-            console.log(error);
+            //console.log(error);
         } finally {
             setLoading(false);
             //return data;
@@ -71,7 +71,7 @@ const useBills = (urlSegment : string) => {
             setData(response);
         }catch(error) {
             setError(true);
-            console.log(error);
+            //console.log(error);
         } finally {
             setLoading(false);
         }
@@ -85,7 +85,7 @@ const useBills = (urlSegment : string) => {
             setData(response);
         }catch(error) {
             setError(true);
-            console.log(error);
+            //console.log(error);
         } finally {
             setLoading(false);
         }

@@ -85,7 +85,7 @@ const useAccount = (urlSegment : string) => {
             return response;
         }catch(error) {
             setError(true);
-            console.log(error);
+            //console.log(error);
         } finally {
             setLoading(false);
             //return data;

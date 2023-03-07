@@ -48,12 +48,12 @@ const useUserSecurity = (urlSegment : string) => {
                 return response;
             })
             setData(response);
-            console.log(response)
+            //console.log(response)
            // return true;
         }catch(error) {
             setError(true);
             setData(error.response)
-            console.log(error);
+            //console.log(error);
             //return false;
         } finally {
 
@@ -79,12 +79,12 @@ const useUserSecurity = (urlSegment : string) => {
                 return response;
             })
             setData(response);
-            console.log(response)
+            //console.log(response)
             // return true;
         }catch(error) {
             setError(true);
             setData(error.response)
-            console.log(error);
+            //console.log(error);
             //return false;
         } finally {
 

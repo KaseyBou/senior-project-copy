@@ -42,6 +42,9 @@ const Dashboard = () => {
           navigate("/")
         }    
 
+        //console.log(cookies.get("TOKEN"))
+        
+
     },[])
 
     // instantiate report hook
@@ -95,14 +98,10 @@ const Dashboard = () => {
         })
 
         // convert list of upcoming bills into display elements
-        var billData = data.data.bills.map((bill) => {
-          return <li>{bill.bill_name} - ${bill.amount}</li>
-        })
-
-        setBudgetData({budgetX,budgetY});
-        setSavingsData(savingsDataList);
-        setBillsData(billData);
-        console.log(billData);
+        
+        setBudgetData({budgetX,budgetY})
+        //console.log(savingsDataList);
+        setSavingsData(savingsDataList)
       });
     }, [])
  

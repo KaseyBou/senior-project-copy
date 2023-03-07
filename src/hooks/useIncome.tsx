@@ -32,7 +32,7 @@ const useIncome = (urlSegment : string) => {
             setData(response);
         }catch(error) {
             setError(true);
-            console.log(error);
+            //console.log(error);
         } finally {
             setLoading(false);
         }
@@ -47,7 +47,7 @@ const useIncome = (urlSegment : string) => {
             return response;
         }catch(error) {
             setError(true);
-            console.log(error);
+            //console.log(error);
         } finally {
             setLoading(false);
             //return data;
@@ -66,10 +66,10 @@ const useIncome = (urlSegment : string) => {
                 budgets: {budgets}
             }, tokenHeader)
             setData(response);
-            console.log(response);
+            //console.log(response);
         }catch(error) {
             setError(true);
-            console.log(error);
+            //console.log(error);
         } finally {
             setLoading(false);
             return data;
@@ -84,7 +84,7 @@ const useIncome = (urlSegment : string) => {
             setData(response);
         }catch(error) {
             setError(true);
-            console.log(error);
+            //console.log(error);
         } finally {
             setLoading(false);
             return data;
