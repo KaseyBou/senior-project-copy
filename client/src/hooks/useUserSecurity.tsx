@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import Cookies from "universal-cookie";
 const cookies = new Cookies();
 
-const baseURL = 'http://localhost:3001/';
+const baseURL = 'https://financial-planner-app.herokuapp.com/';
 
 const useUserSecurity = (urlSegment : string) => {
 

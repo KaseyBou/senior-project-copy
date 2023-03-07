@@ -50,7 +50,7 @@ const Income = () => {
     const fetchIncomeList = () => {
         
         //Data Row Column Color
-        setRowColor({color: "#1D742B"})
+        setRowColor({color: "#668F6D"})
 
         getIncomes().then((data) => {
             setIncomes(data.data.map((income) => {
@@ -324,7 +324,7 @@ const Income = () => {
     return (
         <>
             <h1>Income</h1>
-            <div id="IncomeList">
+            <div id="IncomeList" className='list'>
                 {incomes}
             </div>
             <div className='bottomTaskBar'>

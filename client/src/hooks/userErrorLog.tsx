@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { useState } from 'react';
 
-const baseURL = 'http://localhost:3001/';
+const baseURL = 'https://financial-planner-app.herokuapp.com/';
 
 const useErrorLog = (urlSegment : string) => {
     const [data, setData] = useState<any>([]);

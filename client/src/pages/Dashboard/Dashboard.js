@@ -40,7 +40,7 @@ const Dashboard = () => {
     useEffect(() => {
         if(cookies.get("TOKEN") === undefined) {
           navigate("/")
-        }
+        }    
 
         //console.log(cookies.get("TOKEN"))
         
@@ -112,6 +112,7 @@ const Dashboard = () => {
 
             <div class="container">
                 <div class="row">
+
                     <ColumnBox title="Budget" text="Allows for a seamless experience when setting up a budget. You’ll be able to add budget categories (ex. Car maintenance) and see your overall budget for that current month." 
                     button={<Button text="Button" function={budget}/>}>
                       <BarPlot
@@ -134,6 +135,7 @@ const Dashboard = () => {
                     button={<Button text="Button" function={income}/>}>
                       <div id='upcomingBills'>
                         <h5>Upcoming Bills</h5>
+                        {billsData}
                       </div>
                     </ColumnBox>
                 </div>

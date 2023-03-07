@@ -19,6 +19,10 @@ const HomeNavbar = () => {
       navigate("");
     };
 
+    const dashboard = () => {
+      navigate("/Dashboard");
+    }
+
     const budget = () => {
       navigate("/Budget");
     };
@@ -69,7 +73,13 @@ const HomeNavbar = () => {
 
     <Navbar expand="lg" className='nav-style'>
       <Container>
-        <Navbar.Brand className="text-white" onClick={() =>home()}>Financial Planner</Navbar.Brand>
+        <Navbar.Brand className="text-white" onClick={() => {
+          if(cookies.get("TOKEN")){
+            dashboard();
+          } else {
+            home();
+          }
+        }}>Financial Planner</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
         {cookies.get("TOKEN") !== undefined ? (
