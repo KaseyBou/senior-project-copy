@@ -39,7 +39,7 @@ ReactDOM.render(
             <Route path="/Expenses" element={<Expenses />}/>
             <Route path="/Income" element={<Income />}/>
             <Route path="/Deposits" element={<Deposits />}/>
-            <Route path="/BankAccounts" element={<BankAccounts />}/>
+            <Route path="/Savings" element={<BankAccounts />}/>
             <Route path="/Report" element={<Report />}/>
             <Route path="/Register" element={<Register />}/>
             <Route path="/Login" element={<Login />}/>
