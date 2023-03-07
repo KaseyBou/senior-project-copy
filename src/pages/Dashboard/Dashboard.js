@@ -40,10 +40,7 @@ const Dashboard = () => {
     useEffect(() => {
         if(cookies.get("TOKEN") === undefined) {
           navigate("/")
-        }
-
-        console.log(cookies.get("TOKEN"))
-        
+        }    
 
     },[])
 
@@ -99,12 +96,13 @@ const Dashboard = () => {
 
         // convert list of upcoming bills into display elements
         var billData = data.data.bills.map((bill) => {
-          return <li>{bill.name} - ${bill.amount}</li>
+          return <li>{bill.bill_name} - ${bill.amount}</li>
         })
 
         setBudgetData({budgetX,budgetY});
         setSavingsData(savingsDataList);
         setBillsData(billData);
+        console.log(billData);
       });
     }, [])
  
@@ -138,7 +136,7 @@ const Dashboard = () => {
                     button={<Button text="Button" function={income}/>}>
                       <div id='upcomingBills'>
                         <h5>Upcoming Bills</h5>
-
+                        {billsData}
                       </div>
                     </ColumnBox>
                 </div>

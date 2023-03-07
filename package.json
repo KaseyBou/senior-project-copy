@@ -28,6 +28,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "local": "heroku local web --port 3000",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

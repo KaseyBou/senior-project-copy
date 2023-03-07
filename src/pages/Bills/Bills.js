@@ -104,7 +104,7 @@ const Bills = () => {
                     <DataRow
                     title=""
                     labels={["Bill Name: ", "Company: ", "Amount: ", "Frequency: ", "Next Due: ", "Category: ", "Bank Account: "]}
-                    rows={[bill.bill_name, bill.bill_source, '$' + bill.amount, bill.pay_frequency + ' Month', dateString, categoryName, accountName]}
+                    rows={[bill.bill_name, bill.bill_source, '$' + bill.amount, bill.pay_frequency + ' Days', dateString, categoryName, accountName]}
                     HandleEdit={() => handleShowEdit(bill.bill_id)}
                     HandleDelete={() => handleShowDelete(bill.bill_id)}
                 />
@@ -307,7 +307,7 @@ const Bills = () => {
     return (
         <>
             <SearchBar/>
-            <div id="BillsList">
+            <div id="BillsList" className='list'>
                 {bills}
             </div>
 
