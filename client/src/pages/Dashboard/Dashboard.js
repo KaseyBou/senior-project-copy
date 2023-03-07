@@ -112,6 +112,7 @@ const Dashboard = () => {
 
             <div class="container">
                 <div class="row">
+
                     <ColumnBox title="Budget" text="Allows for a seamless experience when setting up a budget. You’ll be able to add budget categories (ex. Car maintenance) and see your overall budget for that current month." 
                     button={<Button text="Button" function={budget}/>}>
                       <BarPlot
