@@ -31,6 +31,9 @@ const HomeNavbar = () => {
       navigate("/Savings");
     };
 
+    const deposits = () => {
+      navigate("/Deposits");
+    }
     const income = () => {
       navigate("/Income");
     };
@@ -73,6 +76,7 @@ const HomeNavbar = () => {
           <Nav className="d-flex me-auto">
             <Nav.Link className="text-white" onClick={() =>budget()}>Budget</Nav.Link>
             <Nav.Link className="text-white" onClick={() =>savings()}>Savings</Nav.Link>
+            <Nav.Link className="text-white" onClick={() =>deposits()}>Deposits</Nav.Link>
             <Nav.Link className="text-white" onClick={() =>income()}>Income</Nav.Link>
             <Nav.Link className="text-white" onClick={() =>expenses()}>Expenses</Nav.Link>
             <Nav.Link className="text-white" onClick={() =>bills()}>Bills</Nav.Link>

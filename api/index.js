@@ -13,9 +13,13 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(__dirname));
 // cookie parser middleware
 const auth = require("./auth");
+const path = require('path');
+
+// Serve static files from the React frontend app
+app.use(express.static(path.join(__dirname, '../frontend/build')))
+//app.use(express.static('../client/src/pages'));
 
 const { Console } = require("console");
-const e = require("express");
 const connection = mysql.createConnection({
   host: 'financial-planner.c3p10rqx8lpz.us-east-1.rds.amazonaws.com',
   port: 3306,
@@ -35,7 +39,7 @@ const {logError} = require('./routes/errorLog');
 const { addDeposit, getDeposit, updateDeposit, deleteDeposit } = require("./routes/deposits");
 const { addExpenditure, getExpenditure, updateExpenditure, deleteExpenditure } = require("./routes/expenditures");
 const {insertBudget, getBudget, updateBudget, deleteBudget, getBudgetsByIncome} = require("./routes/budget")
-const { getReportData } = require("./routes/report");
+const { getReportData, getDashboardData } = require("./routes/report");
 
 //---------------User Posts------------------------------------------------
 
@@ -64,8 +68,6 @@ app.get('/User',  auth, getAccountDetails);
 app.post('/Recover', recoverUser);
 
 app.get('/Verify/:verificationString', verifyUser);
-
-//app.get('/UpdateEmail/:verificationString', )
 
 app.get('/Reset/:verificationString', resetValidity);
 
@@ -147,17 +149,21 @@ app.delete('/Expenditures/:expenditure_id',  auth, deleteExpenditure);
 
 app.post('/ReportData', auth, getReportData);
 
+app.get('/DashboardData', auth, getDashboardData);
+
+
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
 
 // parse application/json
 app.use(bodyParser.json())
 
+  // ... other app.use middleware 
+app.use(express.static(path.join(__dirname, "client")))
 
+// ...
+// Right before your app.listen(), add this:
 
-app.get("/api", auth, (req, res) => {
-    res.json({ message: "Hello from server!" });
-  });
 
 app.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);
