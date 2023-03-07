@@ -98,10 +98,13 @@ const Dashboard = () => {
         })
 
         // convert list of upcoming bills into display elements
-        
-        setBudgetData({budgetX,budgetY})
-        console.log(savingsDataList);
-        setSavingsData(savingsDataList)
+        var billData = data.data.bills.map((bill) => {
+          return <li>{bill.name} - ${bill.amount}</li>
+        })
+
+        setBudgetData({budgetX,budgetY});
+        setSavingsData(savingsDataList);
+        setBillsData(billData);
       });
     }, [])
  
@@ -135,6 +138,7 @@ const Dashboard = () => {
                     button={<Button text="Button" function={income}/>}>
                       <div id='upcomingBills'>
                         <h5>Upcoming Bills</h5>
+
                       </div>
                     </ColumnBox>
                 </div>
