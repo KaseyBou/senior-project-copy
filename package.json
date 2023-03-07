@@ -3,7 +3,7 @@
         "client": "cd client && npm start",
         "api": "cd api && npm start",
         "dev": "concurrently --kill-others-on-fail \"npm run api\" \"npm run client\"",
-        "heroku-postbuild": "concurrently --kill-others-on-fail \"cd client && npm install && npm start\" \"cd api && npm install && npm start\""
+        "heroku-postbuild": "concurrently --kill-others-on-fail \"cd client && npm install && npm run build && \" \"cd api && npm install && npm start\""
     },
     "dependencies": {
       "node": "^19.7.0",
