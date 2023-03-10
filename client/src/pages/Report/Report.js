@@ -289,6 +289,7 @@ const Report = () => {
 
             {displayReport && <>
                 {(reportFormat === 'table' || reportFormat === 'both') && <>
+                    <Button text="New Report" function={() => setDisplayReport(false)} />
                     <table className='reportTable'>
                         <thead><tr>
                             <th id="spacer" />
@@ -316,9 +317,11 @@ const Report = () => {
                     </table>
                 </>}
                 {(reportFormat === 'graph' || reportFormat === 'both') && <>
-                    <Button text="New Report" function={() => setDisplayReport(false)} /><Plot
-                    data={reportData}
-                    layout={{ width: 800, height: 400, title: 'TEST' }} />
+                    <Button text="New Report" function={() => setDisplayReport(false)} />
+                    <Plot
+                        data={reportData}
+                        layout={{ width: 800, height: 400, title: 'Report ' + (new Date(Date.now()).getMonth() + 1) + "/" + new Date(Date.now()).getDate() + "/" + (new Date(Date.now()).getYear()+1900)}}
+                    />
                 </>}
             </>}
 

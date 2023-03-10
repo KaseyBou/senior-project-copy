@@ -135,7 +135,7 @@ const Dashboard = () => {
                     button={<Button text="Button" function={income}/>}>
                       <div id='upcomingBills'>
                         <h5>Upcoming Bills</h5>
-                        {billsData}
+                        {billsData?billsData:"No upcoming bills!"}
                       </div>
                     </ColumnBox>
                 </div>
