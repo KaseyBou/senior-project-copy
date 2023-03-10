@@ -33,8 +33,8 @@ const Dashboard = () => {
         navigate("/Savings");
       };
   
-      const income = () => {
-        navigate("/Income");
+      const bills = () => {
+        navigate("/Bills");
       };
 
     useEffect(() => {
@@ -114,7 +114,7 @@ const Dashboard = () => {
                 <div class="row">
 
                     <ColumnBox title="Budget" text="Allows for a seamless experience when setting up a budget. You’ll be able to add budget categories (ex. Car maintenance) and see your overall budget for that current month." 
-                    button={<Button text="Button" function={budget}/>}>
+                    button={<Button text="Go To Budgets" function={budget}/>}>
                       <BarPlot
                         width='300' height='200' margin='25'
                         xData={budgetData?budgetData.budgetX:null}
@@ -123,7 +123,7 @@ const Dashboard = () => {
                     </ColumnBox>
 
                     <ColumnBox title="Savings" text="With the help of our financial planner web tool, keep track of your savings. Your accounts, deposits, and sources of income are all visible here. Your current total savings will be displayed for you." 
-                    button={<Button text="Button" function={savings}/>}>
+                    button={<Button text="Go To Savings" function={savings}/>}>
                       <ScatterPlot
                         width='300' height='200' margin='25'
                         data={savingsData}
@@ -132,10 +132,10 @@ const Dashboard = () => {
                     </ColumnBox>
 
                     <ColumnBox title="Bills" text="Keep track of all of your bills. Here, you can view all of your regular payments broken down by date, company, and amount." 
-                    button={<Button text="Button" function={income}/>}>
+                    button={<Button text="Go To Bills" function={bills}/>}>
                       <div id='upcomingBills'>
                         <h5>Upcoming Bills</h5>
-                        {billsData}
+                        {billsData?billsData:"No upcoming bills!"}
                       </div>
                     </ColumnBox>
                 </div>

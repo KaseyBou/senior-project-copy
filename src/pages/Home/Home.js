@@ -8,6 +8,12 @@ import ColumnBox from '../../components/ColumnBox/ColumnBox'
 
 const Home = () => {
 
+    useEffect(() => {
+        if(cookies.get("TOKEN") !== undefined) {
+          navigate("/Dashboard")
+        }   
+    })
+    
     //Initializing
     //const navigate = useNavigate();
 
