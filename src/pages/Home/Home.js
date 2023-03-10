@@ -1,3 +1,6 @@
+import { useEffect } from 'react';
+import { redirect, useNavigate } from 'react-router-dom';
+import Cookies from "universal-cookie";
 
 //import Loading from '../Loading/Loading';
 import './Home.css';
@@ -6,7 +9,11 @@ import ColumnBox from '../../components/ColumnBox/ColumnBox'
 //import { useNavigate } from 'react-router-dom';
 //import Modal from '../../components/Modal/Modal';
 
+const cookies = new Cookies();
+
 const Home = () => {
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         if(cookies.get("TOKEN") !== undefined) {
