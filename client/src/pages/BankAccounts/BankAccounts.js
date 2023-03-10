@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import Cookies from "universal-cookie";
 import {useNavigate} from "react-router-dom";
+import { isExpired} from "react-jwt";
 
 //import Loading from '../Loading/Loading';
 import './BankAccounts.css';
@@ -65,9 +66,10 @@ const BankAccounts = () => {
         useEffect(() => {
 
             //verifying user is logged in
-            if(cookies.get("TOKEN") === undefined) {
-                navigate("/");
-            }
+            if(cookies.get("TOKEN") === undefined || isExpired(cookies.get("TOKEN"))) {
+                cookies.remove("TOKEN");
+                navigate("/")
+            }    
     
             fetchAccounts();
     
@@ -241,7 +243,7 @@ const BankAccounts = () => {
     //returning JSX
     return (
         <>
-            <SearchBar/>
+            <h1>Accounts</h1>
             <div id="BankAccountList">
                 {accounts}
             </div>

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import Cookies from "universal-cookie";
 import {useNavigate} from "react-router-dom";
-
+import { isExpired} from "react-jwt";
 //import Loading from '../Loading/Loading';
 import './Income.css';
 //import { useNavigate } from 'react-router-dom';
@@ -40,9 +40,11 @@ const Income = () => {
 
     // redirect if not logged in
     useEffect(() => {
-        if(cookies.get("TOKEN") === undefined) {
+        //verifying user is logged in
+        if(cookies.get("TOKEN") === undefined || isExpired(cookies.get("TOKEN"))) {
+            cookies.remove("TOKEN");
             navigate("/")
-        }
+        }    
 
     },[])
 

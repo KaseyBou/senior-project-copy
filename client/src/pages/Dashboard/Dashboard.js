@@ -14,6 +14,7 @@ import functions from '../../utils/functions';
 import BarPlot from '../../graphing/BarPlot';
 import ScatterPlot from '../../graphing/ScatterPlot';
 
+import { isExpired} from "react-jwt";
 const cookies = new Cookies();
 
 const Dashboard = () => {
@@ -38,12 +39,10 @@ const Dashboard = () => {
       };
 
     useEffect(() => {
-        if(cookies.get("TOKEN") === undefined) {
+        if(cookies.get("TOKEN") === undefined || isExpired(cookies.get("TOKEN"))) {
+          cookies.remove("TOKEN");
           navigate("/")
         }    
-
-        //console.log(cookies.get("TOKEN"))
-        
 
     },[])
 

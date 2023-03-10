@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import Cookies from "universal-cookie";
 import {useNavigate} from "react-router-dom";
+import { isExpired} from "react-jwt";
 //import Loading from '../Loading/Loading';
 import './Deposits.css';
 //import { useNavigate } from 'react-router-dom';
@@ -112,10 +113,12 @@ const Deposit = () => {
     // on render, get list of Deposits
     useEffect(() => {
 
-        //verifying user is logged in
-        if(cookies.get("TOKEN") === undefined) {
-            navigate("/");
-        }
+
+            //verifying user is logged in
+            if(cookies.get("TOKEN") === undefined || isExpired(cookies.get("TOKEN"))) {
+                cookies.remove("TOKEN");
+                navigate("/")
+            }    
 
         //getting accounts for display and form
         getAccounts().then((accounts) => {
@@ -247,6 +250,7 @@ const Deposit = () => {
     //returning JSX
     return (
         <>
+            <h1>Deposits</h1>
             <SearchBar
                 placeholder='Deposit Source'
                 fieldID="search"
@@ -301,16 +305,10 @@ const Deposit = () => {
                 </Modal>
 
                 <Modal buttonText="Confirm Deletion" show={showDelete} handleShow={handleShowDelete} handleClose={handleCloseDelete}>
-                    <CustomForm
-                        title="Delete Deposit"
-                        fields={['User Password']}
-                        fieldIDs={['userPassword']}
-                        fieldTypes={['password']}
-                        warning={[passwordWarning]}
-                        warningIDs={['passwordWarning']}
-                        onChange={passwordInputHandler}
-                        submitAction={removeDeposit}
-                    />
+                <h2 className='text-center'>Confirm Deletion</h2>
+                    <div className='d-flex justify-content-center'>
+                        <Button onClick={removeDeposit}>Confirm</Button>
+                    </div>
                 </Modal>
             </div>
         </>

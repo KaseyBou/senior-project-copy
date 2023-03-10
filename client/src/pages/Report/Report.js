@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import Cookies from "universal-cookie";
 import {useNavigate} from "react-router-dom";
+import { isExpired} from "react-jwt";
+
 import CustomForm from '../../components/CustomForm/CustomForm';
 import TableRow from '../../components/TableRow/TableRow';
 //import Loading from '../Loading/Loading';
@@ -30,9 +32,11 @@ const Report = () => {
 
 
     useEffect(() => {
-        if(cookies.get("TOKEN") === undefined) {
+        //verifying user is logged in
+        if(cookies.get("TOKEN") === undefined || isExpired(cookies.get("TOKEN"))) {
+            cookies.remove("TOKEN");
             navigate("/")
-        }
+        }    
 
     },[])
 
@@ -87,7 +91,7 @@ const Report = () => {
                 CheckedIds.push(idNum);
             }
         }
-        console.log(CheckedIds)
+        //console.log(CheckedIds)
         setSelectedIds(CheckedIds);
     }
 
@@ -127,6 +131,7 @@ const Report = () => {
     }, [reportType])
 
     const getReport = async(type, idList) => {
+        if(endDate.length !== 0 && startDate.length !== 0) {
         let reportData = await getSnapshotValues(type, idList);
 
         var dataSet = [];
@@ -162,6 +167,7 @@ const Report = () => {
         setReportData(dataSet);
         
         setDisplayReport(true);  
+    }
     }
 
      // income state

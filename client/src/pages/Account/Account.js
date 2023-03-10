@@ -3,12 +3,12 @@ import './Account.css';
 import { useState, useEffect } from 'react';
 import Cookies from "universal-cookie";
 import {useNavigate} from "react-router-dom";
+import { isExpired} from "react-jwt";
 //import { useNavigate } from 'react-router-dom';
 import CustomForm from '../../components/CustomForm/CustomForm';
 import usePost from '../../hooks/useUserAccount.tsx';
 import Button from '../../components/Button/Button';
 import Modal from '../../components/Modal/Modal';
-
 import validations from '../../utils/validations';
 
 const Account = () => {
@@ -24,9 +24,10 @@ const Account = () => {
 
         //console.log(cookies.get("TOKEN"))
         //verifying user is logged in
-        if(cookies.get("TOKEN") === undefined) {
-            navigate("/");
-        }
+        if(cookies.get("TOKEN") === undefined || isExpired(cookies.get("TOKEN"))) {
+            cookies.remove("TOKEN");
+            navigate("/")
+          }    
         
     },[])
 
@@ -262,12 +263,12 @@ const Account = () => {
         cookies.remove("TOKEN");
         home();
           
-
       }
 
     //returning JSX
     return (
         <>
+            <h1>My Account</h1>
             <div className='d-flex'>
             <Button text='Update Email' function={handleShowEmail}/>
             <Button text='Update Password' function={handleShowPassword}/>
