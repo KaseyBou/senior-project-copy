@@ -83,7 +83,7 @@ const Login = () => {
                 fieldIDs={['email', 'password']}
                 warning={[`${emailWarning}`, `${passwordWarning}`]}
                 warningIDs={['emailWarning', 'passwordWarning']}
-                fieldTypes={['text', 'text']}
+                fieldTypes={['text', 'password']}
                 onChange={inputHandler}
                 submitAction={Login}
                 linkAddr='/Recovery'

@@ -7,7 +7,8 @@ import { isExpired} from "react-jwt";
 //import { useNavigate } from 'react-router-dom';
 import CustomForm from '../../components/CustomForm/CustomForm';
 import usePost from '../../hooks/useUserAccount.tsx';
-import Button from '../../components/Button/Button';
+//import Button from '../../components/Button/Button';
+import Button from 'react-bootstrap/Button';
 import Modal from '../../components/Modal/Modal';
 import validations from '../../utils/validations';
 
@@ -269,11 +270,11 @@ const Account = () => {
     return (
         <>
             <h1>My Account</h1>
-            <div className='d-flex'>
-            <Button text='Update Email' function={handleShowEmail}/>
-            <Button text='Update Password' function={handleShowPassword}/>
-            <Button text='Update Information' function={handleShowInfo}/>
-            <Button text='Delete Account' function={handleShowDelete}/>
+            <div className='d-flex justify-content-center'>
+            <Button onClick={handleShowEmail}>Update Email</Button>
+            <Button onClick={handleShowPassword}>Update Password</Button>
+            <Button onClick={handleShowInfo}>Update Info</Button>
+            <Button onClick={handleShowDelete}>Delete Account</Button>
             </div>
 
                 {showEmail ? (

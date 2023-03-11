@@ -1,16 +1,18 @@
+//imports
 import { useState, useEffect } from 'react';
 import Cookies from "universal-cookie";
 import {useNavigate} from "react-router-dom";
 import { isExpired} from "react-jwt";
-//import Loading from '../Loading/Loading';
-import './Expenses.css';
-//import { useNavigate } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
+
+//css
+import './Expenses.css';
+
+//component imports
 import Modal from '../../components/Modal/Modal';
 import DataRow from '../../components/DataRow/DataRow';
 import CustomForm from '../../components/CustomForm/CustomForm';
 import SearchBar from '../../components/SearchBar/SearchBar';
-
 import useBills from '../../hooks/useBills.tsx';
 import useExpenditures from '../../hooks/useExpenditures.tsx';
 import useAccount from '../../hooks/useAccount.tsx';
