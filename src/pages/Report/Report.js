@@ -136,7 +136,7 @@ const Report = () => {
             var label = '';
 
             reportData.data.forEach((dataPoint) => {
-                if(dataPoint.id === id && dataPoint.date >= startDate && dataPoint.date <= endDate){
+                //if(dataPoint.id === id && dataPoint.date >= startDate && dataPoint.date <= endDate){
                     // set date to be at midnight
                     var newDate = new Date(dataPoint.date);
                     newDate.setHours(0);
@@ -146,7 +146,7 @@ const Report = () => {
                     xData.push(newDate);
                     yData.push(dataPoint.balance);
                     label = dataPoint.name;
-                }
+                //}
             });
 
             dataSet.push({
@@ -161,6 +161,14 @@ const Report = () => {
         setReportData(dataSet);
         
         setDisplayReport(true);  
+    }
+
+    
+    // add to date
+    const addDays = (date, days) => {
+        var result = new Date(date);
+        result.setDate(result.getDate() + days);
+        return result;
     }
 
      // income state
@@ -297,7 +305,8 @@ const Report = () => {
                         </tr></thead>
                         <tbody>
                             {
-                                getDateList(startDate, endDate).map((date) => {
+                                getDateList(addDays(startDate, 1), addDays(endDate, 1)).map((date) => {
+                                    console.log(reportData)
                                     return(<tr>
                                         <td>{date.toDateString()}</td>
                                         {reportData.map((column) => {
