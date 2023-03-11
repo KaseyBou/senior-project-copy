@@ -32,11 +32,11 @@ const Report = () => {
 
 
     useEffect(() => {
-        //verifying user is logged in
-        if(cookies.get("TOKEN") === undefined || isExpired(cookies.get("TOKEN"))) {
-            cookies.remove("TOKEN");
-            navigate("/")
-        }    
+            //verifying user is logged in
+            if(cookies.get("TOKEN") === undefined || isExpired(cookies.get("TOKEN"))) {
+                cookies.remove("TOKEN");
+                navigate("/")
+            }    
 
     },[])
 
