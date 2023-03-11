@@ -1,15 +1,32 @@
 
-//import Loading from '../Loading/Loading';
+//css
 import './Home.css';
+
+//components
 import ColumnBox from '../../components/ColumnBox/ColumnBox'
-//import Button from '../../components/Button/Button'
-//import { useNavigate } from 'react-router-dom';
-//import Modal from '../../components/Modal/Modal';
+
+//imports
+import { useNavigate } from 'react-router-dom';
+import {useEffect} from 'react';
+import Cookies from "universal-cookie";
+import { isExpired} from "react-jwt";
+const cookies = new Cookies();
 
 const Home = () => {
 
     //Initializing
-    //const navigate = useNavigate();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+          if(isExpired(cookies.get("TOKEN"))) {
+  
+            cookies.remove("TOKEN");
+            navigate("/")
+          } else {
+            navigate("/Dashboard")
+          }
+  
+      },[])
 
     //returning JSX
     return (
