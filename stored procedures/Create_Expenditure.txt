@@ -1,0 +1,21 @@
+CREATE DEFINER=`admin`@`%` PROCEDURE `Create_Expenditure`(
+	new_account_id INT,
+    new_recipient VARCHAR(50),
+    expenditure_date DATETIME,
+    new_total_amount DECIMAL,
+    new_budget_id INT,
+    new_email VARCHAR(255)
+)
+BEGIN
+	-- Insert expenditure
+    INSERT INTO Expenditures (account_id, recipient, date, total_amount, budget_id, user_id)
+		VALUES (new_account_id, new_recipient, expenditure_date, new_total_amount, new_budget_id,
+        (SELECT user_id FROM Users WHERE email = new_email));
+        
+	-- subtract amount from budget
+    UPDATE Budgets SET monthly_budget = monthly_budget - new_total_amount WHERE budget_id = new_budget_id;
+    
+    -- subtract amount from account
+    UPDATE Accounts SET balance = balance - new_total_amount WHERE account_id = new_account_id;
+    
+END

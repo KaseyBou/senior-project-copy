@@ -1,0 +1,20 @@
+.searchbar{
+    display: flex;
+    flex-direction: row;
+}
+
+.searchForm {
+    display: flex;
+    background-color: white ;
+    width: 75%;
+    padding: .5%;
+    margin: auto;
+    border-radius: 1em;
+}
+
+.formInput{
+    border-radius: 10px;
+    border: none;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+}

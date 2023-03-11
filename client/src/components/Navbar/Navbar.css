@@ -1,0 +1,37 @@
+/* global variables */
+:root{
+  --nav-height: 10vh;
+}
+
+.nav-style {
+  position: fixed;
+  top:0;
+  background-color:#32752D;
+  color: #fff;
+  margin-top: 0;
+  margin-bottom: 0;
+  /* used !important here and below to override bootstrap to make nav links full height of bar */
+  padding: 0 !important;
+  height: var(--nav-height);
+}
+
+.navbar-brand {
+  height: var(--nav-height);
+  padding-top: calc(var(--nav-height)*7/24) !important;
+  color: #fff;
+  cursor: pointer;
+}
+
+.navbar-brand:hover {
+  background-color: #275b22;
+}
+
+.nav-link{
+  height: var(--nav-height);
+  padding-top: calc(var(--nav-height)/3) !important;
+}
+
+.nav-link:hover {
+  background-color: #275b22;
+}
+

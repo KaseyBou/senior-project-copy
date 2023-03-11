@@ -1,0 +1,44 @@
+CREATE DEFINER=`admin`@`%` PROCEDURE `Create_Budget_Connections`(
+	send_query TEXT,
+    source_type VARCHAR(20),
+    conn_list TEXT,
+    percent_list TEXT
+)
+BEGIN
+	-- Declare variables
+    DECLARE next_id_end INT DEFAULT 0;
+    DECLARE next_percent_end INT DEFAULT 0;
+    DECLARE conn_id INT DEFAULT 0;
+    DECLARE conn_percent DECIMAL DEFAULT 0;
+    DECLARE source_id INT DEFAULT 0;
+    
+    -- run sent insert query
+    SET @new_query = send_query;
+    PREPARE insert_query FROM @new_query;
+    EXECUTE insert_query;
+      
+	-- get ID of inserted income
+    IF source_type = 'income' THEN
+		SELECT LAST_INSERT_ID(income_id) INTO source_id FROM Incomes ORDER BY income_id DESC LIMIT 1;
+	ELSEIF source_type = 'bill' THEN
+		SELECT LAST_INSERT_ID(bill_id) INTO source_id FROM Bills ORDER BY bill_id DESC LIMIT 1;
+	END IF;
+    
+	-- Grab IDs and %s from string parameter
+    WHILE LOCATE(', ', conn_list) AND LOCATE(', ', percent_list) DO
+		-- Find end of substring
+		SET next_id_end = POSITION(", " IN conn_list);
+        SET next_percent_end = POSITION(", " IN percent_list);
+        
+        -- grab substring and cast to decimal
+		SET conn_id = CAST(SUBSTRING(conn_list, 1, next_id_end) AS DECIMAL);
+        SET conn_percent = CAST(SUBSTRING(percent_list, 1, next_percent_end) AS DECIMAL);
+        
+        -- delete entry from string list
+        SET conn_list = SUBSTRING(conn_list, next_id_end + 1, LENGTH(conn_list));
+        SET percent_list = SUBSTRING(percent_list, next_percent_end + 1, LENGTH(percent_list));
+        
+		INSERT INTO Budget_Connections (budget_id, linked_id, connection_type, conn_percentage) 
+			VALUES (conn_id, source_id, source_type, conn_percent);
+    END WHILE;
+END

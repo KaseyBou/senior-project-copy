@@ -1,0 +1,21 @@
+:root{
+    --row-bg: #b5b5b5;
+}
+
+.column-style {
+    background-color: var(--row-bg) ;
+    color:black;
+    border: 10px #333333 solid;
+}
+
+.rowWrapper{
+    display: flex;
+    justify-content: space-between;
+    width: 90%;
+    background-color: var(--row-bg);
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 1em;
+    padding:1em;
+    border-radius: 1em;
+}

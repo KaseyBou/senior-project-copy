@@ -1,0 +1,40 @@
+.modal-content{
+  background-color: #b5b5b5;
+}
+
+.modal-header{
+  border-bottom: none;
+}
+
+.modal-body{
+  padding: 0 !important;
+}
+
+.modal-body .customForm{
+  margin: 0;
+  margin-top: 0 !important;
+  width: 100%;
+}
+
+.modalOLD {
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+    border-radius: 6px;
+    background-color: white;
+    padding: 1rem;
+    text-align: center;
+    width: 30rem;
+    z-index: 10;
+    position: fixed;
+    top: 0;
+    left: 0;
+  }
+  
+  .backdrop {
+    position: fixed;
+    z-index: 1;
+    background-color: rgba(0, 0, 0, 0.75);
+    width: 100%;
+    height: 100vh;
+    top: 0;
+    left: 0;
+  }
