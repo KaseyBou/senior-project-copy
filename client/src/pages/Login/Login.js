@@ -72,7 +72,7 @@ const Login = () => {
             setPasswordWarning("Incorrect Email or Password");
         }
 
-    }, [data])
+    }, [Login])
 
     //returning JSX
     return (

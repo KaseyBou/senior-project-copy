@@ -10,6 +10,8 @@ import { useNavigate } from 'react-router-dom';
 import {useEffect} from 'react';
 import Cookies from "universal-cookie";
 import { isExpired} from "react-jwt";
+
+//intializing
 const cookies = new Cookies();
 
 const Home = () => {
@@ -17,11 +19,15 @@ const Home = () => {
     //Initializing
     const navigate = useNavigate();
 
+    //checking login/token validity
     useEffect(() => {
+
+        //if login is invalid remove cookie
           if(isExpired(cookies.get("TOKEN"))) {
   
             cookies.remove("TOKEN");
-            navigate("/")
+
+            //if login is valid redirect to dashboard
           } else {
             navigate("/Dashboard")
           }
